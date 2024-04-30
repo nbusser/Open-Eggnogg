@@ -4,9 +4,4 @@ out
 .idea
 .vs
 .vscode
-Makefile
-CMakeCache.txt
-*.cmake
-CMakeFiles/*
-bin/*
-_deps/*
+CMakeFiles
