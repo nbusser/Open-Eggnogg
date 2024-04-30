@@ -1,15 +1,17 @@
-cmake_minimum_required(VERSION 3.16)
-project(OpenEggnogg LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16) # This project requires CMake 3.16 or newer
+project(OpenEggnogg LANGUAGES CXX) # Defines the project name and the language used
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # Sets the output directory for executables
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF) # Embedds libraries into the executable
 
+# Downloads and includes SFML library from GitHub
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+# Adds the executable and links the SFML library
 add_executable(OpenEggnogg src/main.cpp)
 target_link_libraries(OpenEggnogg PRIVATE sfml-graphics)
 target_compile_features(OpenEggnogg PRIVATE cxx_std_20)
