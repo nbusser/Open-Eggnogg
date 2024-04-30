@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 int main() {
-  auto window = sf::RenderWindow{{1920u, 1080u}, "CMake SFML Project"};
+  auto window = sf::RenderWindow{{1920u, 1080u}, "Open Eggnogg"};
   window.setFramerateLimit(60);
 
   while (window.isOpen()) {
