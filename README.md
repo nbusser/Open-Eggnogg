@@ -13,3 +13,9 @@ You should also install cmake, make, and any C++ compiler.
 Run the script `build.sh`.
 
 The compiled binary can be found in the `build/bin` directory.
+
+## Git hooks
+
+You can find git hooks in the `git_hooks` directory.
+
+Feel free to copy them to the `.git/hooks` directory of your repository.
