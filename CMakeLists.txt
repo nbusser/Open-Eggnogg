@@ -8,7 +8,7 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF) # Embedds libraries into 
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
+    GIT_TAG 2.6.x) # TODO: update to SFML 3.0 when it's released
 FetchContent_MakeAvailable(SFML)
 
 # Adds the executable and links the SFML library
