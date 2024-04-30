@@ -1,6 +1,10 @@
+#include "Character.hpp"
+#include "SFML/System/Vector2.hpp"
 #include <SFML/Graphics.hpp>
 
 int main() {
+  Character player = Character(sf::Vector2f(0.0, 0.0));
+
   auto window = sf::RenderWindow{{1920u, 1080u}, "Open Eggnogg"};
   window.setFramerateLimit(60);
 
