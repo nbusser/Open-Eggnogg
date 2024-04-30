@@ -1,7 +1,7 @@
-#include "SFML/System/Vector2.hpp"
-
 #ifndef BODY_HPP
 #define BODY_HPP
+
+#include "SFML/System/Vector2.hpp"
 
 class PhysicsBody {
 public:

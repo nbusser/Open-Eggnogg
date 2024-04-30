@@ -1,11 +1,11 @@
+#ifndef CHARACTER_HPP
+#define CHARACTER_HPP
+
 #include "PhysicsBody.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <system_error>
-
-#ifndef CHARACTER_HPP
-#define CHARACTER_HPP
 
 class Character : PhysicsBody {
 private:
