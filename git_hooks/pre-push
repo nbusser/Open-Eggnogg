@@ -3,9 +3,19 @@
 # Checks if the code is formatted correctly
 ./format-check.sh
 
+if [ $? -ne 0 ]; then
+    echo "Code format is invalid"
+    exit 1
+fi
+
 echo "Code format is valid"
 
 # Checks if the code is buildable
 ./build.sh
+
+if [ $? -ne 0 ]; then
+    echo "Code is not buildable"
+    exit 1
+fi
 
 echo "Code is buildable"
