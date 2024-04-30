@@ -3,5 +3,9 @@
 # Checks if the code is formatted correctly
 ./format-check.sh
 
+echo "Code format is valid"
+
 # Checks if the code is buildable
-./build
+./build.sh
+
+echo "Code is buildable"
