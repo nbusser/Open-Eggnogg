@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Checks if the code is formatted correctly
+./format-check.sh
