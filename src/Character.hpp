@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Displayable.hpp"
 #include "PhysicsBody.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 
-class Character : public PhysicsBody {
+class Character : public PhysicsBody, public Displayable {
 private:
   sf::Sprite sprite;
   std::unique_ptr<sf::Texture> ptr_texture;

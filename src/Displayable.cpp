@@ -1,8 +1,6 @@
 #include "Displayable.hpp"
 
-Displayable::Displayable(const std::shared_ptr<sf::RenderWindow> &ptr_window,
-                         const std::string &textureFilepath)
-    : ptr_window(ptr_window) {
+Displayable::Displayable(const std::string &textureFilepath) {
   ptr_texture = std::make_unique<sf::Texture>();
   if (!ptr_texture->loadFromFile(textureFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
@@ -12,4 +10,4 @@ Displayable::Displayable(const std::shared_ptr<sf::RenderWindow> &ptr_window,
   sprite.setTexture(*ptr_texture);
 }
 
-void Displayable::display(void) { ptr_window->draw(sprite); }
+void Displayable::display(sf::RenderWindow &window) { window.draw(sprite); }

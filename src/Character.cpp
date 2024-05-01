@@ -1,4 +1,5 @@
 #include "Character.hpp"
+#include "Displayable.hpp"
 #include "PhysicsBody.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
@@ -6,14 +7,10 @@
 #include <iostream>
 #include <system_error>
 
-Character::Character(const sf::Vector2f &position) : PhysicsBody{position} {
-  ptr_texture = std::make_unique<sf::Texture>();
-  if (!ptr_texture->loadFromFile("./assets/textures/sample.jpg")) {
-    throw std::system_error(std::make_error_code(std::errc::io_error),
-                            "Cannot open file");
-  }
-  sprite.setTexture(*ptr_texture);
-};
+#define CHARACTER_TEXTURE "./assets/textures/sample.jpg"
+
+Character::Character(const sf::Vector2f &position)
+    : PhysicsBody{position}, Displayable(CHARACTER_TEXTURE) {};
 
 Character::~Character(void) {};
 
