@@ -1,5 +1,4 @@
-#ifndef BODY_HPP
-#define BODY_HPP
+#pragma once
 
 #include "SFML/System/Vector2.hpp"
 
@@ -15,5 +14,3 @@ public:
 
   virtual void applyForce(const sf::Vector2f force) = 0;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef CHARACTER_HPP
-#define CHARACTER_HPP
+#pragma once
 
 #include "PhysicsBody.hpp"
 #include "SFML/Graphics/Sprite.hpp"
@@ -25,5 +24,3 @@ public:
 
   void applyForce(const sf::Vector2f force) {};
 };
-
-#endif
