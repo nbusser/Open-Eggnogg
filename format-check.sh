@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python run-clang-format.py -r src
+python3 run-clang-format.py -r src

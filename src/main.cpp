@@ -26,26 +26,18 @@ int main() {
         window.close();
         break;
       case sf::Event::KeyPressed:
-        switch (event.key.code) {
-        case sf::Keyboard::Left:
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
           player1->move(Direction::LEFT);
-          break;
-        case sf::Keyboard::Right:
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
           player1->move(Direction::RIGHT);
-          break;
-        case sf::Keyboard::V:
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
           player1->jump();
-        case sf::Keyboard::Q:
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
           player2->move(Direction::LEFT);
-          break;
-        case sf::Keyboard::D:
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
           player2->move(Direction::RIGHT);
-          break;
-        case sf::Keyboard::J:
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
           player2->jump();
-        default:
-          break;
-        }
       default:
         break;
       }
