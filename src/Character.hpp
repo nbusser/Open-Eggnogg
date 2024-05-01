@@ -16,5 +16,5 @@ public:
 
   void physicsTick(void) override;
 
-  void applyForce(const sf::Vector2f force) override;
+  void applyForce(const sf::Vector2f &force) override;
 };

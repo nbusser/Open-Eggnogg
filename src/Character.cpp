@@ -19,4 +19,4 @@ Character::~Character(void) {};
 
 void Character::physicsTick(void) { std::cout << "Physics tick" << std::endl; };
 
-void Character::applyForce(const sf::Vector2f force) {};
+void Character::applyForce(const sf::Vector2f &force) {};
