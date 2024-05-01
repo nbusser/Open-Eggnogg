@@ -3,6 +3,7 @@
 #include "PhysicsBody.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "SFML/Window/Event.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
@@ -19,8 +20,12 @@ int main() {
 
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {
-      if (event.type == sf::Event::Closed) {
+      switch (event.type) {
+      case sf::Event::Closed:
         window.close();
+        break;
+      default:
+        break;
       }
     }
 
