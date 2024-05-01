@@ -7,12 +7,12 @@
 #include <system_error>
 
 Character::Character(const sf::Vector2f &position) : PhysicsBody{position} {
-  sf::Texture texture = sf::Texture();
-  if (!texture.loadFromFile("./assets/textures/sample.jpg")) {
+  ptr_texture = std::make_unique<sf::Texture>();
+  if (!ptr_texture->loadFromFile("./assets/textures/sample.jpg")) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "Cannot open file");
   }
-  sprite.setTexture(texture);
+  sprite.setTexture(*ptr_texture);
 };
 
 Character::~Character() {};
