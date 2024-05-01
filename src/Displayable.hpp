@@ -16,5 +16,5 @@ public:
 
   ~Displayable(void) = default;
 
-  virtual void display(sf::RenderWindow &window);
+  virtual void display(sf::RenderWindow &window) const;
 };

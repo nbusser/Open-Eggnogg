@@ -10,4 +10,6 @@ Displayable::Displayable(const std::string &textureFilepath) {
   sprite.setTexture(*ptr_texture);
 }
 
-void Displayable::display(sf::RenderWindow &window) { window.draw(sprite); }
+void Displayable::display(sf::RenderWindow &window) const {
+  window.draw(sprite);
+}
