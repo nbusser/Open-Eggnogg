@@ -25,23 +25,24 @@ int main() {
       case sf::Event::Closed:
         window.close();
         break;
-      case sf::Event::KeyPressed:
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-          player1->move(Direction::LEFT);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-          player1->move(Direction::RIGHT);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
-          player1->jump();
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-          player2->move(Direction::LEFT);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-          player2->move(Direction::RIGHT);
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
-          player2->jump();
       default:
         break;
       }
     }
+
+    // Pressed inputs processing
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+      player1->move(Direction::LEFT);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+      player1->move(Direction::RIGHT);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
+      player1->jump();
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
+      player2->move(Direction::LEFT);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+      player2->move(Direction::RIGHT);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
+      player2->jump();
 
     window.clear();
 
