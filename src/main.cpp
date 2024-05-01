@@ -1,10 +1,10 @@
-#include "Character.hpp"
-#include "Displayable.hpp"
-#include "PhysicsBody.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 #include "SFML/Window/Keyboard.hpp"
+#include "include/Character.hpp"
+#include "include/Displayable.hpp"
+#include "include/PhysicsBody.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>

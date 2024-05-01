@@ -1,9 +1,9 @@
-#include "Character.hpp"
-#include "Displayable.hpp"
-#include "PhysicsBody.hpp"
+#include "include/Character.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "include/Displayable.hpp"
+#include "include/PhysicsBody.hpp"
 #include <system_error>
 
 namespace Constants {

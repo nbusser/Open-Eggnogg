@@ -1,4 +1,4 @@
-#include "Displayable.hpp"
+#include "include/Displayable.hpp"
 
 Displayable::Displayable(const std::string &textureFilepath) {
   ptr_texture = std::make_unique<sf::Texture>();
