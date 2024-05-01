@@ -6,10 +6,8 @@
 #include <vector>
 
 int main() {
-  auto player1 =
-      std::make_shared<Character>(Character(sf::Vector2f(-15.0, 0.0)));
-  auto player2 =
-      std::make_shared<Character>(Character(sf::Vector2f(15.0, 0.0)));
+  auto player1 = std::make_shared<Character>(sf::Vector2f(-15.0, 0.0));
+  auto player2 = std::make_shared<Character>(sf::Vector2f(15.0, 0.0));
 
   std::vector<std::shared_ptr<PhysicsBody>> physicsBodies{player1, player2};
 
