@@ -13,7 +13,7 @@ int main() {
 
   std::vector<std::shared_ptr<PhysicsBody>> physicsBodies{player1, player2};
 
-  auto window = sf::RenderWindow{{1920u, 1080u}, "Open Eggnogg"};
+  auto window = sf::RenderWindow{{640u, 360u}, "Open Eggnogg"};
   window.setFramerateLimit(60);
 
   while (window.isOpen()) {
