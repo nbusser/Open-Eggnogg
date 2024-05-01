@@ -13,12 +13,12 @@ private:
   std::unique_ptr<sf::Texture> ptr_texture;
 
 protected:
-  void updatePosition(const sf::Vector2f &position);
+  void updateSpritePosition(const sf::Vector2f &position);
 
 public:
   Displayable(const std::string &textureFilepath);
 
   ~Displayable(void) = default;
 
-  virtual void display(sf::RenderWindow &window) const;
+  virtual void display(sf::RenderWindow &window);
 };

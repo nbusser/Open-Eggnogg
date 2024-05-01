@@ -2,6 +2,7 @@
 
 #include "Displayable.hpp"
 #include "PhysicsBody.hpp"
+#include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 
@@ -15,6 +16,8 @@ private:
   const float acceleration = 10.0;
 
   void applyForce(const sf::Vector2f &force) override;
+
+  void display(sf::RenderWindow &window) override;
 
 public:
   Character(const sf::Vector2f &position);

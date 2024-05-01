@@ -10,15 +10,13 @@
 #define CHARACTER_TEXTURE "./assets/textures/sample.jpg"
 
 Character::Character(const sf::Vector2f &position)
-    : PhysicsBody{position}, Displayable(CHARACTER_TEXTURE) {
-  updatePosition(position);
-};
+    : PhysicsBody{position}, Displayable(CHARACTER_TEXTURE) {};
 
 Character::~Character(void) {};
 
-void Character::physicsTick(void) { std::cout << "Physics tick" << std::endl; };
+void Character::physicsTick(void) { position += velocity; };
 
-void Character::applyForce(const sf::Vector2f &force) {};
+void Character::applyForce(const sf::Vector2f &force) { velocity += force; };
 
 void Character::move(const Direction direction) {
   switch (direction) {
@@ -29,4 +27,9 @@ void Character::move(const Direction direction) {
     applyForce(sf::Vector2f(acceleration, 0.0));
     break;
   }
+}
+
+void Character::display(sf::RenderWindow &window) {
+  Displayable::display(window);
+  updateSpritePosition(position);
 }
