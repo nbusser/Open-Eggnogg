@@ -7,14 +7,18 @@
 #include <iostream>
 #include <system_error>
 
-#define CHARACTER_TEXTURE "./assets/textures/sample.jpg"
-#define CHARACTER_MAX_VELOCITY_VALUE 7.0
-#define CHARACTER_ACCELERATION_FACTOR 1.0
+namespace Constants {
+constexpr float characterMaxVelocityX = 10.0f;
+constexpr float characterMaxVelocityY = 10.0f;
+constexpr float characterAccelerationFactor = 1.0f;
+const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
+} // namespace Constants
 
 Character::Character(const sf::Vector2f &position)
-    : PhysicsBody{position, CHARACTER_MAX_VELOCITY_VALUE,
-                  CHARACTER_ACCELERATION_FACTOR},
-      Displayable(CHARACTER_TEXTURE) {};
+    : PhysicsBody{position, Constants::characterMaxVelocityX,
+                  Constants::characterMaxVelocityY,
+                  Constants::characterAccelerationFactor},
+      Displayable(Constants::characterTextureFilepath) {};
 
 Character::~Character(void) {};
 
@@ -23,8 +27,8 @@ void Character::physicsTick(void) { position += velocity; };
 void Character::applyForce(const sf::Vector2f &force) {
   velocity += force;
 
-  velocity.x = std::clamp(velocity.x, -maxVelocityValue, maxVelocityValue);
-  velocity.y = std::clamp(velocity.y, -maxVelocityValue, maxVelocityValue);
+  velocity.x = std::clamp(velocity.x, -maxVelocityX, maxVelocityX);
+  velocity.y = std::clamp(velocity.y, -maxVelocityY, maxVelocityY);
 };
 
 void Character::move(const Direction direction) {

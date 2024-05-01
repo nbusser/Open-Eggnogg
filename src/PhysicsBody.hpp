@@ -11,14 +11,14 @@ public:
 
   sf::Vector2f velocity;
 
+  const float maxVelocityX;
+  const float maxVelocityY;
   const float accelerationFactor;
 
-  const float maxVelocityValue;
-
-  PhysicsBody(const sf::Vector2f &position, const float maxVelocityValue,
-              const float accelerationFactor)
-      : position(position), maxVelocityValue(maxVelocityValue),
-        accelerationFactor(accelerationFactor) {};
+  PhysicsBody(const sf::Vector2f &position, const float maxVelocityX,
+              const float maxVelocityY, const float accelerationFactor)
+      : position(position), maxVelocityX(maxVelocityX),
+        maxVelocityY(maxVelocityY), accelerationFactor(accelerationFactor) {};
 
   virtual void physicsTick(void) = 0;
 
