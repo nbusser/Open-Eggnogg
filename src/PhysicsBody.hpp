@@ -13,4 +13,6 @@ public:
   virtual void physicsTick() = 0;
 
   virtual void applyForce(const sf::Vector2f force) = 0;
+
+  virtual ~PhysicsBody() = default;
 };

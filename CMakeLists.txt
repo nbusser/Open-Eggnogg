@@ -12,7 +12,7 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 # Adds the executable and links the SFML library
-add_executable(OpenEggnogg src/main.cpp)
+add_executable(OpenEggnogg src/main.cpp src/Character.cpp)
 target_link_libraries(OpenEggnogg PRIVATE sfml-graphics)
 target_compile_features(OpenEggnogg PRIVATE cxx_std_20)
 
