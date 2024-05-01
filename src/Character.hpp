@@ -24,5 +24,7 @@ public:
 
   void move(const Direction direction);
 
+  void jump(void);
+
   void physicsTick(void) override;
 };

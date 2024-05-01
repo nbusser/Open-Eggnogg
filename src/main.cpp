@@ -33,12 +33,16 @@ int main() {
         case sf::Keyboard::Right:
           player1->move(Direction::RIGHT);
           break;
+        case sf::Keyboard::V:
+          player1->jump();
         case sf::Keyboard::Q:
           player2->move(Direction::LEFT);
           break;
         case sf::Keyboard::D:
           player2->move(Direction::RIGHT);
           break;
+        case sf::Keyboard::J:
+          player2->jump();
         default:
           break;
         }

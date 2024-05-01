@@ -4,12 +4,10 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
-#include <iostream>
 #include <system_error>
 
 namespace Constants {
 constexpr float characterMaxVelocityX = 6.0f;
-constexpr float characterMaxVelocityY = 6.0f;
 constexpr float characterAccelerationFactor = 1.0f;
 constexpr float characterDecelerationFactor = 0.2f;
 const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
@@ -17,7 +15,6 @@ const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
 
 Character::Character(const sf::Vector2f &position)
     : PhysicsBody{position, Constants::characterMaxVelocityX,
-                  Constants::characterMaxVelocityY,
                   Constants::characterAccelerationFactor,
                   Constants::characterDecelerationFactor},
       Displayable(Constants::characterTextureFilepath) {};
@@ -25,6 +22,7 @@ Character::Character(const sf::Vector2f &position)
 Character::~Character(void) {};
 
 void Character::physicsTick(void) {
+  // Updates position
   position += velocity;
 
   // Deceleration
@@ -34,10 +32,12 @@ void Character::physicsTick(void) {
     velocity.x = std::min(0.0f, velocity.x + decelerationFactor);
   }
 
-  if (velocity.y > 0) {
-    velocity.y = std::max(0.0f, velocity.y - decelerationFactor);
-  } else if (velocity.y < 0) {
-    velocity.y = std::min(0.0f, velocity.y + decelerationFactor);
+  // Gravity
+  // TODO: if in air
+  if (position.y < Constants::groundLevel) {
+    applyForce(Constants::gravityVector);
+  } else {
+    velocity.y = 0.0f;
   }
 };
 
@@ -45,7 +45,7 @@ void Character::applyForce(const sf::Vector2f &force) {
   velocity += force;
 
   velocity.x = std::clamp(velocity.x, -maxVelocityX, maxVelocityX);
-  velocity.y = std::clamp(velocity.y, -maxVelocityY, maxVelocityY);
+  velocity.y = std::min(velocity.y, Constants::gravity);
 };
 
 void Character::move(const Direction direction) {
@@ -56,6 +56,13 @@ void Character::move(const Direction direction) {
   case Direction::RIGHT:
     applyForce(sf::Vector2f(accelerationFactor, 0.0f));
     break;
+  }
+}
+
+void Character::jump(void) {
+  // TODO: collides with the ground
+  if (position.y >= Constants::groundLevel) {
+    applyForce(sf::Vector2f(0.0f, -15.0f));
   }
 }
 
