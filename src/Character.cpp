@@ -15,8 +15,8 @@ Character::Character(const sf::Vector2f &position) : PhysicsBody{position} {
   sprite.setTexture(*ptr_texture);
 };
 
-Character::~Character() {};
+Character::~Character(void) {};
 
-void Character::physicsTick() { std::cout << "Physics tick" << std::endl; };
+void Character::physicsTick(void) { std::cout << "Physics tick" << std::endl; };
 
 void Character::applyForce(const sf::Vector2f force) {};

@@ -12,9 +12,9 @@ private:
 public:
   Character(const sf::Vector2f &position);
 
-  ~Character() override;
+  ~Character(void) override;
 
-  void physicsTick() override;
+  void physicsTick(void) override;
 
   void applyForce(const sf::Vector2f force) override;
 };
