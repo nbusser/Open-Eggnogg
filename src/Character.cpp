@@ -8,21 +8,38 @@
 #include <system_error>
 
 namespace Constants {
-constexpr float characterMaxVelocityX = 10.0f;
-constexpr float characterMaxVelocityY = 10.0f;
+constexpr float characterMaxVelocityX = 6.0f;
+constexpr float characterMaxVelocityY = 6.0f;
 constexpr float characterAccelerationFactor = 1.0f;
+constexpr float characterDecelerationFactor = 0.2f;
 const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
 } // namespace Constants
 
 Character::Character(const sf::Vector2f &position)
     : PhysicsBody{position, Constants::characterMaxVelocityX,
                   Constants::characterMaxVelocityY,
-                  Constants::characterAccelerationFactor},
+                  Constants::characterAccelerationFactor,
+                  Constants::characterDecelerationFactor},
       Displayable(Constants::characterTextureFilepath) {};
 
 Character::~Character(void) {};
 
-void Character::physicsTick(void) { position += velocity; };
+void Character::physicsTick(void) {
+  position += velocity;
+
+  // Deceleration
+  if (velocity.x > 0) {
+    velocity.x = std::max(0.0f, velocity.x - decelerationFactor);
+  } else if (velocity.x < 0) {
+    velocity.x = std::min(0.0f, velocity.x + decelerationFactor);
+  }
+
+  if (velocity.y > 0) {
+    velocity.y = std::max(0.0f, velocity.y - decelerationFactor);
+  } else if (velocity.y < 0) {
+    velocity.y = std::min(0.0f, velocity.y + decelerationFactor);
+  }
+};
 
 void Character::applyForce(const sf::Vector2f &force) {
   velocity += force;
@@ -34,10 +51,10 @@ void Character::applyForce(const sf::Vector2f &force) {
 void Character::move(const Direction direction) {
   switch (direction) {
   case Direction::LEFT:
-    applyForce(sf::Vector2f(-accelerationFactor, 0.0));
+    applyForce(sf::Vector2f(-accelerationFactor, 0.0f));
     break;
   case Direction::RIGHT:
-    applyForce(sf::Vector2f(accelerationFactor, 0.0));
+    applyForce(sf::Vector2f(accelerationFactor, 0.0f));
     break;
   }
 }
