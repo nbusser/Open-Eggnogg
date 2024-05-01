@@ -22,8 +22,7 @@ Character::Character(const sf::Vector2f &position)
 Character::~Character(void) {};
 
 void Character::physicsTick(void) {
-  // Updates position
-  position += velocity;
+  PhysicsBody::physicsTick();
 
   // Deceleration
   if (velocity.x > 0) {
@@ -39,13 +38,6 @@ void Character::physicsTick(void) {
   } else {
     velocity.y = 0.0f;
   }
-};
-
-void Character::applyForce(const sf::Vector2f &force) {
-  velocity += force;
-
-  velocity.x = std::clamp(velocity.x, -maxVelocityX, maxVelocityX);
-  velocity.y = std::min(velocity.y, Constants::gravity);
 };
 
 void Character::move(const Direction direction) {

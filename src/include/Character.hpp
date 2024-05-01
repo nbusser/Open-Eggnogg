@@ -13,8 +13,6 @@ private:
   sf::Sprite sprite;
   std::unique_ptr<sf::Texture> ptr_texture;
 
-  void applyForce(const sf::Vector2f &force) override;
-
   void display(sf::RenderWindow &window) override;
 
 public:

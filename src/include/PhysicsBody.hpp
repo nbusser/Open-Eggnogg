@@ -10,7 +10,7 @@ constexpr float groundLevel = 150.0f;
 
 class PhysicsBody {
 protected:
-  virtual void applyForce(const sf::Vector2f &force) = 0;
+  virtual void applyForce(const sf::Vector2f &force);
 
 public:
   sf::Vector2f position;
@@ -27,7 +27,7 @@ public:
         accelerationFactor(accelerationFactor),
         decelerationFactor(decelerationFactor) {};
 
-  virtual void physicsTick(void) = 0;
+  virtual void physicsTick(void);
 
   virtual ~PhysicsBody(void) = default;
 };
