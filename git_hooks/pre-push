@@ -11,7 +11,7 @@ fi
 echo "Code format is valid"
 
 # Checks if the code is buildable
-./build.sh
+./build.sh debug
 
 if [ $? -ne 0 ]; then
     echo "Code is not buildable"
