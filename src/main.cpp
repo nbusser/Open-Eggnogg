@@ -4,6 +4,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
+#include "SFML/Window/Keyboard.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
@@ -24,6 +25,23 @@ int main() {
       case sf::Event::Closed:
         window.close();
         break;
+      case sf::Event::KeyPressed:
+        switch (event.key.code) {
+        case sf::Keyboard::Left:
+          player1->move(Direction::LEFT);
+          break;
+        case sf::Keyboard::Right:
+          player1->move(Direction::RIGHT);
+          break;
+        case sf::Keyboard::Q:
+          player2->move(Direction::LEFT);
+          break;
+        case sf::Keyboard::D:
+          player2->move(Direction::RIGHT);
+          break;
+        default:
+          break;
+        }
       default:
         break;
       }

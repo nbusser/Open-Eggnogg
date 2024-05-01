@@ -19,3 +19,14 @@ Character::~Character(void) {};
 void Character::physicsTick(void) { std::cout << "Physics tick" << std::endl; };
 
 void Character::applyForce(const sf::Vector2f &force) {};
+
+void Character::move(const Direction direction) {
+  switch (direction) {
+  case Direction::LEFT:
+    applyForce(sf::Vector2f(-acceleration, 0.0));
+    break;
+  case Direction::RIGHT:
+    applyForce(sf::Vector2f(acceleration, 0.0));
+    break;
+  }
+}
