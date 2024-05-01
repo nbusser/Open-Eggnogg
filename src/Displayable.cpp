@@ -10,6 +10,10 @@ Displayable::Displayable(const std::string &textureFilepath) {
   sprite.setTexture(*ptr_texture);
 }
 
+void Displayable::updatePosition(const sf::Vector2f &position) {
+  sprite.setPosition(position.x, position.y);
+}
+
 void Displayable::display(sf::RenderWindow &window) const {
   window.draw(sprite);
 }

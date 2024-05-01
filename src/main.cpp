@@ -11,8 +11,8 @@ int main() {
   auto window = sf::RenderWindow{{640u, 360u}, "Open Eggnogg"};
   window.setFramerateLimit(60);
 
-  auto player1 = std::make_shared<Character>(sf::Vector2f(-15.0, 0.0));
-  auto player2 = std::make_shared<Character>(sf::Vector2f(15.0, 0.0));
+  auto player1 = std::make_shared<Character>(sf::Vector2f(200.0, 150.0));
+  auto player2 = std::make_shared<Character>(sf::Vector2f(400.0, 150.0));
 
   std::vector<std::shared_ptr<PhysicsBody>> physicsBodies{player1, player2};
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};

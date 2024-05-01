@@ -10,7 +10,9 @@
 #define CHARACTER_TEXTURE "./assets/textures/sample.jpg"
 
 Character::Character(const sf::Vector2f &position)
-    : PhysicsBody{position}, Displayable(CHARACTER_TEXTURE) {};
+    : PhysicsBody{position}, Displayable(CHARACTER_TEXTURE) {
+  updatePosition(position);
+};
 
 Character::~Character(void) {};
 
