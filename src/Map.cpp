@@ -1,6 +1,7 @@
 #include "include/Map.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include <_types/_uint16_t.h>
 #include <cstddef>
 #include <fstream>
 #include <sstream>
@@ -48,7 +49,6 @@ void Map::loadMapFile(const std::string &mapFilePath) {
     THROW_MAP_READING_ERROR("Cannot read first line");
   }
 
-  size_t width, height;
   std::istringstream iss(line);
   if (!(iss >> width >> height)) {
     THROW_MAP_READING_ERROR("Cannot read width and height");
@@ -56,7 +56,6 @@ void Map::loadMapFile(const std::string &mapFilePath) {
 
   for (size_t i = 0; i < height; ++i) {
     auto row = std::vector<Tile>();
-    auto spriteRow = std::vector<sf::Sprite>();
 
     if (!std::getline(mapFile, line)) {
       THROW_MAP_READING_ERROR("Cannot read line #" + std::to_string(i));
@@ -74,6 +73,7 @@ void Map::loadMapFile(const std::string &mapFilePath) {
         THROW_MAP_READING_ERROR("Unexpected tile found: " +
                                 std::to_string(charTile));
       }
+      row.push_back(static_cast<Tile>(charTile));
     }
 
     grid.push_back(row);
@@ -81,7 +81,38 @@ void Map::loadMapFile(const std::string &mapFilePath) {
 }
 
 void Map::loadMapVertices(void) {
-  // TODO
+  vertices.setPrimitiveType(sf::Quads);
+  vertices.resize(width * height * 4);
+
+  for (size_t i = 0; i < height; ++i) {
+    for (size_t j = 0; j < width; ++j) {
+      const auto tileKind = grid[i][j];
+      uint16_t textureU =
+          tileKind % (tilesetTexture.getSize().x / Constants::mapTileSize);
+      uint16_t textureV =
+          tileKind / (tilesetTexture.getSize().x / Constants::mapTileSize);
+
+      sf::Vertex *quad = &vertices[(i + j * width) * 4];
+
+      quad[0].position =
+          sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize);
+      quad[1].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
+                                      j * Constants::mapTileSize);
+      quad[2].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
+                                      (j + 1) * Constants::mapTileSize);
+      quad[3].position = sf::Vector2f(i * Constants::mapTileSize,
+                                      (j + 1) * Constants::mapTileSize);
+
+      quad[0].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
+                                       textureV * Constants::mapTileSize);
+      quad[1].texCoords = sf::Vector2f((textureU + 1) * Constants::mapTileSize,
+                                       textureV * Constants::mapTileSize);
+      quad[2].texCoords = sf::Vector2f((textureU + 1) * Constants::mapTileSize,
+                                       (textureV + 1) * Constants::mapTileSize);
+      quad[3].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
+                                       (textureV + 1) * Constants::mapTileSize);
+    }
+  }
 }
 
 void Map::loadMap(const std::string &mapFilePath) {

@@ -11,7 +11,7 @@ namespace Constants {
 constexpr uint8_t mapTileSize = 16;
 }
 
-enum Tile { NONE, WALL };
+enum Tile { NONE, WALL, WATER };
 
 class Map {
 public:
