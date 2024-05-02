@@ -4,6 +4,7 @@
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
 #include "include/Displayable.hpp"
+#include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
@@ -18,6 +19,9 @@ int main() {
 
   std::vector<std::shared_ptr<PhysicsEntity>> physicsEntities{player1, player2};
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
+
+  auto map = Map();
+  map.loadMapFile("./assets/maps/sample.map");
 
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {
