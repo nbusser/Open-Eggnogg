@@ -23,7 +23,7 @@ bool isValidTile(const char c) {
          c == static_cast<char>(Tile::WALL);
 }
 
-Map::Map() : grid(), spritesGrid(), tilesetTexture(sf::Texture()) {
+Map::Map() : grid(), tilesetTexture(sf::Texture()) {
   if (!tilesetTexture.loadFromFile("./assets/textures/sample.jpg")) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
@@ -36,15 +36,10 @@ void Map::clearGrid() {
   }
   grid.clear();
 
-  for (auto spriteRow : spritesGrid) {
-    spriteRow.clear();
-  }
-  spritesGrid.clear();
+  // TODO: empty vertices
 }
 
 void Map::loadMapFile(const std::string &mapFilePath) {
-  clearGrid();
-
   std::ifstream mapFile(mapFilePath);
 
   std::string line;
@@ -79,26 +74,22 @@ void Map::loadMapFile(const std::string &mapFilePath) {
         THROW_MAP_READING_ERROR("Unexpected tile found: " +
                                 std::to_string(charTile));
       }
-      auto tile = static_cast<Tile>(charTile);
-      if (tile == Tile::WALL) {
-        row.push_back(tile);
-        auto sprite = sf::Sprite();
-
-        sprite.setTexture(tilesetTexture);
-        sprite.setPosition(j * 32.0f, i * 32.0f);
-        spriteRow.push_back(sprite);
-      }
     }
 
     grid.push_back(row);
-    spritesGrid.push_back(spriteRow);
   }
 }
 
+void Map::loadMapVertices(void) {
+  // TODO
+}
+
+void Map::loadMap(const std::string &mapFilePath) {
+  clearGrid();
+  loadMapFile(mapFilePath);
+  loadMapVertices();
+}
+
 void Map::display(sf::RenderWindow &window) {
-  for (const auto spriteRow : spritesGrid) {
-    for (const auto sprite : spriteRow) {
-      window.draw(sprite);
-    }
-  }
+  // TODO: draw and extend sf::Drawable
 }

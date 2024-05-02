@@ -21,7 +21,7 @@ int main() {
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
 
   auto map = Map();
-  map.loadMapFile("./assets/maps/sample.map");
+  map.loadMap("./assets/maps/sample.map");
 
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {

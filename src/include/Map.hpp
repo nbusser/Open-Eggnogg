@@ -3,7 +3,13 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
+#include <_types/_uint8_t.h>
 #include <vector>
+
+namespace Constants {
+constexpr uint8_t mapTileSize = 16;
+}
 
 enum Tile { NONE, WALL };
 
@@ -15,14 +21,17 @@ public:
 
   Map();
 
-  void loadMapFile(const std::string &mapFilePath);
+  void loadMap(const std::string &mapFilePath);
 
   void display(sf::RenderWindow &window);
 
 private:
-  std::vector<std::vector<sf::Sprite>> spritesGrid;
   sf::Texture tilesetTexture;
+  sf::VertexArray vertices;
 
   void clearGrid();
   void buildGrid(const size_t width, const size_t height);
+
+  void loadMapFile(const std::string &mapFilePath);
+  void loadMapVertices(void);
 };
