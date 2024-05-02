@@ -25,7 +25,7 @@ bool isValidTile(const char c) {
 }
 
 Map::Map() : grid(), tilesetTexture(sf::Texture()) {
-  if (!tilesetTexture.loadFromFile("./assets/textures/sample.jpg")) {
+  if (!tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
   }
