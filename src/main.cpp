@@ -4,7 +4,7 @@
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
 #include "include/Displayable.hpp"
-#include "include/PhysicsBody.hpp"
+#include "include/PhysicsEntity.hpp"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
@@ -16,7 +16,7 @@ int main() {
   auto player1 = std::make_shared<Character>(sf::Vector2f(200.0, 150.0));
   auto player2 = std::make_shared<Character>(sf::Vector2f(400.0, 150.0));
 
-  std::vector<std::shared_ptr<PhysicsBody>> physicsBodies{player1, player2};
+  std::vector<std::shared_ptr<PhysicsEntity>> physicsEntities{player1, player2};
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
 
   while (window.isOpen()) {
@@ -46,7 +46,7 @@ int main() {
 
     window.clear();
 
-    for (const auto &ptr_physicsBody : physicsBodies) {
+    for (const auto &ptr_physicsBody : physicsEntities) {
       ptr_physicsBody->physicsTick();
     }
     for (const auto &ptr_displayable : displayables) {

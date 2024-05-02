@@ -16,8 +16,9 @@ add_executable(
   OpenEggnogg
   src/main.cpp
   src/Character.cpp
+  src/CharacterPhysicsBehavior.cpp
   src/Displayable.cpp
-  src/PhysicsBody.cpp
+  src/PhysicsEntity.cpp
 )
 target_link_libraries(OpenEggnogg PRIVATE sfml-graphics)
 target_compile_features(OpenEggnogg PRIVATE cxx_std_20)
