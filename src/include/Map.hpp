@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
@@ -13,7 +14,7 @@ constexpr uint8_t mapTileSize = 16;
 
 enum Tile { NONE, WALL, WATER };
 
-class Map {
+class Map : public sf::Drawable {
 public:
   size_t width;
   size_t height;
@@ -22,8 +23,6 @@ public:
   Map();
 
   void loadMap(const std::string &mapFilePath);
-
-  void display(sf::RenderWindow &window);
 
 private:
   sf::Texture tilesetTexture;
@@ -34,4 +33,6 @@ private:
 
   void loadMapFile(const std::string &mapFilePath);
   void loadMapVertices(void);
+
+  virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

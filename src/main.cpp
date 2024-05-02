@@ -56,7 +56,7 @@ int main() {
     for (const auto &ptr_displayable : displayables) {
       ptr_displayable->display(window);
     }
-    map.display(window);
+    window.draw(map);
 
     window.display();
   }

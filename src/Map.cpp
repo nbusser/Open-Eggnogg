@@ -121,6 +121,7 @@ void Map::loadMap(const std::string &mapFilePath) {
   loadMapVertices();
 }
 
-void Map::display(sf::RenderWindow &window) {
-  // TODO: draw and extend sf::Drawable
+void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+  states.texture = &tilesetTexture;
+  target.draw(vertices, states);
 }
