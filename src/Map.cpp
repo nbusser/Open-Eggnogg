@@ -75,9 +75,14 @@ void Map::loadMapFile(const std::string &mapFilePath) {
                               std::to_string(height) + ")");
     }
     for (size_t j = 0; j < width; ++j) {
-      char charTile = line[j];
+      char charTile = line[j] - '0';
       if (!isValidTile(charTile)) {
-        row.push_back(static_cast<Tile>(charTile));
+        THROW_MAP_READING_ERROR("Unexpected tile found: " +
+                                std::to_string(charTile));
+      }
+      auto tile = static_cast<Tile>(charTile);
+      if (tile == Tile::WALL) {
+        row.push_back(tile);
         auto sprite = sf::Sprite();
 
         sprite.setTexture(*ptr_texture_tileset);
