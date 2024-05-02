@@ -21,7 +21,8 @@ void throwMapReadingError(const std::string &mapFilePath,
 
 bool isValidTile(const char c) {
   return c == static_cast<char>(Tile::NONE) ||
-         c == static_cast<char>(Tile::WALL);
+         c == static_cast<char>(Tile::WALL) ||
+         c == static_cast<char>(Tile::WATER);
 }
 
 Map::Map() : grid(), tilesetTexture(sf::Texture()) {
