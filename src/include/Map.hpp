@@ -10,7 +10,8 @@
 
 namespace Constants {
 constexpr uint8_t mapTileSize = 16;
-}
+const std::string tilesetFilepath = "./assets/textures/tileset.png";
+} // namespace Constants
 
 enum Tile { NONE, WALL, WATER };
 
