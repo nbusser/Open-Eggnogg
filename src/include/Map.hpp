@@ -2,6 +2,7 @@
 
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
+#include "SFML/Graphics/Texture.hpp"
 #include <vector>
 
 enum Tile { NONE, WALL };
@@ -20,7 +21,7 @@ public:
 
 private:
   std::vector<std::vector<sf::Sprite>> spritesGrid;
-  std::unique_ptr<sf::Texture> ptr_texture_tileset;
+  sf::Texture tilesetTexture;
 
   void clearGrid();
   void buildGrid(const size_t width, const size_t height);

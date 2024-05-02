@@ -23,9 +23,8 @@ bool isValidTile(const char c) {
          c == static_cast<char>(Tile::WALL);
 }
 
-Map::Map() : grid(), spritesGrid() {
-  ptr_texture_tileset = std::make_unique<sf::Texture>();
-  if (!ptr_texture_tileset->loadFromFile("./assets/textures/sample.jpg")) {
+Map::Map() : grid(), spritesGrid(), tilesetTexture(sf::Texture()) {
+  if (!tilesetTexture.loadFromFile("./assets/textures/sample.jpg")) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
   }
@@ -85,7 +84,7 @@ void Map::loadMapFile(const std::string &mapFilePath) {
         row.push_back(tile);
         auto sprite = sf::Sprite();
 
-        sprite.setTexture(*ptr_texture_tileset);
+        sprite.setTexture(tilesetTexture);
         sprite.setPosition(j * 32.0f, i * 32.0f);
         spriteRow.push_back(sprite);
       }
