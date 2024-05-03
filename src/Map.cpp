@@ -24,7 +24,9 @@ bool isValidTile(const char c) {
          c == static_cast<char>(Tile::WATER);
 }
 
-Map::Map() : m_grid(), m_tilesetTexture(sf::Texture()) {
+Map::Map()
+    : m_grid(std::vector<std::vector<Tile>>()),
+      m_tilesetTexture(sf::Texture()) {
   if (!m_tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
