@@ -1,7 +1,6 @@
 #include "include/Map.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
-#include <_types/_uint16_t.h>
 #include <cstddef>
 #include <fstream>
 #include <sstream>
@@ -88,9 +87,9 @@ void Map::loadMapVertices(void) {
   for (size_t i = 0; i < m_height; ++i) {
     for (size_t j = 0; j < m_width; ++j) {
       const auto tileKind = m_grid[i][j];
-      uint16_t textureU =
+      std::uint16_t textureU =
           tileKind % (m_tilesetTexture.getSize().x / Constants::mapTileSize);
-      uint16_t textureV =
+      std::uint16_t textureV =
           tileKind / (m_tilesetTexture.getSize().x / Constants::mapTileSize);
 
       sf::Vertex *quad = &m_vertices[(i + j * m_width) * 4];

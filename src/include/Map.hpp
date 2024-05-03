@@ -5,11 +5,10 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
-#include <_types/_uint8_t.h>
 #include <vector>
 
 namespace Constants {
-constexpr uint8_t mapTileSize = 16;
+constexpr std::uint8_t mapTileSize = 16;
 const std::string tilesetFilepath = "./assets/textures/tileset.png";
 } // namespace Constants
 
