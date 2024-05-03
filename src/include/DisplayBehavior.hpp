@@ -9,7 +9,7 @@
 class DisplayBehavior : public sf::Drawable {
 private:
   sf::Sprite m_sprite;
-  std::unique_ptr<sf::Texture> m_ptr_texture;
+  sf::Texture m_texture;
 
 public:
   DisplayBehavior(const std::string &textureFilepath);

@@ -1,13 +1,13 @@
 #include "include/DisplayBehavior.hpp"
 
-DisplayBehavior::DisplayBehavior(const std::string &textureFilepath) {
-  m_ptr_texture = std::make_unique<sf::Texture>();
-  if (!m_ptr_texture->loadFromFile(textureFilepath)) {
+DisplayBehavior::DisplayBehavior(const std::string &textureFilepath)
+    : m_texture(sf::Texture()) {
+  if (!m_texture.loadFromFile(textureFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file " +
                                 textureFilepath);
   }
-  m_sprite.setTexture(*m_ptr_texture);
+  m_sprite.setTexture(m_texture);
 }
 
 void DisplayBehavior::updateSpritePosition(const sf::Vector2f &position) {
