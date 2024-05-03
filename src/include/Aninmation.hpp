@@ -5,7 +5,8 @@
 #include <vector>
 
 struct Animation {
-  std::vector<sf::Vector2f> textureUvs;
+  std::vector<sf::Vector2i> textureUVs;
+  sf::Vector2i textureSize;
   std::uint8_t nFramesPerAnimtion;
   bool loop;
 };
