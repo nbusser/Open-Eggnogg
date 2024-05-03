@@ -1,16 +1,14 @@
 #pragma once
 
+#include "Animated.hpp"
 #include "AnimationPlayer.hpp"
 #include "DisplayBehavior.hpp"
 
 namespace Constants {
-const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
+const std::string characterTextureFilepath = "./assets/textures/player.png";
 } // namespace Constants
 
-class CharacterDisplayBehavior : public DisplayBehavior {
-private:
-  AnimationPlayer m_animationPlayer;
-
+class CharacterDisplayBehavior : public DisplayBehavior, public Animated {
 public:
   CharacterDisplayBehavior(void);
 

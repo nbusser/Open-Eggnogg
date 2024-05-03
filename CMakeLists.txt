@@ -15,6 +15,7 @@ FetchContent_MakeAvailable(SFML)
 add_executable(
   OpenEggnogg
   src/main.cpp
+  src/Animated.cpp
   src/AnimationPlayer.cpp
   src/Character.cpp
   src/CharacterDisplayBehavior.cpp
