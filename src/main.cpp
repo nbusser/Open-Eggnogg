@@ -1,3 +1,4 @@
+#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
@@ -22,6 +23,10 @@ int main() {
 
   auto map = Map();
   map.loadMap("./assets/maps/sample.map");
+
+  sf::View camera(sf::FloatRect(0.0f, 0.0f, 240.0f, 160.0f));
+  camera.setCenter(0.0f, 0.0f);
+  window.setView(camera);
 
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {

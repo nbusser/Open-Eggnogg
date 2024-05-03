@@ -81,6 +81,12 @@ void Map::loadMapFile(const std::string& mapFilePath) {
 }
 
 void Map::loadMapVertices(void) {
+  const sf::Vector2f offset(
+      -static_cast<float>(static_cast<float>(m_width * Constants::mapTileSize) /
+                          2.0f),
+      -static_cast<float>(
+          static_cast<float>(m_height * Constants::mapTileSize) / 2.0f));
+
   m_vertices.setPrimitiveType(sf::Quads);
   m_vertices.resize(m_width * m_height * 4);
 
@@ -95,13 +101,17 @@ void Map::loadMapVertices(void) {
       sf::Vertex* quad = &m_vertices[(i + j * m_width) * 4];
 
       quad[0].position =
-          sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize);
+          sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize) +
+          offset;
       quad[1].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
-                                      j * Constants::mapTileSize);
+                                      j * Constants::mapTileSize) +
+                         offset;
       quad[2].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
-                                      (j + 1) * Constants::mapTileSize);
+                                      (j + 1) * Constants::mapTileSize) +
+                         offset;
       quad[3].position = sf::Vector2f(i * Constants::mapTileSize,
-                                      (j + 1) * Constants::mapTileSize);
+                                      (j + 1) * Constants::mapTileSize) +
+                         offset;
 
       quad[0].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
                                        textureV * Constants::mapTileSize);
