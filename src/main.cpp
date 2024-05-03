@@ -50,10 +50,10 @@ int main() {
 
     window.clear();
 
-    for (const auto &ptr_physicsBody : physicsEntities) {
+    for (const auto& ptr_physicsBody : physicsEntities) {
       ptr_physicsBody->physicsTick();
     }
-    for (const auto &ptr_displayable : displayables) {
+    for (const auto& ptr_displayable : displayables) {
       ptr_displayable->display(window);
     }
     window.draw(map);

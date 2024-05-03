@@ -16,10 +16,10 @@ private:
   std::unique_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
   std::unique_ptr<DisplayBehavior> m_ptr_displayBehavior;
 
-  virtual void display(sf::RenderTarget &target) override;
+  virtual void display(sf::RenderTarget& target) override;
 
 public:
-  Character(const sf::Vector2f &position);
+  Character(const sf::Vector2f& position);
 
   ~Character(void);
 

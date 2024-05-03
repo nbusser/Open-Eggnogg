@@ -8,7 +8,7 @@ CharacterDisplayBehavior::CharacterDisplayBehavior(void)
     : DisplayBehavior(Constants::characterTextureFilepath),
       m_animationPlayer(AnimationPlayer(m_sprite)) {}
 
-void CharacterDisplayBehavior::update(const sf::Vector2f &position) {
+void CharacterDisplayBehavior::update(const sf::Vector2f& position) {
   DisplayBehavior::update(position);
   m_animationPlayer.update();
 }

@@ -22,7 +22,7 @@ public:
 
   Map();
 
-  void loadMap(const std::string &mapFilePath);
+  void loadMap(const std::string& mapFilePath);
 
 private:
   sf::Texture m_tilesetTexture;
@@ -31,9 +31,9 @@ private:
   void clearGrid();
   void buildGrid(const size_t width, const size_t height);
 
-  void loadMapFile(const std::string &mapFilePath);
+  void loadMapFile(const std::string& mapFilePath);
   void loadMapVertices(void);
 
-  virtual void draw(sf::RenderTarget &target,
+  virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
 };

@@ -5,7 +5,7 @@
 
 class CharacterPhysicsBehavior : public PhysicsBehavior {
 public:
-  CharacterPhysicsBehavior(const sf::Vector2f &position);
+  CharacterPhysicsBehavior(const sf::Vector2f& position);
 
   virtual void physicsTick(void) override;
 };

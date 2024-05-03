@@ -12,12 +12,12 @@ protected:
   sf::Texture m_texture;
 
 public:
-  DisplayBehavior(const std::string &textureFilepath);
+  DisplayBehavior(const std::string& textureFilepath);
 
   ~DisplayBehavior(void) = default;
 
-  virtual void update(const sf::Vector2f &position);
+  virtual void update(const sf::Vector2f& position);
 
-  virtual void draw(sf::RenderTarget &target,
+  virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
 };

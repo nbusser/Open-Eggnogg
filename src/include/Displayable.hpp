@@ -8,5 +8,5 @@
 // before drawing I am not sure yet if it is the cleanest way to do it
 class Displayable {
 public:
-  virtual void display(sf::RenderTarget &target) = 0;
+  virtual void display(sf::RenderTarget& target) = 0;
 };

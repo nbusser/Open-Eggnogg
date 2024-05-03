@@ -1,6 +1,6 @@
 #include "include/AnimationPlayer.hpp"
 
-AnimationPlayer::AnimationPlayer(sf::Sprite &ptr_sprite)
+AnimationPlayer::AnimationPlayer(sf::Sprite& ptr_sprite)
     : m_ptr_sprite(&ptr_sprite) {
   resetCounters();
 };
@@ -15,9 +15,9 @@ void AnimationPlayer::resetCounters(void) {
   m_ptr_currentAnimation = nullptr;
 }
 
-void AnimationPlayer::play(const Animation &animation) {
-  m_frameCounter = 0;
-  m_currentFrame = 0;
+void AnimationPlayer::play(const Animation& animation) {
+  resetCounters();
+  m_ptr_currentAnimation = &animation;
 };
 
 void AnimationPlayer::stop(void) {

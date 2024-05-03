@@ -18,7 +18,7 @@ public:
   const float m_accelerationFactor;
   const float m_decelerationFactor;
 
-  PhysicsBehavior(const sf::Vector2f &position, const float maxVelocityX,
+  PhysicsBehavior(const sf::Vector2f& position, const float maxVelocityX,
                   const float accelerationFactor,
                   const float decelerationFactor)
       : m_position(position), m_maxVelocityX(maxVelocityX),
@@ -26,6 +26,6 @@ public:
         m_decelerationFactor(decelerationFactor) {};
   virtual ~PhysicsBehavior(void) = default;
 
-  virtual void applyForce(const sf::Vector2f &force);
+  virtual void applyForce(const sf::Vector2f& force);
   virtual void physicsTick(void);
 };

@@ -9,7 +9,7 @@ constexpr float characterAccelerationFactor = 1.0f;
 constexpr float characterDecelerationFactor = 0.2f;
 } // namespace Constants
 
-CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f &position)
+CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f& position)
     : PhysicsBehavior(position, Constants::characterMaxm_velocityX,
                       Constants::characterAccelerationFactor,
                       Constants::characterDecelerationFactor) {};

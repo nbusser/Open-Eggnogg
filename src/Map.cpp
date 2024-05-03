@@ -11,8 +11,8 @@
 #define THROW_MAP_READING_ERROR(details)                                       \
   throwMapReadingError(mapFilePath, details)
 
-void throwMapReadingError(const std::string &mapFilePath,
-                          const std::string &details) {
+void throwMapReadingError(const std::string& mapFilePath,
+                          const std::string& details) {
   throw std::system_error(std::make_error_code(std::errc::io_error),
                           "Error while reading '" + mapFilePath +
                               "': " + details);
@@ -40,7 +40,7 @@ void Map::clearGrid() {
   // TODO: empty vertices
 }
 
-void Map::loadMapFile(const std::string &mapFilePath) {
+void Map::loadMapFile(const std::string& mapFilePath) {
   std::ifstream mapFile(mapFilePath);
 
   std::string line;
@@ -92,7 +92,7 @@ void Map::loadMapVertices(void) {
       std::uint16_t textureV =
           tileKind / (m_tilesetTexture.getSize().x / Constants::mapTileSize);
 
-      sf::Vertex *quad = &m_vertices[(i + j * m_width) * 4];
+      sf::Vertex* quad = &m_vertices[(i + j * m_width) * 4];
 
       quad[0].position =
           sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize);
@@ -115,13 +115,13 @@ void Map::loadMapVertices(void) {
   }
 }
 
-void Map::loadMap(const std::string &mapFilePath) {
+void Map::loadMap(const std::string& mapFilePath) {
   clearGrid();
   loadMapFile(mapFilePath);
   loadMapVertices();
 }
 
-void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.texture = &m_tilesetTexture;
   target.draw(m_vertices, states);
 }

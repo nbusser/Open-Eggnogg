@@ -2,7 +2,7 @@
 #include "include/PhysicsBehavior.hpp"
 #include <algorithm>
 
-void PhysicsBehavior::applyForce(const sf::Vector2f &force) {
+void PhysicsBehavior::applyForce(const sf::Vector2f& force) {
   m_velocity += force;
 
   m_velocity.x = std::clamp(m_velocity.x, -m_maxVelocityX, m_maxVelocityX);

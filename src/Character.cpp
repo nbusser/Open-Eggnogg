@@ -7,7 +7,7 @@
 #include "include/DisplayBehavior.hpp"
 #include <system_error>
 
-Character::Character(const sf::Vector2f &position)
+Character::Character(const sf::Vector2f& position)
     : m_ptr_physicsBehavior(
           std::make_unique<CharacterPhysicsBehavior>(position)),
       m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()) {};
@@ -34,7 +34,7 @@ void Character::jump(void) {
   }
 }
 
-void Character::display(sf::RenderTarget &target) {
+void Character::display(sf::RenderTarget& target) {
   m_ptr_displayBehavior->update(m_ptr_physicsBehavior->m_position);
   target.draw(*m_ptr_displayBehavior);
 }
