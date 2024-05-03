@@ -3,7 +3,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
-#include "include/Displayable.hpp"
+#include "include/DisplayBehavior.hpp"
 #include <system_error>
 
 namespace Constants {
@@ -11,9 +11,8 @@ const std::string characterTextureFilepath = "./assets/textures/sample.jpg";
 } // namespace Constants
 
 Character::Character(const sf::Vector2f &position)
-    : Displayable(Constants::characterTextureFilepath),
-      ptr_physicsBehavior(
-          std::make_unique<CharacterPhysicsBehavior>(position)) {};
+    : ptr_physicsBehavior(std::make_unique<CharacterPhysicsBehavior>(position)),
+      displayBehavior(DisplayBehavior(Constants::characterTextureFilepath)) {};
 
 Character::~Character(void) {};
 
@@ -37,9 +36,11 @@ void Character::jump(void) {
   }
 }
 
-void Character::display(sf::RenderWindow &window) {
-  Displayable::display(window);
-  updateSpritePosition(ptr_physicsBehavior->position);
+void Character::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+  displayBehavior.draw(target, states);
 }
 
-void Character::physicsTick() { ptr_physicsBehavior->physicsTick(); }
+void Character::physicsTick() {
+  ptr_physicsBehavior->physicsTick();
+  displayBehavior.updateSpritePosition(ptr_physicsBehavior->position);
+}

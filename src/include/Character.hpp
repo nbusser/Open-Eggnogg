@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CharacterPhysicsBehavior.hpp"
-#include "Displayable.hpp"
+#include "DisplayBehavior.hpp"
 #include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
@@ -10,14 +10,13 @@
 
 enum Direction { LEFT, RIGHT };
 
-class Character : public PhysicsEntity, public Displayable {
+class Character : public PhysicsEntity, public sf::Drawable {
 private:
-  sf::Sprite sprite;
-  std::unique_ptr<sf::Texture> ptr_texture;
-
   std::unique_ptr<PhysicsBehavior> ptr_physicsBehavior;
+  DisplayBehavior displayBehavior;
 
-  void display(sf::RenderWindow &window) override;
+  virtual void draw(sf::RenderTarget &target,
+                    sf::RenderStates states) const override;
 
 public:
   Character(const sf::Vector2f &position);

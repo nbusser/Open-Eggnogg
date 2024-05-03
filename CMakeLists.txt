@@ -17,7 +17,7 @@ add_executable(
   src/main.cpp
   src/Character.cpp
   src/CharacterPhysicsBehavior.cpp
-  src/Displayable.cpp
+  src/Displaybehavior.cpp
   src/Map.cpp
   src/PhysicsEntity.cpp
 )

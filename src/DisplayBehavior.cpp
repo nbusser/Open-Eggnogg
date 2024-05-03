@@ -1,6 +1,6 @@
-#include "include/Displayable.hpp"
+#include "include/DisplayBehavior.hpp"
 
-Displayable::Displayable(const std::string &textureFilepath) {
+DisplayBehavior::DisplayBehavior(const std::string &textureFilepath) {
   ptr_texture = std::make_unique<sf::Texture>();
   if (!ptr_texture->loadFromFile(textureFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
@@ -10,8 +10,11 @@ Displayable::Displayable(const std::string &textureFilepath) {
   sprite.setTexture(*ptr_texture);
 }
 
-void Displayable::updateSpritePosition(const sf::Vector2f &position) {
+void DisplayBehavior::updateSpritePosition(const sf::Vector2f &position) {
   sprite.setPosition(position.x, position.y);
 }
 
-void Displayable::display(sf::RenderWindow &window) { window.draw(sprite); }
+void DisplayBehavior::draw(sf::RenderTarget &target,
+                           sf::RenderStates states) const {
+  target.draw(sprite);
+};

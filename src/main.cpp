@@ -1,9 +1,9 @@
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Event.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
-#include "include/Displayable.hpp"
 #include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
 #include <SFML/Graphics.hpp>
@@ -18,7 +18,7 @@ int main() {
   auto player2 = std::make_shared<Character>(sf::Vector2f(400.0, 150.0));
 
   std::vector<std::shared_ptr<PhysicsEntity>> physicsEntities{player1, player2};
-  std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
+  std::vector<std::shared_ptr<sf::Drawable>> displayables{player1, player2};
 
   auto map = Map();
   map.loadMap("./assets/maps/sample.map");
@@ -54,7 +54,7 @@ int main() {
       ptr_physicsBody->physicsTick();
     }
     for (const auto &ptr_displayable : displayables) {
-      ptr_displayable->display(window);
+      window.draw(*ptr_displayable);
     }
     window.draw(map);
 
