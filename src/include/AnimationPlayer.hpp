@@ -6,14 +6,20 @@
 
 class AnimationPlayer {
 private:
-  std::unique_ptr<sf::Sprite> m_ptr_sprite;
+  sf::Sprite *m_ptr_sprite;
   std::uint8_t m_frameCounter;
-  std::unique_ptr<Animation> m_currentAnimation;
+  std::uint8_t m_currentFrame;
+  Animation *m_ptr_currentAnimation;
+
+  void resetCounters(void);
 
 public:
-  AnimationPlayer(std::unique_ptr<sf::Sprite> &&ptr_sprite);
+  AnimationPlayer(sf::Sprite &ptr_sprite);
 
   ~AnimationPlayer(void) = default;
 
   void update(void);
+
+  void play(const Animation &animation);
+  void stop(void);
 };

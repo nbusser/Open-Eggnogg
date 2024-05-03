@@ -6,8 +6,7 @@
 
 CharacterDisplayBehavior::CharacterDisplayBehavior(void)
     : DisplayBehavior(Constants::characterTextureFilepath),
-      m_animationPlayer(
-          AnimationPlayer(std::make_unique<sf::Sprite>(m_sprite))) {}
+      m_animationPlayer(AnimationPlayer(m_sprite)) {}
 
 void CharacterDisplayBehavior::update(const sf::Vector2f &position) {
   DisplayBehavior::update(position);
