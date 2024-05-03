@@ -10,6 +10,7 @@ private:
   std::uint8_t m_frameCounter;
   std::uint8_t m_currentFrame;
   const Animation* m_ptr_currentAnimation;
+  bool m_isFrozen;
 
   bool isAnimationLoaded(void) const;
   bool isAnimationEnded(void) const;

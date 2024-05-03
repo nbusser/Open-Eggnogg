@@ -3,14 +3,18 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "include/Animations.hpp"
 #include "include/CharacterDisplayBehavior.hpp"
+#include "include/CharacterPhysicsBehavior.hpp"
 #include "include/DisplayBehavior.hpp"
 #include <system_error>
 
 Character::Character(const sf::Vector2f& position)
     : m_ptr_physicsBehavior(
           std::make_unique<CharacterPhysicsBehavior>(position)),
-      m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()) {};
+      m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()) {
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+};
 
 Character::~Character(void) {};
 

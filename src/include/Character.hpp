@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CharacterPhysicsBehavior.hpp"
+#include "CharacterDisplayBehavior.hpp"
 #include "DisplayBehavior.hpp"
 #include "Displayable.hpp"
 #include "PhysicsBehavior.hpp"
@@ -14,7 +14,7 @@ enum Direction { LEFT, RIGHT };
 class Character : public PhysicsEntity, public Displayable {
 private:
   std::unique_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
-  std::unique_ptr<DisplayBehavior> m_ptr_displayBehavior;
+  std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
 
   virtual void display(sf::RenderTarget& target) override;
 

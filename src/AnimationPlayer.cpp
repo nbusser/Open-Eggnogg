@@ -2,9 +2,8 @@
 #include "SFML/Graphics/Rect.hpp"
 
 AnimationPlayer::AnimationPlayer(sf::Sprite& ptr_sprite)
-    : m_ptr_sprite(&ptr_sprite) {
-  resetCounters();
-};
+    : m_ptr_sprite(&ptr_sprite), m_frameCounter(0), m_currentFrame(0),
+      m_isFrozen(false), m_ptr_currentAnimation(nullptr) {};
 
 bool AnimationPlayer::isAnimationLoaded(void) const {
   return m_ptr_currentAnimation != nullptr;
@@ -16,15 +15,18 @@ bool AnimationPlayer::isAnimationEnded(void) const {
 }
 
 void AnimationPlayer::setAnimationFrame(const std::uint8_t frameIndex) {
-  const auto uv = m_ptr_currentAnimation->textureUVs[frameIndex];
   const auto textureSize = m_ptr_currentAnimation->textureSize;
+
+  auto uv = m_ptr_currentAnimation->textureUVs[frameIndex];
+  uv.x *= textureSize.x;
+  uv.y *= textureSize.y;
 
   const auto textureRect = sf::IntRect(uv, textureSize);
   m_ptr_sprite->setTextureRect(textureRect);
 }
 
 void AnimationPlayer::update(void) {
-  if (!isAnimationLoaded()) {
+  if (!isAnimationLoaded() || m_isFrozen) {
     return;
   }
   if (++m_frameCounter > m_ptr_currentAnimation->nFramesPerAnimtion &&
@@ -40,6 +42,7 @@ void AnimationPlayer::resetCounters(void) {
   m_frameCounter = 0;
   m_currentFrame = 0;
   m_ptr_currentAnimation = nullptr;
+  m_isFrozen = false;
 }
 
 void AnimationPlayer::play(const Animation& animation) {
@@ -48,6 +51,4 @@ void AnimationPlayer::play(const Animation& animation) {
   setAnimationFrame(0);
 };
 
-void AnimationPlayer::stop(void) {
-
-};
+void AnimationPlayer::stop(void) { m_isFrozen = true; };
