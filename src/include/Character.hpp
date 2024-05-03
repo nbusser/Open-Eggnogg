@@ -2,6 +2,7 @@
 
 #include "CharacterPhysicsBehavior.hpp"
 #include "DisplayBehavior.hpp"
+#include "Displayable.hpp"
 #include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
@@ -10,13 +11,12 @@
 
 enum Direction { LEFT, RIGHT };
 
-class Character : public PhysicsEntity, public sf::Drawable {
+class Character : public PhysicsEntity, public Displayable {
 private:
   std::unique_ptr<PhysicsBehavior> ptr_physicsBehavior;
   DisplayBehavior displayBehavior;
 
-  virtual void draw(sf::RenderTarget &target,
-                    sf::RenderStates states) const override;
+  virtual void display(sf::RenderTarget &target) override;
 
 public:
   Character(const sf::Vector2f &position);

@@ -36,11 +36,9 @@ void Character::jump(void) {
   }
 }
 
-void Character::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-  displayBehavior.draw(target, states);
+void Character::display(sf::RenderTarget &target) {
+  displayBehavior.updateSpritePosition(ptr_physicsBehavior->position);
+  target.draw(displayBehavior);
 }
 
-void Character::physicsTick() {
-  ptr_physicsBehavior->physicsTick();
-  displayBehavior.updateSpritePosition(ptr_physicsBehavior->position);
-}
+void Character::physicsTick() { ptr_physicsBehavior->physicsTick(); }
