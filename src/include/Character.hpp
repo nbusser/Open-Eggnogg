@@ -14,7 +14,7 @@ enum Direction { LEFT, RIGHT };
 class Character : public PhysicsEntity, public Displayable {
 private:
   std::unique_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
-  DisplayBehavior m_displayBehavior;
+  std::unique_ptr<DisplayBehavior> m_ptr_displayBehavior;
 
   virtual void display(sf::RenderTarget &target) override;
 

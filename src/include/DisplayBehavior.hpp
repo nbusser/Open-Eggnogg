@@ -7,7 +7,7 @@
 #include <memory>
 
 class DisplayBehavior : public sf::Drawable {
-private:
+protected:
   sf::Sprite m_sprite;
   sf::Texture m_texture;
 
