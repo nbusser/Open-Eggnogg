@@ -17,17 +17,17 @@ enum Tile { NONE, WALL, WATER };
 
 class Map : public sf::Drawable {
 public:
-  size_t width;
-  size_t height;
-  std::vector<std::vector<Tile>> grid;
+  size_t m_width;
+  size_t m_height;
+  std::vector<std::vector<Tile>> m_grid;
 
   Map();
 
   void loadMap(const std::string &mapFilePath);
 
 private:
-  sf::Texture tilesetTexture;
-  sf::VertexArray vertices;
+  sf::Texture m_tilesetTexture;
+  sf::VertexArray m_vertices;
 
   void clearGrid();
   void buildGrid(const size_t width, const size_t height);

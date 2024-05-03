@@ -4,13 +4,13 @@
 #include <algorithm>
 
 namespace Constants {
-constexpr float characterMaxVelocityX = 6.0f;
+constexpr float characterMaxm_velocityX = 6.0f;
 constexpr float characterAccelerationFactor = 1.0f;
 constexpr float characterDecelerationFactor = 0.2f;
 } // namespace Constants
 
 CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f &position)
-    : PhysicsBehavior(position, Constants::characterMaxVelocityX,
+    : PhysicsBehavior(position, Constants::characterMaxm_velocityX,
                       Constants::characterAccelerationFactor,
                       Constants::characterDecelerationFactor) {};
 
@@ -18,17 +18,17 @@ void CharacterPhysicsBehavior::physicsTick(void) {
   PhysicsBehavior::physicsTick();
 
   // Deceleration
-  if (velocity.x > 0) {
-    velocity.x = std::max(0.0f, velocity.x - decelerationFactor);
-  } else if (velocity.x < 0) {
-    velocity.x = std::min(0.0f, velocity.x + decelerationFactor);
+  if (m_velocity.x > 0) {
+    m_velocity.x = std::max(0.0f, m_velocity.x - m_decelerationFactor);
+  } else if (m_velocity.x < 0) {
+    m_velocity.x = std::min(0.0f, m_velocity.x + m_decelerationFactor);
   }
 
   // Gravity
   // TODO: if in air
-  if (position.y < Constants::groundLevel) {
+  if (m_position.y < Constants::groundLevel) {
     applyForce(Constants::gravityVector);
   } else {
-    velocity.y = 0.0f;
+    m_velocity.y = 0.0f;
   }
 }

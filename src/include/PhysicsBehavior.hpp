@@ -10,20 +10,20 @@ constexpr float groundLevel = 150.0f;
 
 class PhysicsBehavior {
 public:
-  sf::Vector2f position;
+  sf::Vector2f m_position;
 
-  sf::Vector2f velocity;
+  sf::Vector2f m_velocity;
 
-  const float maxVelocityX;
-  const float accelerationFactor;
-  const float decelerationFactor;
+  const float m_maxVelocityX;
+  const float m_accelerationFactor;
+  const float m_decelerationFactor;
 
   PhysicsBehavior(const sf::Vector2f &position, const float maxVelocityX,
                   const float accelerationFactor,
                   const float decelerationFactor)
-      : position(position), maxVelocityX(maxVelocityX),
-        accelerationFactor(accelerationFactor),
-        decelerationFactor(decelerationFactor) {};
+      : m_position(position), m_maxVelocityX(maxVelocityX),
+        m_accelerationFactor(accelerationFactor),
+        m_decelerationFactor(decelerationFactor) {};
   virtual ~PhysicsBehavior(void) = default;
 
   virtual void applyForce(const sf::Vector2f &force);

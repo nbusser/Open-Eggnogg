@@ -8,8 +8,8 @@
 
 class DisplayBehavior : public sf::Drawable {
 private:
-  sf::Sprite sprite;
-  std::unique_ptr<sf::Texture> ptr_texture;
+  sf::Sprite m_sprite;
+  std::unique_ptr<sf::Texture> m_ptr_texture;
 
 public:
   DisplayBehavior(const std::string &textureFilepath);

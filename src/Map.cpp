@@ -25,18 +25,18 @@ bool isValidTile(const char c) {
          c == static_cast<char>(Tile::WATER);
 }
 
-Map::Map() : grid(), tilesetTexture(sf::Texture()) {
-  if (!tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
+Map::Map() : m_grid(), m_tilesetTexture(sf::Texture()) {
+  if (!m_tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
   }
 }
 
 void Map::clearGrid() {
-  for (auto row : grid) {
+  for (auto row : m_grid) {
     row.clear();
   }
-  grid.clear();
+  m_grid.clear();
 
   // TODO: empty vertices
 }
@@ -51,24 +51,24 @@ void Map::loadMapFile(const std::string &mapFilePath) {
   }
 
   std::istringstream iss(line);
-  if (!(iss >> width >> height)) {
+  if (!(iss >> m_width >> m_height)) {
     THROW_MAP_READING_ERROR("Cannot read width and height");
   }
 
-  for (size_t i = 0; i < height; ++i) {
+  for (size_t i = 0; i < m_height; ++i) {
     auto row = std::vector<Tile>();
 
     if (!std::getline(mapFile, line)) {
       THROW_MAP_READING_ERROR("Cannot read line #" + std::to_string(i));
     }
 
-    if (line.length() != width) {
+    if (line.length() != m_width) {
       THROW_MAP_READING_ERROR("Line #" + std::to_string(i) +
                               " has a length of " +
                               std::to_string(line.length()) + " (expected " +
-                              std::to_string(height) + ")");
+                              std::to_string(m_height) + ")");
     }
-    for (size_t j = 0; j < width; ++j) {
+    for (size_t j = 0; j < m_width; ++j) {
       char charTile = line[j] - '0';
       if (!isValidTile(charTile)) {
         THROW_MAP_READING_ERROR("Unexpected tile found: " +
@@ -77,23 +77,23 @@ void Map::loadMapFile(const std::string &mapFilePath) {
       row.push_back(static_cast<Tile>(charTile));
     }
 
-    grid.push_back(row);
+    m_grid.push_back(row);
   }
 }
 
 void Map::loadMapVertices(void) {
-  vertices.setPrimitiveType(sf::Quads);
-  vertices.resize(width * height * 4);
+  m_vertices.setPrimitiveType(sf::Quads);
+  m_vertices.resize(m_width * m_height * 4);
 
-  for (size_t i = 0; i < height; ++i) {
-    for (size_t j = 0; j < width; ++j) {
-      const auto tileKind = grid[i][j];
+  for (size_t i = 0; i < m_height; ++i) {
+    for (size_t j = 0; j < m_width; ++j) {
+      const auto tileKind = m_grid[i][j];
       uint16_t textureU =
-          tileKind % (tilesetTexture.getSize().x / Constants::mapTileSize);
+          tileKind % (m_tilesetTexture.getSize().x / Constants::mapTileSize);
       uint16_t textureV =
-          tileKind / (tilesetTexture.getSize().x / Constants::mapTileSize);
+          tileKind / (m_tilesetTexture.getSize().x / Constants::mapTileSize);
 
-      sf::Vertex *quad = &vertices[(i + j * width) * 4];
+      sf::Vertex *quad = &m_vertices[(i + j * m_width) * 4];
 
       quad[0].position =
           sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize);
@@ -123,6 +123,6 @@ void Map::loadMap(const std::string &mapFilePath) {
 }
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-  states.texture = &tilesetTexture;
-  target.draw(vertices, states);
+  states.texture = &m_tilesetTexture;
+  target.draw(m_vertices, states);
 }
