@@ -39,7 +39,7 @@ void Character::jump(void) {
 }
 
 void Character::display(sf::RenderTarget &target) {
-  m_displayBehavior.updateSpritePosition(m_ptr_physicsBehavior->m_position);
+  m_displayBehavior.update(m_ptr_physicsBehavior->m_position);
   target.draw(m_displayBehavior);
 }
 
