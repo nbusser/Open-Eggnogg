@@ -41,7 +41,7 @@ Tile Map::getTile(const size_t row, const size_t column) const {
 
 void Map::clearMap() {
   m_grid.clear();
-  // TODO: empty vertices
+  m_vertices.clear();
 }
 
 void Map::loadMapFile(const std::string& mapFilePath) {
