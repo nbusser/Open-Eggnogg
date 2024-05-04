@@ -101,19 +101,19 @@ void Map::loadMapVertices(void) {
       std::uint16_t textureV =
           tileKind / (m_tilesetTexture.getSize().x / Constants::mapTileSize);
 
-      sf::Vertex* quad = &m_vertices[(i + j * m_width) * 4];
+      sf::Vertex* quad = &m_vertices[(j + i * m_width) * 4];
 
       quad[0].position =
-          sf::Vector2f(i * Constants::mapTileSize, j * Constants::mapTileSize) +
+          sf::Vector2f(j * Constants::mapTileSize, i * Constants::mapTileSize) +
           offset;
-      quad[1].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
-                                      j * Constants::mapTileSize) +
+      quad[1].position = sf::Vector2f((j + 1) * Constants::mapTileSize,
+                                      i * Constants::mapTileSize) +
                          offset;
-      quad[2].position = sf::Vector2f((i + 1) * Constants::mapTileSize,
-                                      (j + 1) * Constants::mapTileSize) +
+      quad[2].position = sf::Vector2f((j + 1) * Constants::mapTileSize,
+                                      (i + 1) * Constants::mapTileSize) +
                          offset;
-      quad[3].position = sf::Vector2f(i * Constants::mapTileSize,
-                                      (j + 1) * Constants::mapTileSize) +
+      quad[3].position = sf::Vector2f(j * Constants::mapTileSize,
+                                      (i + 1) * Constants::mapTileSize) +
                          offset;
 
       quad[0].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
