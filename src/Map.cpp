@@ -34,6 +34,11 @@ Map::Map()
   }
 }
 
+Tile Map::getTile(const size_t row, const size_t column) const {
+  const size_t tileIndex = column + row * m_width;
+  return m_grid[tileIndex];
+}
+
 void Map::clearMap() {
   m_grid.clear();
   // TODO: empty vertices

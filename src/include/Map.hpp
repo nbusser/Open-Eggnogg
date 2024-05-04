@@ -24,6 +24,8 @@ public:
 
   void loadMap(const std::string& mapFilePath);
 
+  Tile getTile(const size_t row, const size_t column) const;
+
 private:
   sf::Texture m_tilesetTexture;
   sf::VertexArray m_vertices;
