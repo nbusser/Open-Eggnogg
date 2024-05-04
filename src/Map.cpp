@@ -35,7 +35,7 @@ Map::Map()
 }
 
 void Map::clearGrid() {
-  for (auto row : m_grid) {
+  for (auto& row : m_grid) {
     row.clear();
   }
   m_grid.clear();
