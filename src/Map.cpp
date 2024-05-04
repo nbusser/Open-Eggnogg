@@ -1,6 +1,7 @@
 #include "include/Map.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/Graphics/VertexArray.hpp"
 #include <cstddef>
 #include <fstream>
 #include <sstream>
@@ -25,8 +26,8 @@ bool isValidTile(const char c) {
 }
 
 Map::Map()
-    : m_grid(std::vector<std::vector<Tile>>()),
-      m_tilesetTexture(sf::Texture()) {
+    : m_grid(std::vector<std::vector<Tile>>()), m_tilesetTexture(sf::Texture()),
+      m_vertices(sf::VertexArray()) {
   if (!m_tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
