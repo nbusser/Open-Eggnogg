@@ -34,12 +34,8 @@ Map::Map()
   }
 }
 
-void Map::clearGrid() {
-  for (auto& row : m_grid) {
-    row.clear();
-  }
+void Map::clearMap() {
   m_grid.clear();
-
   // TODO: empty vertices
 }
 
@@ -129,7 +125,7 @@ void Map::loadMapVertices(void) {
 }
 
 void Map::loadMap(const std::string& mapFilePath) {
-  clearGrid();
+  clearMap();
   loadMapFile(mapFilePath);
   loadMapVertices();
 }

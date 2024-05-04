@@ -28,7 +28,7 @@ private:
   sf::Texture m_tilesetTexture;
   sf::VertexArray m_vertices;
 
-  void clearGrid();
+  void clearMap();
   void buildGrid(const size_t width, const size_t height);
 
   void loadMapFile(const std::string& mapFilePath);
