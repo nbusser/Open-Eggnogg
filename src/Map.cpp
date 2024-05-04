@@ -57,29 +57,29 @@ void Map::loadMapFile(const std::string& mapFilePath) {
     THROW_MAP_READING_ERROR("Cannot read width and height");
   }
 
-  for (size_t i = 0; i < m_height; ++i) {
-    auto row = std::vector<Tile>();
+  for (size_t row = 0; row < m_height; ++row) {
+    auto gridRow = std::vector<Tile>();
 
     if (!std::getline(mapFile, line)) {
-      THROW_MAP_READING_ERROR("Cannot read line #" + std::to_string(i));
+      THROW_MAP_READING_ERROR("Cannot read line #" + std::to_string(row));
     }
 
     if (line.length() != m_width) {
-      THROW_MAP_READING_ERROR("Line #" + std::to_string(i) +
+      THROW_MAP_READING_ERROR("Line #" + std::to_string(row) +
                               " has a length of " +
                               std::to_string(line.length()) + " (expected " +
                               std::to_string(m_height) + ")");
     }
-    for (size_t j = 0; j < m_width; ++j) {
-      char charTile = line[j] - '0';
+    for (size_t column = 0; column < m_width; ++column) {
+      char charTile = line[column] - '0';
       if (!isValidTile(charTile)) {
         THROW_MAP_READING_ERROR("Unexpected tile found: " +
                                 std::to_string(charTile));
       }
-      row.push_back(static_cast<Tile>(charTile));
+      gridRow.push_back(static_cast<Tile>(charTile));
     }
 
-    m_grid.push_back(row);
+    m_grid.push_back(gridRow);
   }
 }
 
@@ -93,27 +93,27 @@ void Map::loadMapVertices(void) {
   m_vertices.setPrimitiveType(sf::Quads);
   m_vertices.resize(m_width * m_height * 4);
 
-  for (size_t i = 0; i < m_height; ++i) {
-    for (size_t j = 0; j < m_width; ++j) {
-      const auto tileKind = m_grid[i][j];
+  for (size_t row = 0; row < m_height; ++row) {
+    for (size_t column = 0; column < m_width; ++column) {
+      const auto tileKind = m_grid[row][column];
       std::uint16_t textureU =
           tileKind % (m_tilesetTexture.getSize().x / Constants::mapTileSize);
       std::uint16_t textureV =
           tileKind / (m_tilesetTexture.getSize().x / Constants::mapTileSize);
 
-      sf::Vertex* quad = &m_vertices[(j + i * m_width) * 4];
+      sf::Vertex* quad = &m_vertices[(column + row * m_width) * 4];
 
-      quad[0].position =
-          sf::Vector2f(j * Constants::mapTileSize, i * Constants::mapTileSize) +
-          offset;
-      quad[1].position = sf::Vector2f((j + 1) * Constants::mapTileSize,
-                                      i * Constants::mapTileSize) +
+      quad[0].position = sf::Vector2f(column * Constants::mapTileSize,
+                                      row * Constants::mapTileSize) +
                          offset;
-      quad[2].position = sf::Vector2f((j + 1) * Constants::mapTileSize,
-                                      (i + 1) * Constants::mapTileSize) +
+      quad[1].position = sf::Vector2f((column + 1) * Constants::mapTileSize,
+                                      row * Constants::mapTileSize) +
                          offset;
-      quad[3].position = sf::Vector2f(j * Constants::mapTileSize,
-                                      (i + 1) * Constants::mapTileSize) +
+      quad[2].position = sf::Vector2f((column + 1) * Constants::mapTileSize,
+                                      (row + 1) * Constants::mapTileSize) +
+                         offset;
+      quad[3].position = sf::Vector2f(column * Constants::mapTileSize,
+                                      (row + 1) * Constants::mapTileSize) +
                          offset;
 
       quad[0].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
