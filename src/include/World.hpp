@@ -10,8 +10,8 @@ private:
   std::shared_ptr<Map> m_ptr_map;
 
   std::vector<std::shared_ptr<Character>> m_ptr_characters;
-
   std::vector<std::shared_ptr<Displayable>> m_ptr_displayables;
+  std::vector<std::shared_ptr<Collidable>> m_ptr_collidables;
 
 public:
   World(void);

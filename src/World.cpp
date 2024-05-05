@@ -1,6 +1,7 @@
 #include "include/World.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
+#include "include/Collidable.hpp"
 #include "include/Displayable.hpp"
 #include "include/PhysicsEntity.hpp"
 #include <memory>
@@ -16,6 +17,9 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
       std::vector<std::shared_ptr<Character>>{ptr_player1, ptr_player2};
 
   m_ptr_displayables = std::vector<std::shared_ptr<Displayable>>{
+      ptr_player1, ptr_player2, m_ptr_map};
+
+  m_ptr_collidables = std::vector<std::shared_ptr<Collidable>>{
       ptr_player1, ptr_player2, m_ptr_map};
 
   m_ptr_map->loadMap("./assets/maps/sample.png");
@@ -40,14 +44,14 @@ void World::process(void) {
     ptr_physicsBody->physicsTick();
   }
 
-  for (const auto& collidable : m_ptr_characters) {
-    for (const auto& other : m_ptr_characters) {
-      if (collidable == other) {
+  for (const auto& character : m_ptr_characters) {
+    for (const auto& collidable : m_ptr_collidables) {
+      if (character == collidable) {
         continue;
       }
-      const auto ptr_collidingPair = collidable->getCollidingHitbox(*other);
+      const auto ptr_collidingPair = character->getCollidingHitbox(*collidable);
       if (ptr_collidingPair != nullptr) {
-        collidable->resolveCollision(*ptr_collidingPair);
+        character->resolveCollision(*ptr_collidingPair);
       }
     }
   }
