@@ -4,6 +4,7 @@
 #include "SFML/Window/Event.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
+#include "include/Collidable.hpp"
 #include "include/Displayable.hpp"
 #include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
@@ -18,11 +19,12 @@ int main() {
   auto player1 = std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f));
   auto player2 = std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f));
 
+  auto map = std::make_shared<Map>();
+  map->loadMap("./assets/maps/sample.png");
+
   std::vector<std::shared_ptr<PhysicsEntity>> physicsEntities{player1, player2};
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
-
-  auto map = Map();
-  map.loadMap("./assets/maps/sample.png");
+  std::vector<std::shared_ptr<Collidable>> collidables{player1, player2, map};
 
   sf::View camera(sf::FloatRect(0.0f, 0.0f, 240.0f, 160.0f));
   camera.setCenter(0.0f, 0.0f);
@@ -58,10 +60,18 @@ int main() {
     for (const auto& ptr_physicsBody : physicsEntities) {
       ptr_physicsBody->physicsTick();
     }
+    for (const auto& collidable : collidables) {
+      for (const auto& other : collidables) {
+        if (collidable == other) {
+          continue;
+        }
+        const auto isColliding = collidable->isColliding(*other);
+      }
+    }
     for (const auto& ptr_displayable : displayables) {
       ptr_displayable->display(window);
     }
-    window.draw(map);
+    window.draw(*map);
 
     window.display();
   }
