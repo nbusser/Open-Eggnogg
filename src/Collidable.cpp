@@ -7,18 +7,23 @@ Collidable::Collidable() : Collidable(std::vector<sf::FloatRect>()) {};
 Collidable::Collidable(const std::vector<sf::FloatRect>& hitboxes)
     : m_relativeHitboxes(hitboxes), m_absoluteHitboxes(hitboxes) {};
 
-bool Collidable::isColliding(const Collidable& other) const {
+std::unique_ptr<HitboxesPair>
+Collidable::getCollidingHitbox(const Collidable& other) const {
   for (const auto& myHitbox : m_absoluteHitboxes) {
     for (const auto& otherHitbox : other.m_absoluteHitboxes) {
       if (myHitbox.intersects(otherHitbox)) {
-        return true;
+        return std::make_unique<HitboxesPair>(
+            HitboxesPair{std::make_unique<sf::FloatRect>(myHitbox),
+                         std::make_unique<sf::FloatRect>(otherHitbox)});
       }
     }
   }
-  return false;
+  return nullptr;
 };
 
-void Collidable::updateHitboxesPosition(const sf::Vector2f newPosition) {
+void Collidable::resolveCollision(const HitboxesPair& other) {}
+
+void Collidable::updateHitboxesPosition(const sf::Vector2f& newPosition) {
   m_absoluteHitboxes.clear();
   for (const auto& relativeHitbox : m_relativeHitboxes) {
     const auto absoluteHitbox = sf::FloatRect(

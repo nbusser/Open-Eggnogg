@@ -45,7 +45,10 @@ void World::process(void) {
       if (collidable == other) {
         continue;
       }
-      const auto isColliding = collidable->isColliding(*other);
+      const auto ptr_collidingPair = collidable->getCollidingHitbox(*other);
+      if (ptr_collidingPair != nullptr) {
+        collidable->resolveCollision(*ptr_collidingPair);
+      }
     }
   }
 }
