@@ -9,6 +9,7 @@
 #include "include/CharacterPhysicsBehavior.hpp"
 #include "include/Collidable.hpp"
 #include "include/DisplayBehavior.hpp"
+#include "include/Utils.hpp"
 #include <system_error>
 #include <vector>
 
@@ -58,5 +59,19 @@ void Character::display(sf::RenderTarget& target) {
 
 void Character::physicsTick() {
   m_ptr_physicsBehavior->physicsTick();
+  updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
+}
+
+void Character::resolveCollision(const HitboxesPair& hitboxPair) {
+  const auto myHitboxCenter =
+      Utils::getFloatRectCenter(*hitboxPair.ptr_myHitbox);
+  const auto collidedHitboxCenter =
+      Utils::getFloatRectCenter(*hitboxPair.ptr_otherHitbox);
+
+  const auto separationVector = myHitboxCenter - collidedHitboxCenter;
+
+  m_ptr_physicsBehavior->m_velocity = sf::Vector2f(0.0f, 0.0f);
+  m_ptr_physicsBehavior->m_position += separationVector;
+
   updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
 }

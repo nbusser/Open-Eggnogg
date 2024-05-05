@@ -31,4 +31,6 @@ public:
   void jump(void);
 
   void physicsTick(void) override;
+
+  virtual void resolveCollision(const HitboxesPair& hitboxPair) override;
 };

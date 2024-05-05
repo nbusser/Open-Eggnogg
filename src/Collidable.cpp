@@ -21,7 +21,7 @@ Collidable::getCollidingHitbox(const Collidable& other) const {
   return nullptr;
 };
 
-void Collidable::resolveCollision(const HitboxesPair& other) {}
+void Collidable::resolveCollision(const HitboxesPair& hitboxPair) {}
 
 void Collidable::updateHitboxesPosition(const sf::Vector2f& newPosition) {
   m_absoluteHitboxes.clear();

@@ -24,5 +24,5 @@ public:
 
   void updateHitboxesPosition(const sf::Vector2f& newPosition);
 
-  virtual void resolveCollision(const HitboxesPair& hit);
+  virtual void resolveCollision(const HitboxesPair& hitboxPair);
 };
