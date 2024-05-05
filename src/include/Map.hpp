@@ -5,6 +5,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
+#include <unordered_map>
 #include <vector>
 
 namespace Constants {
@@ -22,13 +23,15 @@ public:
 
   Map();
 
-  void loadMap(const std::string& mapFilePath);
+  void loadMap(const std::string& mapFilepath);
 
   Tile getTile(const size_t row, const size_t column) const;
 
 private:
   sf::Texture m_tilesetTexture;
   sf::VertexArray m_vertices;
+
+  static const std::unordered_map<sf::Uint32, Tile> ColorToTileMap;
 
   void clearMap();
   void buildGrid(const size_t width, const size_t height);

@@ -22,7 +22,7 @@ int main() {
   std::vector<std::shared_ptr<Displayable>> displayables{player1, player2};
 
   auto map = Map();
-  map.loadMap("./assets/maps/sample.map");
+  map.loadMap("./assets/maps/sample.png");
 
   sf::View camera(sf::FloatRect(0.0f, 0.0f, 240.0f, 160.0f));
   camera.setCenter(0.0f, 0.0f);

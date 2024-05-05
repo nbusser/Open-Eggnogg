@@ -1,7 +1,10 @@
 #include "include/Map.hpp"
+#include "SFML/Graphics/Color.hpp"
+#include "SFML/Graphics/Image.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
+#include "SFML/System/Utf.hpp"
 #include <cstddef>
 #include <fstream>
 #include <sstream>
@@ -10,20 +13,20 @@
 #include <vector>
 
 #define THROW_MAP_READING_ERROR(details)                                       \
-  throwMapReadingError(mapFilePath, details)
+  throwMapReadingError(mapFilepath, details)
 
-void throwMapReadingError(const std::string& mapFilePath,
+void throwMapReadingError(const std::string& mapFilepath,
                           const std::string& details) {
   throw std::system_error(std::make_error_code(std::errc::io_error),
-                          "Error while reading '" + mapFilePath +
+                          "Error while reading '" + mapFilepath +
                               "': " + details);
 }
 
-bool isValidTile(const char c) {
-  return c == static_cast<char>(Tile::NONE) ||
-         c == static_cast<char>(Tile::WALL) ||
-         c == static_cast<char>(Tile::WATER);
-}
+const std::unordered_map<sf::Uint32, Tile> Map::ColorToTileMap = {
+    {0xFFFFFFFF, Tile::NONE}, // White
+    {0x000000FF, Tile::WALL}, // Back
+    {0x46BBE7FF, Tile::WATER} // Blue
+};
 
 Map::Map()
     : m_grid(std::vector<Tile>()), m_tilesetTexture(sf::Texture()),
@@ -44,38 +47,32 @@ void Map::clearMap() {
   m_vertices.clear();
 }
 
-void Map::loadMapFile(const std::string& mapFilePath) {
-  std::ifstream mapFile(mapFilePath);
+void Map::loadMapFile(const std::string& mapFilepath) {
+  auto image = sf::Image();
 
-  std::string line;
-
-  if (!std::getline(mapFile, line)) {
-    THROW_MAP_READING_ERROR("Cannot read first line");
+  if (!image.loadFromFile(mapFilepath)) {
+    THROW_MAP_READING_ERROR("Cannot find file");
   }
 
-  std::istringstream iss(line);
-  if (!(iss >> m_width >> m_height)) {
-    THROW_MAP_READING_ERROR("Cannot read width and height");
-  }
+  m_width = image.getSize().x;
+  m_height = image.getSize().y;
 
   for (size_t row = 0; row < m_height; ++row) {
-    if (!std::getline(mapFile, line)) {
-      THROW_MAP_READING_ERROR("Cannot read line #" + std::to_string(row));
-    }
-
-    if (line.length() != m_width) {
-      THROW_MAP_READING_ERROR("Line #" + std::to_string(row) +
-                              " has a length of " +
-                              std::to_string(line.length()) + " (expected " +
-                              std::to_string(m_height) + ")");
-    }
     for (size_t column = 0; column < m_width; ++column) {
-      char charTile = line[column] - '0';
-      if (!isValidTile(charTile)) {
-        THROW_MAP_READING_ERROR("Unexpected tile found: " +
-                                std::to_string(charTile));
+      const auto pixelHexColor = image.getPixel(column, row).toInteger();
+
+      const auto it = ColorToTileMap.find(pixelHexColor);
+
+      if (it == ColorToTileMap.end()) {
+        std::stringstream ss;
+        ss << std::hex << pixelHexColor;
+        std::string hexStr = ss.str();
+        THROW_MAP_READING_ERROR(
+            "Unexpected pixel color at position " + std::to_string(column) +
+            "," + std::to_string(row) + " - Hex color code #" + hexStr);
       }
-      m_grid.push_back(static_cast<Tile>(charTile));
+
+      m_grid.push_back(static_cast<Tile>(it->second));
     }
   }
 }
