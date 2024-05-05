@@ -49,10 +49,13 @@ void World::process(void) {
       if (character == collidable) {
         continue;
       }
-      const auto ptr_collidingPair = character->getCollidingHitbox(*collidable);
-      if (ptr_collidingPair != nullptr) {
-        character->resolveCollision(*ptr_collidingPair);
-      }
+
+      std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
+      do {
+        ptr_collidingPair = character->getCollidingHitbox(*collidable);
+        if (ptr_collidingPair != nullptr)
+          character->resolveCollision(*ptr_collidingPair);
+      } while (ptr_collidingPair != nullptr);
     }
   }
 }

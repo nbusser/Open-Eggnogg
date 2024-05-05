@@ -15,8 +15,6 @@ CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f& position)
                       Constants::characterDecelerationFactor) {};
 
 void CharacterPhysicsBehavior::physicsTick(void) {
-  PhysicsBehavior::physicsTick();
-
   // Deceleration
   if (m_velocity.x > 0) {
     m_velocity.x = std::max(0.0f, m_velocity.x - m_decelerationFactor);
@@ -25,10 +23,7 @@ void CharacterPhysicsBehavior::physicsTick(void) {
   }
 
   // Gravity
-  // TODO: if in air
-  if (m_position.y < Constants::groundLevel) {
-    applyForce(Constants::gravityVector);
-  } else {
-    m_velocity.y = 0.0f;
-  }
+  applyForce(Constants::gravityVector);
+
+  PhysicsBehavior::physicsTick();
 }
