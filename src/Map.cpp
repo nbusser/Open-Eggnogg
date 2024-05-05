@@ -2,6 +2,7 @@
 #include "SFML/Graphics/Color.hpp"
 #include "SFML/Graphics/Image.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "SFML/Graphics/RenderTarget.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
@@ -146,3 +147,5 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   states.texture = &m_tilesetTexture;
   target.draw(m_vertices, states);
 }
+
+void Map::display(sf::RenderTarget& target) { target.draw(*this); }

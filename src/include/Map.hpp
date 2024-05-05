@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Collidable.hpp"
+#include "Displayable.hpp"
 #include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
@@ -17,7 +18,7 @@ const std::string tilesetFilepath = "./assets/textures/tileset.png";
 
 enum Tile { NONE, WALL, WATER };
 
-class Map : public sf::Drawable, public Collidable {
+class Map : public sf::Drawable, public Displayable, public Collidable {
 public:
   size_t m_width;
   size_t m_height;
@@ -43,4 +44,6 @@ private:
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+
+  virtual void display(sf::RenderTarget& target) override;
 };
