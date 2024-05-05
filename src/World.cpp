@@ -51,11 +51,12 @@ void World::process(void) {
       }
 
       std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
+      std::uint8_t sanityCheck = 0;
       do {
         ptr_collidingPair = character->getCollidingHitbox(*collidable);
         if (ptr_collidingPair != nullptr)
           character->resolveCollision(*ptr_collidingPair);
-      } while (ptr_collidingPair != nullptr);
+      } while (ptr_collidingPair != nullptr && ++sanityCheck < 3);
     }
   }
 }
