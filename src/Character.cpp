@@ -10,6 +10,7 @@
 #include "include/Collidable.hpp"
 #include "include/DisplayBehavior.hpp"
 #include "include/Utils.hpp"
+#include <cstdlib>
 #include <system_error>
 #include <vector>
 
@@ -63,15 +64,51 @@ void Character::physicsTick() {
 }
 
 void Character::resolveCollision(const HitboxesPair& hitboxPair) {
-  const auto myHitboxCenter =
-      Utils::getFloatRectCenter(*hitboxPair.ptr_myHitbox);
-  const auto collidedHitboxCenter =
-      Utils::getFloatRectCenter(*hitboxPair.ptr_otherHitbox);
+  const auto& myHitbox = *hitboxPair.ptr_myHitbox;
+  const auto& otherHitbox = *hitboxPair.ptr_otherHitbox;
 
-  const auto separationVector = myHitboxCenter - collidedHitboxCenter;
+  const auto myHitboxCenter = Utils::getFloatRectCenter(myHitbox);
+  const auto collidedHitboxCenter = Utils::getFloatRectCenter(otherHitbox);
 
-  m_ptr_physicsBehavior->m_velocity = sf::Vector2f(0.0f, 0.0f);
-  m_ptr_physicsBehavior->m_position += separationVector;
+  const auto overlapPosition =
+      sf::Vector2f(std::max(myHitbox.left, otherHitbox.left),
+                   std::max(myHitbox.top, otherHitbox.top));
+  const auto overlapRect = sf::FloatRect(
+      overlapPosition,
+      sf::Vector2f(std::min(myHitbox.left + myHitbox.width,
+                            otherHitbox.left + otherHitbox.width),
+                   std::min(myHitbox.top + myHitbox.height,
+                            otherHitbox.top + otherHitbox.height)) -
+          overlapPosition);
+
+  auto restitution =
+      sf::Vector2f(overlapRect.getSize().x, overlapRect.getSize().y);
+
+  sf::Vector2f restitutionFactor;
+  sf::Vector2f velocityFactor;
+
+  // Restitution on X axis
+  if (overlapRect.getSize().y > overlapRect.getSize().x) {
+    velocityFactor = sf::Vector2f(0.0f, 1.0f);
+    if (myHitboxCenter.x < collidedHitboxCenter.x)
+      restitutionFactor = sf::Vector2f(-1.0f, 0.0f);
+    else
+      restitutionFactor = sf::Vector2f(1.0f, 0.0f);
+    // Restitution on Y axis
+  } else {
+    velocityFactor = sf::Vector2f(1.0f, 0.0f);
+    if (myHitboxCenter.y < collidedHitboxCenter.y)
+      restitutionFactor = sf::Vector2f(0.0f, -1.0f);
+    else
+      restitutionFactor = sf::Vector2f(0.0f, 1.0f);
+  }
+  restitution.x *= restitutionFactor.x;
+  restitution.y *= restitutionFactor.y;
+
+  m_ptr_physicsBehavior->m_position += restitution;
+
+  m_ptr_physicsBehavior->m_velocity.x *= velocityFactor.x;
+  m_ptr_physicsBehavior->m_velocity.y *= velocityFactor.y;
 
   updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
 }
