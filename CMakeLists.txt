@@ -20,6 +20,7 @@ add_executable(
   src/Character.cpp
   src/CharacterDisplayBehavior.cpp
   src/CharacterPhysicsBehavior.cpp
+  src/Collidable.cpp
   src/DisplayBehavior.cpp
   src/Map.cpp
   src/PhysicsEntity.cpp

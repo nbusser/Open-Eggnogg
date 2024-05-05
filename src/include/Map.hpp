@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Collidable.hpp"
 #include "SFML/Graphics/Drawable.hpp"
+#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
@@ -15,7 +17,7 @@ const std::string tilesetFilepath = "./assets/textures/tileset.png";
 
 enum Tile { NONE, WALL, WATER };
 
-class Map : public sf::Drawable {
+class Map : public sf::Drawable, public Collidable {
 public:
   size_t m_width;
   size_t m_height;

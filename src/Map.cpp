@@ -1,10 +1,12 @@
 #include "include/Map.hpp"
 #include "SFML/Graphics/Color.hpp"
 #include "SFML/Graphics/Image.hpp"
+#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Graphics/VertexArray.hpp"
 #include "SFML/System/Utf.hpp"
+#include "SFML/System/Vector2.hpp"
 #include <cstddef>
 #include <fstream>
 #include <sstream>
@@ -45,6 +47,7 @@ Tile Map::getTile(const size_t row, const size_t column) const {
 void Map::clearMap() {
   m_grid.clear();
   m_vertices.clear();
+  m_relativeHitboxes.clear();
 }
 
 void Map::loadMapFile(const std::string& mapFilepath) {
@@ -121,6 +124,11 @@ void Map::loadMapVertices(void) {
                                        (textureV + 1) * Constants::mapTileSize);
       quad[3].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
                                        (textureV + 1) * Constants::mapTileSize);
+
+      const auto tileBoxSize =
+          sf::Vector2f(Constants::mapTileSize, Constants::mapTileSize);
+      auto tileBox = sf::FloatRect(quad[0].position, tileBoxSize);
+      m_relativeHitboxes.push_back(tileBox);
     }
   }
 }
@@ -129,6 +137,7 @@ void Map::loadMap(const std::string& mapFilePath) {
   clearMap();
   loadMapFile(mapFilePath);
   loadMapVertices();
+  updateHitboxesPosition(sf::Vector2f(0.0f, 0.0f));
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {

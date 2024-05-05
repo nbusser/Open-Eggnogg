@@ -1,17 +1,20 @@
 #pragma once
 
 #include "CharacterDisplayBehavior.hpp"
+#include "Collidable.hpp"
 #include "DisplayBehavior.hpp"
 #include "Displayable.hpp"
 #include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
+#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/System/Vector2.hpp"
 
 enum Direction { LEFT, RIGHT };
 
-class Character : public PhysicsEntity, public Displayable {
+class Character : public PhysicsEntity, public Displayable, public Collidable {
 private:
   std::unique_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
   std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;

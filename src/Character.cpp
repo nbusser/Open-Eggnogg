@@ -1,4 +1,5 @@
 #include "include/Character.hpp"
+#include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
@@ -6,14 +7,26 @@
 #include "include/Animations.hpp"
 #include "include/CharacterDisplayBehavior.hpp"
 #include "include/CharacterPhysicsBehavior.hpp"
+#include "include/Collidable.hpp"
 #include "include/DisplayBehavior.hpp"
 #include <system_error>
+#include <vector>
 
 Character::Character(const sf::Vector2f& position)
-    : m_ptr_physicsBehavior(
-          std::make_unique<CharacterPhysicsBehavior>(position)),
+    : Collidable(), m_ptr_physicsBehavior(
+                        std::make_unique<CharacterPhysicsBehavior>(position)),
       m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()) {
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+  {
+    // Play idle anim
+    m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+
+    // Set player's hitbox
+    const auto hitbox =
+        sf::FloatRect(sf::Vector2f(3.0f, 1.0f), sf::Vector2f(9.0f, 15.0f));
+    m_relativeHitboxes.push_back(hitbox);
+    // Shift the hitbox with player's position
+    updateHitboxesPosition(position);
+  };
 };
 
 Character::~Character(void) {};
@@ -43,4 +56,7 @@ void Character::display(sf::RenderTarget& target) {
   target.draw(*m_ptr_displayBehavior);
 }
 
-void Character::physicsTick() { m_ptr_physicsBehavior->physicsTick(); }
+void Character::physicsTick() {
+  m_ptr_physicsBehavior->physicsTick();
+  updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
+}
