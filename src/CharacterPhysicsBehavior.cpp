@@ -4,13 +4,13 @@
 #include <algorithm>
 
 namespace Constants {
-constexpr float characterMaxm_velocityX = 6.0f;
+constexpr float characterMax_velocityX = 4.0f;
 constexpr float characterAccelerationFactor = 1.0f;
 constexpr float characterDecelerationFactor = 0.2f;
 } // namespace Constants
 
 CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f& position)
-    : PhysicsBehavior(position, Constants::characterMaxm_velocityX,
+    : PhysicsBehavior(position, Constants::characterMax_velocityX,
                       Constants::characterAccelerationFactor,
                       Constants::characterDecelerationFactor) {};
 
