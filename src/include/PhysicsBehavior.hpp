@@ -5,7 +5,7 @@
 namespace Constants {
 constexpr float gravity = 2.0f;
 const auto gravityVector = sf::Vector2f(0.0f, gravity);
-constexpr float groundLevel = 150.0f;
+constexpr float groundLevel = 32.0f;
 } // namespace Constants
 
 class PhysicsBehavior {
