@@ -24,6 +24,7 @@ add_executable(
   src/DisplayBehavior.cpp
   src/Map.cpp
   src/PhysicsEntity.cpp
+  src/Utils.cpp
   src/World.cpp
 )
 target_link_libraries(OpenEggnogg PRIVATE sfml-graphics)
