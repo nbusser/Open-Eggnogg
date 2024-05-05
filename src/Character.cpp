@@ -107,8 +107,8 @@ void Character::resolveCollision(const HitboxesPair& hitboxPair) {
 
   m_ptr_physicsBehavior->m_position += restitution;
 
-  m_ptr_physicsBehavior->m_velocity.x *= velocityFactor.x;
-  m_ptr_physicsBehavior->m_velocity.y *= velocityFactor.y;
+  // m_ptr_physicsBehavior->m_velocity.x *= velocityFactor.x;
+  // m_ptr_physicsBehavior->m_velocity.y *= velocityFactor.y;
 
   updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
 }
