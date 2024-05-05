@@ -6,7 +6,7 @@ void PhysicsBehavior::applyForce(const sf::Vector2f& force) {
   m_velocity += force;
 
   m_velocity.x = std::clamp(m_velocity.x, -m_maxVelocityX, m_maxVelocityX);
-  m_velocity.y = std::min(m_velocity.y, Constants::gravity);
+  m_velocity.y = std::clamp(m_velocity.y, -15.0f, Constants::gravity);
 }
 
 void PhysicsBehavior::physicsTick(void) {
