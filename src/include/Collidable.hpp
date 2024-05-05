@@ -10,6 +10,8 @@ struct HitboxesPair {
   std::unique_ptr<sf::FloatRect> ptr_otherHitbox;
 };
 
+enum Axis { X, Y };
+
 class Collidable {
 public:
   std::vector<sf::FloatRect> m_relativeHitboxes;
