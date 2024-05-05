@@ -125,10 +125,12 @@ void Map::loadMapVertices(void) {
       quad[3].texCoords = sf::Vector2f(textureU * Constants::mapTileSize,
                                        (textureV + 1) * Constants::mapTileSize);
 
-      const auto tileBoxSize =
-          sf::Vector2f(Constants::mapTileSize, Constants::mapTileSize);
-      auto tileBox = sf::FloatRect(quad[0].position, tileBoxSize);
-      m_relativeHitboxes.push_back(tileBox);
+      if (tileKind != Tile::NONE) {
+        const auto tileBoxSize =
+            sf::Vector2f(Constants::mapTileSize, Constants::mapTileSize);
+        auto tileBox = sf::FloatRect(quad[0].position, tileBoxSize);
+        m_relativeHitboxes.push_back(tileBox);
+      }
     }
   }
 }
