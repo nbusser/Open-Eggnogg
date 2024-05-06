@@ -30,17 +30,17 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
 
 void World::process(void) {
   // Pressed inputs processing
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-    GET_PLAYER(0)->move(Direction::LEFT);
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-    GET_PLAYER(0)->move(Direction::RIGHT);
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
-    GET_PLAYER(0)->jump();
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-    GET_PLAYER(1)->move(Direction::LEFT);
+    GET_PLAYER(0)->move(Direction::LEFT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    GET_PLAYER(1)->move(Direction::RIGHT);
+    GET_PLAYER(0)->move(Direction::RIGHT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
+    GET_PLAYER(0)->jump();
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+    GET_PLAYER(1)->move(Direction::LEFT);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+    GET_PLAYER(1)->move(Direction::RIGHT);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
     GET_PLAYER(1)->jump();
 
   for (const auto& ptr_physicsBody : m_ptr_characters) {
@@ -50,19 +50,24 @@ void World::process(void) {
   // Collisions resolution
 
   // First, resolve collisions between characters and map
-  for (const auto& character : m_ptr_characters) {
-    character->m_ptr_collisionBehavior->reset();
+
+  auto playersPushabilities = std::vector<bool>();
+
+  for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
+    const auto& player = m_ptr_characters[i];
+
+    playersPushabilities.push_back(true); // X
+    playersPushabilities.push_back(true); // Y
+
     std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
     do {
-      ptr_collidingPair = character->getCollidingHitbox(*m_ptr_map);
+      ptr_collidingPair = player->getCollidingHitbox(*m_ptr_map);
       if (ptr_collidingPair != nullptr) {
-        const auto overlapingRect =
-            Collidable::GetCollisionRect(*ptr_collidingPair);
-        resolvePlayerToMapCollision(
-            *character, *ptr_collidingPair->ptr_myHitbox,
-            *ptr_collidingPair->ptr_otherHitbox, overlapingRect);
-        character->updateHitboxesPosition(
-            character->m_ptr_physicsBehavior->m_position);
+        const auto collision = Collidable::GetCollision(*ptr_collidingPair);
+        resolvePlayerToMapCollision(*player, collision);
+        player->updateHitboxesPosition(
+            player->m_ptr_physicsBehavior->m_position);
+        playersPushabilities[(i * 2) + collision.axis];
       }
     } while (ptr_collidingPair != nullptr);
   }
@@ -75,11 +80,11 @@ void World::process(void) {
   do {
     ptr_collidingPair = player1->getCollidingHitbox(*player2);
     if (ptr_collidingPair != nullptr) {
-      const auto overlapingRect =
-          Collidable::GetCollisionRect(*ptr_collidingPair);
-      resolvePlayerToPlayerCollision(
-          *player1, *player2, *ptr_collidingPair->ptr_myHitbox,
-          *ptr_collidingPair->ptr_otherHitbox, overlapingRect);
+      const auto collision = Collidable::GetCollision(*ptr_collidingPair);
+
+      resolvePlayerToPlayerCollision(*player1, *player2, collision,
+                                     playersPushabilities[0 + collision.axis],
+                                     playersPushabilities[2 + collision.axis]);
       player1->updateHitboxesPosition(
           player1->m_ptr_physicsBehavior->m_position);
       player2->updateHitboxesPosition(
@@ -94,20 +99,22 @@ void World::display(sf::RenderTarget& target) {
   }
 }
 
-void World::resolvePlayerToMapCollision(
-    const Character& player, const sf::FloatRect& hitboxPlayer,
-    const sf::FloatRect& hitboxMap, const sf::FloatRect& collisionRect) const {
+void World::resolvePlayerToMapCollision(const Character& player,
+                                        const Collision& collision) const {
+
+  const auto& collisionRect = collision.collisionRect;
+  const auto& hitboxPlayer = collision.hitboxes.first;
+  const auto& hitboxMap = collision.hitboxes.second;
+  const auto axis = collision.axis;
+
   auto restitution =
       sf::Vector2f(collisionRect.getSize().x, collisionRect.getSize().y);
-
-  const auto collisionAxis =
-      collisionRect.getSize().y > collisionRect.getSize().x ? Axis::X : Axis::Y;
 
   sf::Vector2f restitutionFactor;
   sf::Vector2f velocityFactor;
 
   // Restitution on X axis
-  if (collisionAxis == Axis::X) {
+  if (axis == Axis::X) {
     velocityFactor = sf::Vector2f(0.0f, 1.0f);
     if (hitboxPlayer.left < hitboxMap.left)
       restitutionFactor = sf::Vector2f(-1.0f, 0.0f);
@@ -125,14 +132,18 @@ void World::resolvePlayerToMapCollision(
   restitution.y *= restitutionFactor.y;
 
   player.m_ptr_physicsBehavior->m_position += restitution;
-
-  player.m_ptr_collisionBehavior->setUnpushable(collisionAxis);
 }
 
 void World::resolvePlayerToPlayerCollision(
     const Character& player1, const Character& player2,
-    const sf::FloatRect& hitboxPlayer1, const sf::FloatRect& hitboxPlayer2,
-    const sf::FloatRect& collisionRect) const {
+    const Collision& collision, const bool player1CanBePushed,
+    const bool player2CanBePushed) const {
+
+  const auto& collisionRect = collision.collisionRect;
+  const auto& hitboxPlayer1 = collision.hitboxes.first;
+  const auto& hitboxPlayer2 = collision.hitboxes.second;
+  const auto axis = collision.axis;
+
   auto restitutionPlayer1 =
       sf::Vector2f(collisionRect.getSize().x, collisionRect.getSize().y);
   auto restitutionPlayer2 =
@@ -140,11 +151,6 @@ void World::resolvePlayerToPlayerCollision(
 
   const auto collisionAxis =
       collisionRect.getSize().y > collisionRect.getSize().x ? Axis::X : Axis::Y;
-
-  const auto player1CanBePushed =
-      player1.m_ptr_collisionBehavior->canBePushed(collisionAxis);
-  const auto player2CanBePushed =
-      player2.m_ptr_collisionBehavior->canBePushed(collisionAxis);
 
   if (!player1CanBePushed && !player2CanBePushed) {
     return; // TODO
@@ -177,27 +183,27 @@ void World::resolvePlayerToPlayerCollision(
     player2RestitutionFactor *= 0.0f;
   }
 
-  if (player1CanBePushed && player2CanBePushed)
-     {
-      const float player1VelocityValue =
-          collisionAxis == Axis::X
-              ? player1.m_ptr_physicsBehavior->m_velocity.x
-              : player1.m_ptr_physicsBehavior->m_velocity.y;
-      const float player2VelocityValue =
-          collisionAxis == Axis::X
-              ? player2.m_ptr_physicsBehavior->m_velocity.x
-              : player1.m_ptr_physicsBehavior->m_velocity.y;
+  if (player1CanBePushed && player2CanBePushed) {
+    const float player1VelocityValue =
+        collisionAxis == Axis::X ? player1.m_ptr_physicsBehavior->m_velocity.x
+                                 : player1.m_ptr_physicsBehavior->m_velocity.y;
+    const float player2VelocityValue =
+        collisionAxis == Axis::X ? player2.m_ptr_physicsBehavior->m_velocity.x
+                                 : player2.m_ptr_physicsBehavior->m_velocity.y;
 
-      if (player1VelocityValue == player2VelocityValue) {
-        player1RestitutionFactor *= 0.5f;
-        player2RestitutionFactor *= 0.5f;
-      } else if (player1VelocityValue > player2VelocityValue) {
-        player1RestitutionFactor *= 0.0f;
-      } else {
-        player2RestitutionFactor *= 0.0f;
-      }
+    if (player1VelocityValue == player2VelocityValue) {
+      player1RestitutionFactor *= 0.5f;
+      player2RestitutionFactor *= 0.5f;
+    } else if (player1VelocityValue > player2VelocityValue) {
+      player1RestitutionFactor *= 0.0f;
+    } else {
+      player2RestitutionFactor *= 0.0f;
     }
+  }
 
+  // std::cout << player1RestitutionFactor.x << "," <<
+  // player1RestitutionFactor.y << " - " << player2RestitutionFactor.x << "," <<
+  // player2RestitutionFactor.y << std::endl;
   restitutionPlayer1.x *= player1RestitutionFactor.x;
   restitutionPlayer1.y *= player1RestitutionFactor.y;
 

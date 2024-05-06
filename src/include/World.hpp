@@ -25,12 +25,10 @@ public:
 
 private:
   void resolvePlayerToMapCollision(const Character& player,
-                                   const sf::FloatRect& hitboxPlayer,
-                                   const sf::FloatRect& hitboxMap,
-                                   const sf::FloatRect& collisionRect) const;
+                                   const Collision& collision) const;
   void resolvePlayerToPlayerCollision(const Character& player1,
                                       const Character& player2,
-                                      const sf::FloatRect& hitboxPlayer1,
-                                      const sf::FloatRect& hitboxPlayer2,
-                                      const sf::FloatRect& collisionRect) const;
+                                      const Collision& collision,
+                                      const bool player1CanBePushed,
+                                      const bool player2CanBePushed) const;
 };

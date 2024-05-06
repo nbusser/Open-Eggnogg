@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CollisionBehavior.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <memory>
@@ -11,16 +10,21 @@ struct HitboxesPair {
   std::unique_ptr<sf::FloatRect> ptr_otherHitbox;
 };
 
+enum Axis { X, Y };
+
+struct Collision {
+  std::pair<const sf::FloatRect&, const sf::FloatRect&> hitboxes;
+  sf::FloatRect collisionRect;
+  Axis axis;
+};
+
 class Collidable {
 public:
   std::vector<sf::FloatRect> m_relativeHitboxes;
   std::vector<sf::FloatRect> m_absoluteHitboxes;
 
-  std::unique_ptr<CollisionBehavior> m_ptr_collisionBehavior;
-
-  Collidable(std::unique_ptr<CollisionBehavior> ptr_collisionBehavior);
-  Collidable(std::unique_ptr<CollisionBehavior> ptr_collisionBehavior,
-             const std::vector<sf::FloatRect>& hitboxes);
+  Collidable();
+  Collidable(const std::vector<sf::FloatRect>& hitboxes);
 
   std::unique_ptr<HitboxesPair>
   getCollidingHitbox(const Collidable& other) const;
@@ -30,5 +34,5 @@ public:
   virtual void resolveCollision(const HitboxesPair& hitboxesPair,
                                 const sf::FloatRect& overlapingRect);
 
-  static sf::FloatRect GetCollisionRect(const HitboxesPair& hitboxesPair);
+  static Collision GetCollision(const HitboxesPair& hitboxesPair);
 };

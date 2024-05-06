@@ -24,7 +24,6 @@ add_executable(
   src/DisplayBehavior.cpp
   src/Map.cpp
   src/PhysicsEntity.cpp
-  src/PushableCollisionBehavior.cpp
   src/Utils.cpp
   src/World.cpp
 )

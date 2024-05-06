@@ -9,8 +9,6 @@
 #include "SFML/System/Utf.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "include/Collidable.hpp"
-#include "include/CollisionBehavior.hpp"
-#include "include/ImmobileCollisionBehavior.hpp"
 #include <cstddef>
 #include <fstream>
 #include <memory>
@@ -37,8 +35,7 @@ const std::unordered_map<sf::Uint32, Tile> Map::ColorToTileMap = {
 
 Map::Map()
     : m_grid(std::vector<Tile>()), m_tilesetTexture(sf::Texture()),
-      m_vertices(sf::VertexArray()),
-      Collidable(std::make_unique<ImmobileCollisionBehavior>()) {
+      m_vertices(sf::VertexArray()) {
   if (!m_tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
