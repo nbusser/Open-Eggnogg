@@ -2,10 +2,14 @@
 #include "SFML/Graphics/Rect.hpp"
 #include <vector>
 
-Collidable::Collidable() : Collidable(std::vector<sf::FloatRect>()) {};
+Collidable::Collidable(std::unique_ptr<CollisionBehavior> ptr_collisionBehavior)
+    : Collidable(std::move(ptr_collisionBehavior),
+                 std::vector<sf::FloatRect>()) {};
 
-Collidable::Collidable(const std::vector<sf::FloatRect>& hitboxes)
-    : m_relativeHitboxes(hitboxes), m_absoluteHitboxes(hitboxes) {};
+Collidable::Collidable(std::unique_ptr<CollisionBehavior> ptr_collisionBehavior,
+                       const std::vector<sf::FloatRect>& hitboxes)
+    : m_ptr_collisionBehavior(std::move(ptr_collisionBehavior)),
+      m_relativeHitboxes(hitboxes), m_absoluteHitboxes(hitboxes) {};
 
 std::unique_ptr<HitboxesPair>
 Collidable::getCollidingHitbox(const Collidable& other) const {

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Character.hpp"
 #include "Collidable.hpp"
 #include "Displayable.hpp"
@@ -5,6 +7,7 @@
 #include "PhysicsEntity.hpp"
 #include <memory>
 #include <vector>
+
 class World : public Displayable {
 private:
   std::shared_ptr<Map> m_ptr_map;

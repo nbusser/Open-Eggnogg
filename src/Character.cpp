@@ -9,14 +9,16 @@
 #include "include/CharacterPhysicsBehavior.hpp"
 #include "include/Collidable.hpp"
 #include "include/DisplayBehavior.hpp"
+#include "include/PushableCollisionBehavior.hpp"
 #include "include/Utils.hpp"
 #include <cstdlib>
 #include <system_error>
 #include <vector>
 
 Character::Character(const sf::Vector2f& position)
-    : Collidable(), m_ptr_physicsBehavior(
-                        std::make_unique<CharacterPhysicsBehavior>(position)),
+    : m_ptr_physicsBehavior(
+          std::make_shared<CharacterPhysicsBehavior>(position)),
+      Collidable(make_unique<PushableCollisionBehavior>(m_ptr_physicsBehavior)),
       m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()) {
   {
     // Play idle anim

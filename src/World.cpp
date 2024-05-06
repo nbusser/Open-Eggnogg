@@ -4,6 +4,7 @@
 #include "include/Collidable.hpp"
 #include "include/Displayable.hpp"
 #include "include/PhysicsEntity.hpp"
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -44,21 +45,28 @@ void World::process(void) {
     ptr_physicsBody->physicsTick();
   }
 
-  for (const auto& character : m_ptr_characters) {
-    for (const auto& collidable : m_ptr_collidables) {
-      if (character == collidable) {
-        continue;
-      }
+  // Collisions resolution
 
-      std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
-      std::uint8_t sanityCheck = 0;
-      do {
-        ptr_collidingPair = character->getCollidingHitbox(*collidable);
-        if (ptr_collidingPair != nullptr)
-          character->resolveCollision(*ptr_collidingPair);
-      } while (ptr_collidingPair != nullptr && ++sanityCheck < 3);
-    }
+  // First, resolve collisions between characters and map
+  for (const auto& character : m_ptr_characters) {
+    std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
+    do {
+      ptr_collidingPair = character->getCollidingHitbox(*m_ptr_map);
+      if (ptr_collidingPair != nullptr)
+        character->resolveCollision(*ptr_collidingPair);
+    } while (ptr_collidingPair != nullptr);
   }
+
+  // Then, resolve collisions between characters
+  const auto player1 = m_ptr_characters[0];
+  const auto player2 = m_ptr_characters[1];
+
+  std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
+  do {
+    ptr_collidingPair = player1->getCollidingHitbox(*player2);
+    if (ptr_collidingPair != nullptr)
+      player1->resolveCollision(*ptr_collidingPair);
+  } while (ptr_collidingPair != nullptr);
 }
 
 void World::display(sf::RenderTarget& target) {

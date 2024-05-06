@@ -16,7 +16,7 @@ enum Direction { LEFT, RIGHT };
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
 private:
-  std::unique_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
+  std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
   std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
 
   virtual void display(sf::RenderTarget& target) override;
