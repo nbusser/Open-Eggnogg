@@ -51,46 +51,46 @@ void World::process(void) {
 
   // First, resolve collisions between characters and map
 
-  auto playersPushabilities = std::vector<bool>();
+  auto playersPushabilities = std::vector<bool>{true, true, true, true};
 
-  for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
-    const auto& player = m_ptr_characters[i];
+  for (size_t j = 0; j < 2; ++j) {
+    for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
+      const auto& player = m_ptr_characters[i];
 
-    playersPushabilities.push_back(true); // X
-    playersPushabilities.push_back(true); // Y
+      std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
+      do {
+        ptr_collidingPair = player->getCollidingHitbox(*m_ptr_map);
+        if (ptr_collidingPair != nullptr) {
+          const auto collision = Collidable::GetCollision(*ptr_collidingPair);
+          resolvePlayerToMapCollision(*player, collision);
+          player->updateHitboxesPosition(
+              player->m_ptr_physicsBehavior->m_position);
+          playersPushabilities[(i * 2) + collision.axis];
+        }
+      } while (ptr_collidingPair != nullptr);
+    }
+
+    // Then, resolve collisions between characters
+    const auto player1 = m_ptr_characters[0];
+    const auto player2 = m_ptr_characters[1];
 
     std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
     do {
-      ptr_collidingPair = player->getCollidingHitbox(*m_ptr_map);
+      ptr_collidingPair = player1->getCollidingHitbox(*player2);
       if (ptr_collidingPair != nullptr) {
         const auto collision = Collidable::GetCollision(*ptr_collidingPair);
-        resolvePlayerToMapCollision(*player, collision);
-        player->updateHitboxesPosition(
-            player->m_ptr_physicsBehavior->m_position);
-        playersPushabilities[(i * 2) + collision.axis];
+
+        resolvePlayerToPlayerCollision(
+            *player1, *player2, collision,
+            playersPushabilities[0 + collision.axis],
+            playersPushabilities[2 + collision.axis]);
+        player1->updateHitboxesPosition(
+            player1->m_ptr_physicsBehavior->m_position);
+        player2->updateHitboxesPosition(
+            player2->m_ptr_physicsBehavior->m_position);
       }
     } while (ptr_collidingPair != nullptr);
   }
-
-  // Then, resolve collisions between characters
-  const auto player1 = m_ptr_characters[0];
-  const auto player2 = m_ptr_characters[1];
-
-  std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
-  do {
-    ptr_collidingPair = player1->getCollidingHitbox(*player2);
-    if (ptr_collidingPair != nullptr) {
-      const auto collision = Collidable::GetCollision(*ptr_collidingPair);
-
-      resolvePlayerToPlayerCollision(*player1, *player2, collision,
-                                     playersPushabilities[0 + collision.axis],
-                                     playersPushabilities[2 + collision.axis]);
-      player1->updateHitboxesPosition(
-          player1->m_ptr_physicsBehavior->m_position);
-      player2->updateHitboxesPosition(
-          player2->m_ptr_physicsBehavior->m_position);
-    }
-  } while (ptr_collidingPair != nullptr);
 }
 
 void World::display(sf::RenderTarget& target) {
