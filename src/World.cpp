@@ -1,9 +1,11 @@
 #include "include/World.hpp"
+#include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
 #include "include/Collidable.hpp"
 #include "include/Displayable.hpp"
 #include "include/PhysicsEntity.hpp"
+#include "include/Utils.hpp"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -49,13 +51,18 @@ void World::process(void) {
 
   // First, resolve collisions between characters and map
   for (const auto& character : m_ptr_characters) {
+    character->m_ptr_collisionBehavior->reset();
     std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
     do {
       ptr_collidingPair = character->getCollidingHitbox(*m_ptr_map);
       if (ptr_collidingPair != nullptr) {
         const auto overlapingRect =
             Collidable::GetCollisionRect(*ptr_collidingPair);
-        character->resolveCollision(*ptr_collidingPair, overlapingRect);
+        resolvePlayerToMapCollision(
+            *character, *ptr_collidingPair->ptr_myHitbox,
+            *ptr_collidingPair->ptr_otherHitbox, overlapingRect);
+        character->updateHitboxesPosition(
+            character->m_ptr_physicsBehavior->m_position);
       }
     } while (ptr_collidingPair != nullptr);
   }
@@ -70,7 +77,13 @@ void World::process(void) {
     if (ptr_collidingPair != nullptr) {
       const auto overlapingRect =
           Collidable::GetCollisionRect(*ptr_collidingPair);
-      player1->resolveCollision(*ptr_collidingPair, overlapingRect);
+      resolvePlayerToPlayerCollision(
+          *player1, *player2, *ptr_collidingPair->ptr_myHitbox,
+          *ptr_collidingPair->ptr_otherHitbox, overlapingRect);
+      player1->updateHitboxesPosition(
+          player1->m_ptr_physicsBehavior->m_position);
+      player2->updateHitboxesPosition(
+          player2->m_ptr_physicsBehavior->m_position);
     }
   } while (ptr_collidingPair != nullptr);
 }
@@ -79,4 +92,118 @@ void World::display(sf::RenderTarget& target) {
   for (const auto& displayable : m_ptr_displayables) {
     displayable->display(target);
   }
+}
+
+void World::resolvePlayerToMapCollision(
+    const Character& player, const sf::FloatRect& hitboxPlayer,
+    const sf::FloatRect& hitboxMap, const sf::FloatRect& collisionRect) const {
+  auto restitution =
+      sf::Vector2f(collisionRect.getSize().x, collisionRect.getSize().y);
+
+  const auto collisionAxis =
+      collisionRect.getSize().y > collisionRect.getSize().x ? Axis::X : Axis::Y;
+
+  sf::Vector2f restitutionFactor;
+  sf::Vector2f velocityFactor;
+
+  // Restitution on X axis
+  if (collisionAxis == Axis::X) {
+    velocityFactor = sf::Vector2f(0.0f, 1.0f);
+    if (hitboxPlayer.left < hitboxMap.left)
+      restitutionFactor = sf::Vector2f(-1.0f, 0.0f);
+    else
+      restitutionFactor = sf::Vector2f(1.0f, 0.0f);
+    // Restitution on Y axis
+  } else {
+    velocityFactor = sf::Vector2f(1.0f, 0.0f);
+    if (hitboxPlayer.top < hitboxMap.top)
+      restitutionFactor = sf::Vector2f(0.0f, -1.0f);
+    else
+      restitutionFactor = sf::Vector2f(0.0f, 1.0f);
+  }
+  restitution.x *= restitutionFactor.x;
+  restitution.y *= restitutionFactor.y;
+
+  player.m_ptr_physicsBehavior->m_position += restitution;
+
+  player.m_ptr_collisionBehavior->setUnpushable(collisionAxis);
+}
+
+void World::resolvePlayerToPlayerCollision(
+    const Character& player1, const Character& player2,
+    const sf::FloatRect& hitboxPlayer1, const sf::FloatRect& hitboxPlayer2,
+    const sf::FloatRect& collisionRect) const {
+  auto restitutionPlayer1 =
+      sf::Vector2f(collisionRect.getSize().x, collisionRect.getSize().y);
+  auto restitutionPlayer2 =
+      sf::Vector2f(collisionRect.getSize().x, collisionRect.getSize().y);
+
+  const auto collisionAxis =
+      collisionRect.getSize().y > collisionRect.getSize().x ? Axis::X : Axis::Y;
+
+  const auto player1CanBePushed =
+      player1.m_ptr_collisionBehavior->canBePushed(collisionAxis);
+  const auto player2CanBePushed =
+      player2.m_ptr_collisionBehavior->canBePushed(collisionAxis);
+
+  if (!player1CanBePushed && !player2CanBePushed) {
+    return; // TODO
+  }
+
+  sf::Vector2f player1RestitutionFactor;
+  sf::Vector2f player2RestitutionFactor;
+
+  if (collisionAxis == Axis::X) {
+    const bool isPlayer1LeftOfPlayer2 = hitboxPlayer1.left < hitboxPlayer2.left;
+    player1RestitutionFactor = isPlayer1LeftOfPlayer2
+                                   ? sf::Vector2f(-1.0f, 0.0f)
+                                   : sf::Vector2f(1.0f, 0.0f);
+    player2RestitutionFactor = isPlayer1LeftOfPlayer2
+                                   ? sf::Vector2f(1.0f, 0.0f)
+                                   : sf::Vector2f(-1.0f, 0.0f);
+  } else {
+    const bool isPlayer1TopOfPlayer2 = hitboxPlayer1.top < hitboxPlayer2.top;
+    player1RestitutionFactor = isPlayer1TopOfPlayer2 ? sf::Vector2f(0.0f, -1.0f)
+                                                     : sf::Vector2f(0.0f, 1.0f);
+    player2RestitutionFactor = isPlayer1TopOfPlayer2
+                                   ? sf::Vector2f(0.0f, 1.0f)
+                                   : sf::Vector2f(0.0f, -1.0f);
+  }
+
+  if (!player1CanBePushed) {
+    player1RestitutionFactor *= 0.0f;
+  }
+  if (!player2CanBePushed) {
+    player2RestitutionFactor *= 0.0f;
+  }
+
+  if (player1CanBePushed && player2CanBePushed)
+     {
+      const float player1VelocityValue =
+          collisionAxis == Axis::X
+              ? player1.m_ptr_physicsBehavior->m_velocity.x
+              : player1.m_ptr_physicsBehavior->m_velocity.y;
+      const float player2VelocityValue =
+          collisionAxis == Axis::X
+              ? player2.m_ptr_physicsBehavior->m_velocity.x
+              : player1.m_ptr_physicsBehavior->m_velocity.y;
+
+      if (player1VelocityValue == player2VelocityValue) {
+        player1RestitutionFactor *= 0.5f;
+        player2RestitutionFactor *= 0.5f;
+      } else if (player1VelocityValue > player2VelocityValue) {
+        player1RestitutionFactor *= 0.0f;
+      } else {
+        player2RestitutionFactor *= 0.0f;
+      }
+    }
+
+  restitutionPlayer1.x *= player1RestitutionFactor.x;
+  restitutionPlayer1.y *= player1RestitutionFactor.y;
+
+  restitutionPlayer2.x *= player2RestitutionFactor.x;
+  restitutionPlayer2.y *= player2RestitutionFactor.y;
+
+  player1.m_ptr_physicsBehavior->m_position += restitutionPlayer1;
+  player2.m_ptr_physicsBehavior->m_position += restitutionPlayer2;
 }
