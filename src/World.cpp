@@ -52,8 +52,11 @@ void World::process(void) {
     std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
     do {
       ptr_collidingPair = character->getCollidingHitbox(*m_ptr_map);
-      if (ptr_collidingPair != nullptr)
-        character->resolveCollision(*ptr_collidingPair);
+      if (ptr_collidingPair != nullptr) {
+        const auto overlapingRect =
+            Collidable::GetCollisionRect(*ptr_collidingPair);
+        character->resolveCollision(*ptr_collidingPair, overlapingRect);
+      }
     } while (ptr_collidingPair != nullptr);
   }
 
@@ -64,8 +67,11 @@ void World::process(void) {
   std::unique_ptr<HitboxesPair> ptr_collidingPair = nullptr;
   do {
     ptr_collidingPair = player1->getCollidingHitbox(*player2);
-    if (ptr_collidingPair != nullptr)
-      player1->resolveCollision(*ptr_collidingPair);
+    if (ptr_collidingPair != nullptr) {
+      const auto overlapingRect =
+          Collidable::GetCollisionRect(*ptr_collidingPair);
+      player1->resolveCollision(*ptr_collidingPair, overlapingRect);
+    }
   } while (ptr_collidingPair != nullptr);
 }
 

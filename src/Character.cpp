@@ -65,32 +65,21 @@ void Character::physicsTick() {
   updateHitboxesPosition(m_ptr_physicsBehavior->m_position);
 }
 
-void Character::resolveCollision(const HitboxesPair& hitboxPair) {
-  const auto& myHitbox = *hitboxPair.ptr_myHitbox;
-  const auto& otherHitbox = *hitboxPair.ptr_otherHitbox;
-
-  const auto myHitboxCenter = Utils::getFloatRectCenter(myHitbox);
-  const auto collidedHitboxCenter = Utils::getFloatRectCenter(otherHitbox);
-
-  const auto overlapPosition =
-      sf::Vector2f(std::max(myHitbox.left, otherHitbox.left),
-                   std::max(myHitbox.top, otherHitbox.top));
-  const auto overlapRect = sf::FloatRect(
-      overlapPosition,
-      sf::Vector2f(std::min(myHitbox.left + myHitbox.width,
-                            otherHitbox.left + otherHitbox.width),
-                   std::min(myHitbox.top + myHitbox.height,
-                            otherHitbox.top + otherHitbox.height)) -
-          overlapPosition);
+void Character::resolveCollision(const HitboxesPair& hitboxesPair,
+                                 const sf::FloatRect& overlapingRect) {
+  const auto& myHitboxCenter =
+      Utils::getFloatRectCenter(*hitboxesPair.ptr_myHitbox);
+  const auto& collidedHitboxCenter =
+      Utils::getFloatRectCenter(*hitboxesPair.ptr_otherHitbox);
 
   auto restitution =
-      sf::Vector2f(overlapRect.getSize().x, overlapRect.getSize().y);
+      sf::Vector2f(overlapingRect.getSize().x, overlapingRect.getSize().y);
 
   sf::Vector2f restitutionFactor;
   sf::Vector2f velocityFactor;
 
   // Restitution on X axis
-  if (overlapRect.getSize().y > overlapRect.getSize().x) {
+  if (overlapingRect.getSize().y > overlapingRect.getSize().x) {
     velocityFactor = sf::Vector2f(0.0f, 1.0f);
     if (myHitboxCenter.x < collidedHitboxCenter.x)
       restitutionFactor = sf::Vector2f(-1.0f, 0.0f);

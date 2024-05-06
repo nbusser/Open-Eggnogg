@@ -32,5 +32,6 @@ public:
 
   void physicsTick(void) override;
 
-  virtual void resolveCollision(const HitboxesPair& hitboxPair) override;
+  virtual void resolveCollision(const HitboxesPair& hitboxesPair,
+                                const sf::FloatRect& overlapingRect) override;
 };
