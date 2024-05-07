@@ -24,6 +24,7 @@ int main() {
   camera.setCenter(0.0f, 0.0f);
   window.setView(camera);
 
+  auto m_delta = sf::Clock();
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {
       switch (event.type) {
@@ -37,7 +38,9 @@ int main() {
 
     window.clear();
 
-    world.process();
+    const auto delta = m_delta.restart().asSeconds();
+    world.process(delta);
+
     world.display(window);
 
     window.display();

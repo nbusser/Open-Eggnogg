@@ -18,7 +18,7 @@
 Character::Character(const sf::Vector2f& position)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
-      m_isGrounded(false) {
+      m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
 
@@ -35,28 +35,29 @@ Character::~Character(void) {};
 void Character::updateSpeed(sf::Vector2f force) {
   m_velocity += force;
 
-  constexpr float characterMax_velocityX = 4.0f;
+  constexpr float characterMax_velocityX = 2.0f;
 
   m_velocity.x =
       std::clamp(m_velocity.x, -characterMax_velocityX, characterMax_velocityX);
   m_velocity.y = std::clamp(m_velocity.y, -15.0f, Constants::gravity);
 }
 
-void Character::move(const Direction direction) {
+void Character::move(const Direction direction, const float delta) {
+  const auto acceleration = 15.0f * delta;
   switch (direction) {
   case Direction::LEFT:
-    updateSpeed(sf::Vector2f(-1.0f, 0.0f));
+    updateSpeed(sf::Vector2f(-acceleration, 0.0f));
     break;
   case Direction::RIGHT:
-    updateSpeed(sf::Vector2f(1.0f, 0.0f));
+    updateSpeed(sf::Vector2f(acceleration, 0.0f));
     break;
   }
 }
 
-void Character::jump(void) {
-  // TODO: collides with the ground
+void Character::jump(const float delta) {
+  // TODO: use delta??
   if (m_isGrounded) {
-    updateSpeed(sf::Vector2f(0.0f, -15.0f));
+    updateSpeed(sf::Vector2f(0.0f, -5.0f));
     m_isGrounded = false;
   }
 }

@@ -6,6 +6,7 @@
 #include "Map.hpp"
 #include "PhysicsEntity.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "SFML/System/Clock.hpp"
 #include <memory>
 #include <vector>
 
@@ -19,7 +20,7 @@ private:
 
 public:
   World(void);
-  void process(void);
+  void process(const float delta);
 
   virtual void display(sf::RenderTarget& target);
 

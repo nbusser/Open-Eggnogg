@@ -3,7 +3,7 @@
 #include "SFML/System/Vector2.hpp"
 
 namespace Constants {
-constexpr float gravity = 2.0f;
+constexpr float gravity = 20.0f;
 const auto gravityVector = sf::Vector2f(0.0f, gravity);
 constexpr float groundLevel = 32.0f;
 } // namespace Constants

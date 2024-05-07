@@ -25,15 +25,17 @@ public:
 
   ~Character(void);
 
-  void move(const Direction direction);
+  void move(const Direction direction, const float delta);
 
-  void jump(void);
+  void jump(const float delta);
 
   void physicsTick(void) override;
 
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
   bool m_isGrounded;
+
+  sf::Vector2f m_remainder;
 
   void updateSpeed(sf::Vector2f force);
 
