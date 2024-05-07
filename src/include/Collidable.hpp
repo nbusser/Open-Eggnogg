@@ -31,8 +31,5 @@ public:
 
   void updateHitboxesPosition(const sf::Vector2f& newPosition);
 
-  virtual void resolveCollision(const HitboxesPair& hitboxesPair,
-                                const sf::FloatRect& overlapingRect);
-
   static Collision GetCollision(const HitboxesPair& hitboxesPair);
 };

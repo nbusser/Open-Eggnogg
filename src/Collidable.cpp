@@ -21,9 +21,6 @@ Collidable::getCollidingHitbox(const Collidable& other) const {
   return nullptr;
 };
 
-void Collidable::resolveCollision(const HitboxesPair& hitboxesPair,
-                                  const sf::FloatRect& overlapingRect) {}
-
 void Collidable::updateHitboxesPosition(const sf::Vector2f& newPosition) {
   m_absoluteHitboxes.clear();
   for (const auto& relativeHitbox : m_relativeHitboxes) {

@@ -31,8 +31,10 @@ public:
 
   void physicsTick(void) override;
 
-  virtual void resolveCollision(const HitboxesPair& hitboxesPair,
-                                const sf::FloatRect& overlapingRect) override;
+  sf::Vector2f m_position;
+  sf::Vector2f m_velocity;
 
-  std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
+  void updateSpeed(sf::Vector2f force);
+
+  // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };
