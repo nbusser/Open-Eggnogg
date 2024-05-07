@@ -8,7 +8,8 @@ CharacterDisplayBehavior::CharacterDisplayBehavior(void)
     : DisplayBehavior(Constants::characterTextureFilepath),
       Animated(AnimationPlayer(m_sprite)) {}
 
-void CharacterDisplayBehavior::update(const sf::Vector2f& position) {
-  DisplayBehavior::update(position);
-  m_animationPlayer.update();
+void CharacterDisplayBehavior::update(const sf::Vector2f& position,
+                                      const float delta) {
+  DisplayBehavior::update(position, delta);
+  m_animationPlayer.update(delta);
 }

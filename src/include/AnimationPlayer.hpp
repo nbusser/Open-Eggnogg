@@ -7,7 +7,7 @@
 class AnimationPlayer {
 private:
   sf::Sprite* m_ptr_sprite;
-  std::uint8_t m_frameCounter;
+  float m_secondsCounter;
   std::uint8_t m_currentFrame;
   const Animation* m_ptr_currentAnimation;
   bool m_isFrozen;
@@ -22,7 +22,7 @@ public:
 
   ~AnimationPlayer(void) = default;
 
-  void update(void);
+  void update(const float delta);
 
   void play(const Animation& animation);
   void stop(void);

@@ -62,8 +62,8 @@ void Character::jump(const float delta) {
   }
 }
 
-void Character::display(sf::RenderTarget& target) {
-  m_ptr_displayBehavior->update(m_position);
+void Character::display(sf::RenderTarget& target, const float delta) {
+  m_ptr_displayBehavior->update(m_position, delta);
   target.draw(*m_ptr_displayBehavior);
 }
 

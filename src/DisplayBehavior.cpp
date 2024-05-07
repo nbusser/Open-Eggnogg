@@ -10,7 +10,7 @@ DisplayBehavior::DisplayBehavior(const std::string& textureFilepath)
   m_sprite.setTexture(m_texture);
 }
 
-void DisplayBehavior::update(const sf::Vector2f& position) {
+void DisplayBehavior::update(const sf::Vector2f& position, const float delta) {
   m_sprite.setPosition(position.x, position.y);
 }
 

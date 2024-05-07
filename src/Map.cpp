@@ -150,4 +150,6 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(m_vertices, states);
 }
 
-void Map::display(sf::RenderTarget& target) { target.draw(*this); }
+void Map::display(sf::RenderTarget& target, const float delta) {
+  target.draw(*this);
+}

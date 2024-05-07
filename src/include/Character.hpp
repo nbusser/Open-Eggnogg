@@ -18,7 +18,7 @@ class Character : public PhysicsEntity, public Displayable, public Collidable {
 private:
   std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
 
-  virtual void display(sf::RenderTarget& target) override;
+  virtual void display(sf::RenderTarget& target, const float delta) override;
 
 public:
   Character(const sf::Vector2f& position);

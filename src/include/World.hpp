@@ -22,7 +22,7 @@ public:
   World(void);
   void process(const float delta);
 
-  virtual void display(sf::RenderTarget& target);
+  virtual void display(sf::RenderTarget& target, const float delta);
 
 private:
   void resolvePlayerToMapCollision(const Character& player,

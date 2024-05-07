@@ -41,7 +41,7 @@ int main() {
     const auto delta = m_delta.restart().asSeconds();
     world.process(delta);
 
-    world.display(window);
+    world.display(window, delta);
 
     window.display();
   }

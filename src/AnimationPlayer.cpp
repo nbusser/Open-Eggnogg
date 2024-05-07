@@ -2,7 +2,7 @@
 #include "SFML/Graphics/Rect.hpp"
 
 AnimationPlayer::AnimationPlayer(sf::Sprite& ptr_sprite)
-    : m_ptr_sprite(&ptr_sprite), m_frameCounter(0), m_currentFrame(0),
+    : m_ptr_sprite(&ptr_sprite), m_secondsCounter(0), m_currentFrame(0),
       m_isFrozen(false), m_ptr_currentAnimation(nullptr) {};
 
 bool AnimationPlayer::isAnimationLoaded(void) const {
@@ -25,13 +25,14 @@ void AnimationPlayer::setAnimationFrame(const std::uint8_t frameIndex) {
   m_ptr_sprite->setTextureRect(textureRect);
 }
 
-void AnimationPlayer::update(void) {
+void AnimationPlayer::update(const float delta) {
   if (!isAnimationLoaded() || m_isFrozen) {
     return;
   }
-  if (++m_frameCounter > m_ptr_currentAnimation->nFramesPerAnimtion &&
+  m_secondsCounter += delta;
+  if (m_secondsCounter > m_ptr_currentAnimation->nSecondsPerAnimtion &&
       (m_ptr_currentAnimation->loop || !isAnimationEnded())) {
-    m_frameCounter = 0;
+    m_secondsCounter = 0.0f;
     m_currentFrame =
         (++m_currentFrame) % m_ptr_currentAnimation->textureUVs.size();
     setAnimationFrame(m_currentFrame);
@@ -39,7 +40,7 @@ void AnimationPlayer::update(void) {
 }
 
 void AnimationPlayer::resetCounters(void) {
-  m_frameCounter = 0;
+  m_secondsCounter = 0;
   m_currentFrame = 0;
   m_ptr_currentAnimation = nullptr;
   m_isFrozen = false;

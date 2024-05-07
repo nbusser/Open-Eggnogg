@@ -16,7 +16,7 @@ public:
 
   ~DisplayBehavior(void) = default;
 
-  virtual void update(const sf::Vector2f& position);
+  virtual void update(const sf::Vector2f& position, const float delta);
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;

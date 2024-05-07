@@ -45,5 +45,5 @@ private:
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
 
-  virtual void display(sf::RenderTarget& target) override;
+  virtual void display(sf::RenderTarget& target, const float delta) override;
 };

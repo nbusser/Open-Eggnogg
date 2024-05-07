@@ -156,8 +156,8 @@ void World::process(const float delta) {
   }
 }
 
-void World::display(sf::RenderTarget& target) {
+void World::display(sf::RenderTarget& target, const float delta) {
   for (const auto& displayable : m_ptr_displayables) {
-    displayable->display(target);
+    displayable->display(target, delta);
   }
 }
