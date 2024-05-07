@@ -17,7 +17,8 @@
 
 Character::Character(const sf::Vector2f& position)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
-      m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)) {
+      m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
+      m_isGrounded(false) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
 
@@ -54,9 +55,10 @@ void Character::move(const Direction direction) {
 
 void Character::jump(void) {
   // TODO: collides with the ground
-  // if (m_ptr_physicsBehavior->m_position.y >= Constants::groundLevel) {
-  //   m_ptr_physicsBehavior->applyForce(sf::Vector2f(0.0f, -15.0f));
-  // }
+  if (m_isGrounded) {
+    updateSpeed(sf::Vector2f(0.0f, -15.0f));
+    m_isGrounded = false;
+  }
 }
 
 void Character::display(sf::RenderTarget& target) {

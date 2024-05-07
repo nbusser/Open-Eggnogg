@@ -33,6 +33,7 @@ public:
 
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
+  bool m_isGrounded;
 
   void updateSpeed(sf::Vector2f force);
 

@@ -75,6 +75,7 @@ void World::process(void) {
       // Test collisions against map
       const auto collidingMapHitboxes = player->getCollidingHitbox(*m_ptr_map);
       if (collidingMapHitboxes != nullptr) {
+        // TODO: check if collision occurs on axis X
         // Collision againt map detected
         player->m_velocity.x = 0;
         break;
@@ -84,6 +85,7 @@ void World::process(void) {
       const auto collidingPlayerHitboxes =
           player->getCollidingHitbox(*otherPlayer);
       if (collidingPlayerHitboxes != nullptr) {
+        // TODO: check if collision occurs on axis X
         // Collision againt player detected
         player->m_velocity.x = 0;
         break;
@@ -91,6 +93,45 @@ void World::process(void) {
 
       // No obstacle, apply position
       player->m_position.x += directionX;
+    }
+    player->updateHitboxesPosition(player->m_position);
+
+    // Move Y
+    const auto directionY = player->m_velocity.y < 0 ? -1 : 1;
+    auto amountToMoveY = std::abs(std::round(player->m_velocity.y));
+
+    while (amountToMoveY-- > 0) {
+      // Move hitboxes 1 pixel into direction
+      player->updateHitboxesPosition(player->m_position +
+                                     sf::Vector2f(0.0f, directionY));
+
+      // Test collisions against map
+      const auto collidingMapHitboxes = player->getCollidingHitbox(*m_ptr_map);
+      if (collidingMapHitboxes != nullptr) {
+        // TODO: check if collision occurs on axis Y
+        // Collision againt map detected
+        player->m_velocity.y = 0;
+
+        // If is falling
+        if (directionY > 0) {
+          player->m_isGrounded = true;
+        }
+
+        break;
+      }
+
+      // Test collisions against player
+      const auto collidingPlayerHitboxes =
+          player->getCollidingHitbox(*otherPlayer);
+      if (collidingPlayerHitboxes != nullptr) {
+        // TODO: check if collision occurs on axis Y
+        // Collision againt player detected
+        player->m_velocity.y = 0;
+        break;
+      }
+
+      // No obstacle, apply position
+      player->m_position.y += directionY;
     }
     player->updateHitboxesPosition(player->m_position);
   }
