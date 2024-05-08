@@ -1,9 +1,12 @@
 #include "include/DisplayBehavior.hpp"
+#include "SFML/Graphics/Rect.hpp"
+#include "SFML/System/Vector2.hpp"
 #include "include/Character.hpp"
 #include <iostream>
 
 DisplayBehavior::DisplayBehavior(const std::string& textureFilepath,
-                                 sf::Vector2f textureUvSize)
+                                 sf::Vector2i textureUv,
+                                 sf::Vector2i textureUvSize)
     : m_texture(sf::Texture()) {
   if (!m_texture.loadFromFile(textureFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
@@ -11,7 +14,10 @@ DisplayBehavior::DisplayBehavior(const std::string& textureFilepath,
                                 textureFilepath);
   }
   m_sprite.setTexture(m_texture);
-  m_sprite.setOrigin(textureUvSize / 2.f);
+  m_sprite.setOrigin(sf::Vector2f(textureUvSize) / 2.f);
+
+  const auto textureRect = sf::IntRect(textureUv, textureUvSize);
+  m_sprite.setTextureRect(textureRect);
 }
 
 void DisplayBehavior::update(const sf::Vector2f& position,

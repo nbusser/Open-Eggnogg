@@ -26,7 +26,8 @@ Character::Character(const sf::Vector2f& position, const Direction direction)
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
       m_direction(direction), m_input_direction(Direction::NEUTRAL),
-      m_stunTimer(Timer()), m_respawnTimer(Timer()), m_hurtbox(Collidable()) {
+      m_stunTimer(Timer()), m_respawnTimer(Timer()), m_hurtbox(Collidable()),
+      m_hitbox(Collidable()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 

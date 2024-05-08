@@ -13,8 +13,8 @@ protected:
   sf::Texture m_texture;
 
 public:
-  DisplayBehavior(const std::string& textureFilepath,
-                  sf::Vector2f textureUvSize);
+  DisplayBehavior(const std::string& textureFilepath, sf::Vector2i textureUv,
+                  sf::Vector2i textureUvSize);
 
   ~DisplayBehavior(void) = default;
 

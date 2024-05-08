@@ -56,6 +56,7 @@ public:
   sf::Vector2f m_velocity;
   sf::Vector2f m_remainder;
   Collidable m_hurtbox;
+  Collidable m_hitbox;
 
   bool m_isGrounded;
 

@@ -6,6 +6,7 @@
 #include "include/Displayable.hpp"
 #include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
+#include "include/Sword.hpp"
 #include "include/Utils.hpp"
 #include <cmath>
 #include <cstdlib>
@@ -28,8 +29,12 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
 
   m_ptr_characters = std::vector<std::shared_ptr<Character>>{player1, player2};
 
-  m_ptr_displayables =
-      std::vector<std::shared_ptr<Displayable>>{player1, player2, m_ptr_map};
+  const auto ptr_sword = std::make_shared<Sword>();
+  ptr_sword->attachTo(player1);
+  m_ptr_swords = std::vector<std::shared_ptr<Sword>>{ptr_sword};
+
+  m_ptr_displayables = std::vector<std::shared_ptr<Displayable>>{
+      player1, player2, m_ptr_map, ptr_sword};
 
   m_ptr_map->loadMap("./assets/maps/sample.png");
 }

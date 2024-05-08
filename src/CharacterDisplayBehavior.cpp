@@ -8,8 +8,8 @@
 #include "include/Utils.hpp"
 
 CharacterDisplayBehavior::CharacterDisplayBehavior(void)
-    : DisplayBehavior(Constants::characterTextureFilepath,
-                      sf::Vector2f(16.0f, 16.0f)),
+    : DisplayBehavior(Constants::characterTextureFilepath, sf::Vector2i(0, 0),
+                      sf::Vector2i(16, 16)),
       Animated(AnimationPlayer(m_sprite)) {};
 
 void CharacterDisplayBehavior::update(const sf::Vector2f& position,

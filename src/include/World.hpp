@@ -7,6 +7,7 @@
 #include "PhysicsEntity.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Clock.hpp"
+#include "Sword.hpp"
 #include <memory>
 #include <vector>
 
@@ -25,6 +26,7 @@ public:
 
   std::shared_ptr<Map> m_ptr_map;
   std::vector<std::shared_ptr<Character>> m_ptr_characters;
+  std::vector<std::shared_ptr<Sword>> m_ptr_swords;
 
 private:
   World(void);
