@@ -100,12 +100,14 @@ std::shared_ptr<Character> Character::getOtherCharacter(void) const {
 }
 
 void Character::inputDirection(const Direction direction) {
-  m_input_direction = direction;
+  if (canMove()) {
+    m_input_direction = direction;
+  }
 }
 
 void Character::inputJump(const float delta) {
   // TODO: use delta??
-  if (m_isGrounded) {
+  if (m_isGrounded && canMove()) {
     jump();
   }
 }
@@ -114,6 +116,8 @@ void Character::jump() {
   updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
   m_isGrounded = false;
 }
+
+bool Character::canMove(void) const { return !IS_STUNNED; }
 
 void Character::endStun(void) {
   m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);

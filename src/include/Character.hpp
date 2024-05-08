@@ -38,6 +38,8 @@ private:
 
   void jump();
 
+  bool canMove(void) const;
+
 public:
   Character(const sf::Vector2f& position, const Direction direction);
 
