@@ -19,15 +19,16 @@
 #include <vector>
 
 #define IS_STUNNED m_stunTimer.isRunning()
+#define IS_DEAD m_respawnTimer.isRunning()
 
 Character::Character(const sf::Vector2f& position, const Direction direction)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
       m_direction(direction), m_input_direction(Direction::NEUTRAL),
-      m_stunTimer(Timer()) {
+      m_stunTimer(Timer()), m_respawnTimer(Timer()) {
   // Play idle anim
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 
   // Set player's hitbox
   const auto hitbox =
@@ -100,14 +101,14 @@ std::shared_ptr<Character> Character::getOtherCharacter(void) const {
 }
 
 void Character::inputDirection(const Direction direction) {
-  if (canMove()) {
+  if (isControllable()) {
     m_input_direction = direction;
   }
 }
 
 void Character::inputJump(const float delta) {
   // TODO: use delta??
-  if (m_isGrounded && canMove()) {
+  if (m_isGrounded && isControllable()) {
     jump();
   }
 }
@@ -117,10 +118,10 @@ void Character::jump() {
   m_isGrounded = false;
 }
 
-bool Character::canMove(void) const { return !IS_STUNNED; }
+bool Character::isControllable(void) const { return !IS_STUNNED && !IS_DEAD; }
 
 void Character::endStun(void) {
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 }
 
 void Character::endureMarsupialJump(void) {
@@ -129,11 +130,30 @@ void Character::endureMarsupialJump(void) {
                     [this] { endStun(); });
 }
 
-void Character::tickTimers(const float delta) { m_stunTimer.tick(delta); }
+void Character::tickTimers(const float delta) {
+  m_stunTimer.tick(delta);
+  m_respawnTimer.tick(delta);
+}
 
 void Character::display(sf::RenderTarget& target, const float delta) {
   m_ptr_displayBehavior->update(m_position, m_direction, delta);
   target.draw(*m_ptr_displayBehavior);
+}
+
+void Character::respawn(void) {
+  // TODO: chose respawn position
+  // TODO: reactivate hitboxes
+  const sf::Vector2f respawnPosition(32.0f, 32.0f);
+
+  m_position = respawnPosition;
+  m_velocity = sf::Vector2f(0.0f, 0.0f);
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+}
+
+void Character::kill(void) {
+  // TODO: remove hitboxes
+  m_ptr_displayBehavior->playAnimation(Animations::playerDeath);
+  m_respawnTimer.start(Constants::respawnDuration, [this] { respawn(); });
 }
 
 void Character::moveX(const float amount) {

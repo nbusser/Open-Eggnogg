@@ -21,6 +21,7 @@ constexpr float characterJumpForce = -5.0f;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
 constexpr float characterMarsupialStunDuration = 0.3f;
+constexpr float respawnDuration = 2.0f;
 } // namespace Constants
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
@@ -35,10 +36,12 @@ private:
   Direction m_input_direction;
 
   Timer m_stunTimer;
+  Timer m_respawnTimer;
 
   void jump();
 
-  bool canMove(void) const;
+  bool isControllable(void) const;
+  void respawn(void);
 
 public:
   Character(const sf::Vector2f& position, const Direction direction);
@@ -68,6 +71,8 @@ public:
 
   void endureMarsupialJump(void);
   void endStun(void);
+
+  void kill(void);
 
   // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };
