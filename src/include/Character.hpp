@@ -20,6 +20,8 @@ private:
 
   virtual void display(sf::RenderTarget& target, const float delta) override;
 
+  std::shared_ptr<Character> getOtherCharacter(void) const;
+
 public:
   Character(const sf::Vector2f& position);
 
@@ -29,15 +31,16 @@ public:
 
   void jump(const float delta);
 
-  void physicsTick(void) override;
-
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
-  bool m_isGrounded;
-
   sf::Vector2f m_remainder;
 
+  bool m_isGrounded;
+
   void updateSpeed(sf::Vector2f force);
+
+  virtual void moveX(const float amount) override;
+  virtual void moveY(const float amount) override;
 
   // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };

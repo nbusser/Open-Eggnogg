@@ -3,10 +3,6 @@
 #include "SFML/System/Vector2.hpp"
 class PhysicsEntity {
 public:
-  sf::Vector2f m_position;
-  sf::Vector2f m_velocity;
-
-  virtual void physicsTick(void) = 0;
-
-  bool isMovable(void);
+  virtual void moveX(const float amount) = 0;
+  virtual void moveY(const float amount) = 0;
 };

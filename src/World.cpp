@@ -4,6 +4,7 @@
 #include "include/Character.hpp"
 #include "include/Collidable.hpp"
 #include "include/Displayable.hpp"
+#include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
 #include "include/Utils.hpp"
 #include <cmath>
@@ -12,22 +13,27 @@
 #include <memory>
 #include <vector>
 
-#define GET_PLAYER(i) m_ptr_characters[i]
+#define GET_PLAYER(i) ptr_Characters[i]
 
-World::World(void) : m_ptr_map(std::make_shared<Map>()) {
-  auto ptr_player1 = std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f));
-  auto ptr_player2 = std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f));
+std::shared_ptr<Map> World::ptr_Map = nullptr;
+std::vector<std::shared_ptr<Character>> World::ptr_Characters = {};
 
-  m_ptr_characters =
-      std::vector<std::shared_ptr<Character>>{ptr_player1, ptr_player2};
+void World::Init(void) {
+  World::ptr_Map = std::make_shared<Map>();
+  World::ptr_Characters.push_back(
+      std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f)));
+  World::ptr_Characters.push_back(
+      std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f)));
+}
 
+World::World(void) {
   m_ptr_displayables = std::vector<std::shared_ptr<Displayable>>{
-      ptr_player1, ptr_player2, m_ptr_map};
+      ptr_Characters[0], ptr_Characters[1], ptr_Map};
 
   m_ptr_collidables = std::vector<std::shared_ptr<Collidable>>{
-      ptr_player1, ptr_player2, m_ptr_map};
+      ptr_Characters[0], ptr_Characters[1], ptr_Map};
 
-  m_ptr_map->loadMap("./assets/maps/sample.png");
+  ptr_Map->loadMap("./assets/maps/sample.png");
 }
 
 void World::process(const float delta) {
@@ -49,9 +55,9 @@ void World::process(const float delta) {
   //   ptr_physicsBody->physicsTick();
   // }
 
-  for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
-    const auto player = m_ptr_characters[i];
-    const auto otherPlayer = m_ptr_characters[(i + 1) % 2];
+  for (size_t i = 0; i < ptr_Characters.size(); ++i) {
+    const auto player = ptr_Characters[i];
+    const auto otherPlayer = ptr_Characters[(i + 1) % 2];
 
     // Decelerate
     // TODO: if no input
@@ -85,7 +91,7 @@ void World::process(const float delta) {
                                      sf::Vector2f(directionX, 0.0f));
 
       // Test collisions against map
-      const auto collidingMapHitboxes = player->getCollidingHitbox(*m_ptr_map);
+      const auto collidingMapHitboxes = player->getCollidingHitbox(*ptr_Map);
       if (collidingMapHitboxes != nullptr) {
         const auto collision = Collidable::GetCollision(*collidingMapHitboxes);
         if (collision.axis == Axis::X) {
@@ -125,7 +131,7 @@ void World::process(const float delta) {
                                      sf::Vector2f(0.0f, directionY));
 
       // Test collisions against map
-      const auto collidingMapHitboxes = player->getCollidingHitbox(*m_ptr_map);
+      const auto collidingMapHitboxes = player->getCollidingHitbox(*ptr_Map);
       if (collidingMapHitboxes != nullptr) {
         // TODO: check if collision occurs on axis Y
         // Collision againt map detected

@@ -18,6 +18,7 @@ int main() {
   auto window = sf::RenderWindow{{640u, 360u}, "Open Eggnogg"};
   window.setFramerateLimit(60);
 
+  World::Init();
   auto world = World();
 
   sf::View camera(sf::FloatRect(0.0f, 0.0f, 240.0f, 160.0f));
