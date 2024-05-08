@@ -28,10 +28,11 @@ private:
 
   std::shared_ptr<Character> getOtherCharacter(void) const;
 
+  Direction m_direction;
   Direction m_input_direction;
 
 public:
-  Character(const sf::Vector2f& position);
+  Character(const sf::Vector2f& position, const Direction direction);
 
   ~Character(void);
 

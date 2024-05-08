@@ -17,11 +17,11 @@
 #include <system_error>
 #include <vector>
 
-Character::Character(const sf::Vector2f& position)
-    : m_input_direction(Direction::NEUTRAL),
-      m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
+Character::Character(const sf::Vector2f& position, const Direction direction)
+    : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
-      m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)) {
+      m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
+      m_direction(direction), m_input_direction(Direction::NEUTRAL) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
 
@@ -63,6 +63,12 @@ void Character::physicsTick(const float delta) {
 
   // Apply gravity
   updateSpeed(Constants::gravityVector * delta);
+
+  if (m_direction == Direction::RIGHT && m_velocity.x < 0.0f) {
+    m_direction = Direction::LEFT;
+  } else if (m_direction == Direction::LEFT && m_velocity.x > 0.0f) {
+    m_direction = Direction::RIGHT;
+  }
 }
 
 void Character::updateSpeed(sf::Vector2f force) {
@@ -102,9 +108,7 @@ void Character::jump(const float delta) {
 }
 
 void Character::display(sf::RenderTarget& target, const float delta) {
-  const auto spriteDirection =
-      m_velocity.x >= 0 ? Direction::RIGHT : Direction::LEFT;
-  m_ptr_displayBehavior->update(m_position, spriteDirection, delta);
+  m_ptr_displayBehavior->update(m_position, m_direction, delta);
   target.draw(*m_ptr_displayBehavior);
 }
 
