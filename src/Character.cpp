@@ -37,11 +37,10 @@ Character::~Character(void) {};
 void Character::updateSpeed(sf::Vector2f force) {
   m_velocity += force;
 
-  constexpr float characterMax_velocityX = 2.0f;
-
-  m_velocity.x =
-      std::clamp(m_velocity.x, -characterMax_velocityX, characterMax_velocityX);
-  m_velocity.y = std::clamp(m_velocity.y, -15.0f, Constants::gravity);
+  m_velocity.x = std::clamp(m_velocity.x, -Constants::characterMaxVelocityX,
+                            Constants::characterMaxVelocityX);
+  m_velocity.y = std::clamp(m_velocity.y, Constants::characterMinVelocityY,
+                            Constants::gravity);
 }
 
 std::shared_ptr<Character> Character::getOtherCharacter(void) const {
@@ -55,7 +54,7 @@ std::shared_ptr<Character> Character::getOtherCharacter(void) const {
 }
 
 void Character::move(const Direction direction, const float delta) {
-  const auto acceleration = 15.0f * delta;
+  const auto acceleration = Constants::characterAccelerationFactor * delta;
   switch (direction) {
   case Direction::LEFT:
     updateSpeed(sf::Vector2f(-acceleration, 0.0f));
@@ -69,7 +68,7 @@ void Character::move(const Direction direction, const float delta) {
 void Character::jump(const float delta) {
   // TODO: use delta??
   if (m_isGrounded) {
-    updateSpeed(sf::Vector2f(0.0f, -5.0f));
+    updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
     m_isGrounded = false;
   }
 }

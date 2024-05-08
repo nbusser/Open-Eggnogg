@@ -57,7 +57,8 @@ void World::process(const float delta) {
   for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
     const auto player = m_ptr_characters[i];
 
-    const auto decelerationAmount = 7.0f * delta;
+    const auto decelerationAmount =
+        Constants::characterDecelerationFactor * delta;
     if (player->m_velocity.x > 0) {
       player->m_velocity.x =
           std::max(0.0f, player->m_velocity.x - decelerationAmount);

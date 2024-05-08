@@ -1,16 +1,11 @@
 #include "include/CharacterPhysicsBehavior.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "include/Character.hpp"
 #include "include/PhysicsBehavior.hpp"
 #include <algorithm>
 
-namespace Constants {
-constexpr float characterMax_velocityX = 4.0f;
-constexpr float characterAccelerationFactor = 1.0f;
-constexpr float characterDecelerationFactor = 0.2f;
-} // namespace Constants
-
 CharacterPhysicsBehavior::CharacterPhysicsBehavior(const sf::Vector2f& position)
-    : PhysicsBehavior(position, Constants::characterMax_velocityX,
+    : PhysicsBehavior(position, Constants::characterMaxVelocityX,
                       Constants::characterAccelerationFactor,
                       Constants::characterDecelerationFactor) {};
 

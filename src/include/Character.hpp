@@ -12,6 +12,14 @@
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
 
+namespace Constants {
+constexpr float characterMaxVelocityX = 2.0f;
+constexpr float characterMinVelocityY = -15.0f;
+constexpr float characterJumpForce = -5.0f;
+constexpr float characterAccelerationFactor = 15.0f;
+constexpr float characterDecelerationFactor = 7.0f;
+} // namespace Constants
+
 enum Direction { LEFT, RIGHT };
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
