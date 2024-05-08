@@ -10,23 +10,29 @@
 #include <memory>
 #include <vector>
 
+#define WORLD World::GetInstance()
+
 class World : public Displayable {
 private:
   std::vector<std::shared_ptr<Displayable>> m_ptr_displayables;
   std::vector<std::shared_ptr<Collidable>> m_ptr_collidables;
 
 public:
-  static std::shared_ptr<Map> ptr_Map;
-  static std::vector<std::shared_ptr<Character>> ptr_Characters;
+  static World& GetInstance(void);
 
-  static void Init(void);
-
-  World(void);
   void process(const float delta);
 
   virtual void display(sf::RenderTarget& target, const float delta);
 
+  std::shared_ptr<Map> m_ptr_map;
+  std::vector<std::shared_ptr<Character>> m_ptr_characters;
+
 private:
+  World(void);
+
+  World(const World&) = delete;
+  World& operator=(const World&) = delete;
+
   void resolvePlayerToMapCollision(const Character& player,
                                    const Collision& collision) const;
   void resolvePlayerToPlayerCollision(const Character& player1,

@@ -45,7 +45,7 @@ void Character::updateSpeed(sf::Vector2f force) {
 }
 
 std::shared_ptr<Character> Character::getOtherCharacter(void) const {
-  for (const auto ptr_character : World::ptr_Characters) {
+  for (const auto ptr_character : WORLD.m_ptr_characters) {
     if (ptr_character.get() != this) {
       return ptr_character;
     }
@@ -95,7 +95,7 @@ void Character::moveX(const float amount) {
     updateHitboxesPosition(m_position + sf::Vector2f(directionX, 0.0f));
 
     // Test collisions against map
-    const auto collidingMapHitboxes = getCollidingHitbox(*World::ptr_Map);
+    const auto collidingMapHitboxes = getCollidingHitbox(*WORLD.m_ptr_map);
     if (collidingMapHitboxes != nullptr) {
       const auto collision = Collidable::GetCollision(*collidingMapHitboxes);
       if (collision.axis == Axis::X) {
@@ -136,7 +136,7 @@ void Character::moveY(const float amount) {
     updateHitboxesPosition(m_position + sf::Vector2f(0.0f, directionY));
 
     // Test collisions against map
-    const auto collidingMapHitboxes = getCollidingHitbox(*World::ptr_Map);
+    const auto collidingMapHitboxes = getCollidingHitbox(*WORLD.m_ptr_map);
     if (collidingMapHitboxes != nullptr) {
       // TODO: check if collision occurs on axis Y
       // Collision againt map detected

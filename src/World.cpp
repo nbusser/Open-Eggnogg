@@ -13,27 +13,26 @@
 #include <memory>
 #include <vector>
 
-#define GET_PLAYER(i) ptr_Characters[i]
+#define GET_PLAYER(i) m_ptr_characters[i]
 
-std::shared_ptr<Map> World::ptr_Map = nullptr;
-std::vector<std::shared_ptr<Character>> World::ptr_Characters = {};
-
-void World::Init(void) {
-  World::ptr_Map = std::make_shared<Map>();
-  World::ptr_Characters.push_back(
-      std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f)));
-  World::ptr_Characters.push_back(
-      std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f)));
+World& World::GetInstance(void) {
+  static World instance;
+  return instance;
 }
 
-World::World(void) {
-  m_ptr_displayables = std::vector<std::shared_ptr<Displayable>>{
-      ptr_Characters[0], ptr_Characters[1], ptr_Map};
+World::World(void) : m_ptr_map(std::make_shared<Map>()) {
+  const auto player1 = std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f));
+  const auto player2 = std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f));
 
-  m_ptr_collidables = std::vector<std::shared_ptr<Collidable>>{
-      ptr_Characters[0], ptr_Characters[1], ptr_Map};
+  m_ptr_characters = std::vector<std::shared_ptr<Character>>{player1, player2};
 
-  ptr_Map->loadMap("./assets/maps/sample.png");
+  m_ptr_displayables =
+      std::vector<std::shared_ptr<Displayable>>{player1, player2, m_ptr_map};
+
+  m_ptr_collidables =
+      std::vector<std::shared_ptr<Collidable>>{player1, player2, m_ptr_map};
+
+  m_ptr_map->loadMap("./assets/maps/sample.png");
 }
 
 void World::process(const float delta) {
@@ -55,8 +54,8 @@ void World::process(const float delta) {
   //   ptr_physicsBody->physicsTick();
   // }
 
-  for (size_t i = 0; i < ptr_Characters.size(); ++i) {
-    const auto player = ptr_Characters[i];
+  for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
+    const auto player = m_ptr_characters[i];
 
     const auto decelerationAmount = 7.0f * delta;
     if (player->m_velocity.x > 0) {
