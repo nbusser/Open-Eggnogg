@@ -3,6 +3,7 @@
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/System/Clock.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "include/Animations.hpp"
 #include "include/CharacterDisplayBehavior.hpp"
@@ -17,11 +18,14 @@
 #include <system_error>
 #include <vector>
 
+#define IS_STUNNED m_stunTimer.isRunning()
+
 Character::Character(const sf::Vector2f& position, const Direction direction)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
-      m_direction(direction), m_input_direction(Direction::NEUTRAL) {
+      m_direction(direction), m_input_direction(Direction::NEUTRAL),
+      m_stunTimer(Timer()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
 
@@ -99,13 +103,29 @@ void Character::inputDirection(const Direction direction) {
   m_input_direction = direction;
 }
 
-void Character::jump(const float delta) {
+void Character::inputJump(const float delta) {
   // TODO: use delta??
   if (m_isGrounded) {
-    updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
-    m_isGrounded = false;
+    jump();
   }
 }
+
+void Character::jump() {
+  updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
+  m_isGrounded = false;
+}
+
+void Character::endStun(void) {
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdleAnimation);
+}
+
+void Character::endureMarsupialJump(void) {
+  m_ptr_displayBehavior->playAnimation(Animations::playerEndureMarsupialJump);
+  m_stunTimer.start(Constants::characterMarsupialStunDuration,
+                    [this] { endStun(); });
+}
+
+void Character::tickTimers(const float delta) { m_stunTimer.tick(delta); }
 
 void Character::display(sf::RenderTarget& target, const float delta) {
   m_ptr_displayBehavior->update(m_position, m_direction, delta);
@@ -189,10 +209,14 @@ void Character::moveY(const float amount) {
 
     // Test collisions against player
     const auto collidingPlayerHitboxes = getCollidingHitbox(*otherPlayer);
+
+    // Marsupial jump
     if (collidingPlayerHitboxes != nullptr) {
-      // TODO: check if collision occurs on axis Y
-      // Collision againt player detected
-      m_velocity.y = 0;
+      if (collidingPlayerHitboxes->ptr_myHitbox->top <
+          collidingPlayerHitboxes->ptr_otherHitbox->top) {
+        jump();
+        otherPlayer->endureMarsupialJump();
+      }
       break;
     }
 

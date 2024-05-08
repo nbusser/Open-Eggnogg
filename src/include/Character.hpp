@@ -9,7 +9,9 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
+#include "SFML/System/Clock.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "Timer.hpp"
 #include "Utils.hpp"
 
 namespace Constants {
@@ -18,6 +20,7 @@ constexpr float characterMinVelocityY = -15.0f;
 constexpr float characterJumpForce = -5.0f;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
+constexpr float characterMarsupialStunDuration = 0.3f;
 } // namespace Constants
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
@@ -31,6 +34,10 @@ private:
   Direction m_direction;
   Direction m_input_direction;
 
+  Timer m_stunTimer;
+
+  void jump();
+
 public:
   Character(const sf::Vector2f& position, const Direction direction);
 
@@ -38,7 +45,7 @@ public:
 
   void inputDirection(const Direction direction);
 
-  void jump(const float delta);
+  void inputJump(const float delta);
 
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
@@ -50,10 +57,15 @@ public:
 
   void move(void);
 
+  void tickTimers(const float delta);
+
   void physicsTick(const float delta);
 
   virtual void moveX(const float amount) override;
   virtual void moveY(const float amount) override;
+
+  void endureMarsupialJump(void);
+  void endStun(void);
 
   // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };
