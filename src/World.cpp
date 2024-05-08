@@ -31,9 +31,6 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
   m_ptr_displayables =
       std::vector<std::shared_ptr<Displayable>>{player1, player2, m_ptr_map};
 
-  m_ptr_collidables =
-      std::vector<std::shared_ptr<Collidable>>{player1, player2, m_ptr_map};
-
   m_ptr_map->loadMap("./assets/maps/sample.png");
 }
 

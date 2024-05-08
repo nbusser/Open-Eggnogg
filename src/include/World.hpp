@@ -15,7 +15,6 @@
 class World : public Displayable {
 private:
   std::vector<std::shared_ptr<Displayable>> m_ptr_displayables;
-  std::vector<std::shared_ptr<Collidable>> m_ptr_collidables;
 
 public:
   static World& GetInstance(void);

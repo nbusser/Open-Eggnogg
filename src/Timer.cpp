@@ -1,5 +1,6 @@
 #include "include/Timer.hpp"
 #include "SFML/System/Time.hpp"
+#include <iostream>
 
 Timer::Timer(void)
     : m_isRunning(false), m_timeLeft(0.0f),

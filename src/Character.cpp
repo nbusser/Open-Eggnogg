@@ -26,16 +26,16 @@ Character::Character(const sf::Vector2f& position, const Direction direction)
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
       m_direction(direction), m_input_direction(Direction::NEUTRAL),
-      m_stunTimer(Timer()), m_respawnTimer(Timer()) {
+      m_stunTimer(Timer()), m_respawnTimer(Timer()), m_hurtbox(Collidable()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 
   // Set player's hitbox
-  const auto hitbox =
+  const auto hurtbox =
       sf::FloatRect(sf::Vector2f(3.0f, 1.0f), sf::Vector2f(9.0f, 15.0f));
-  m_relativeHitboxes.push_back(hitbox);
+  m_hurtbox.m_relativeHitboxes.push_back(hurtbox);
   // Shift the hitbox with player's position
-  updateHitboxesPosition(position);
+  m_hurtbox.updateHitboxesPosition(position);
 };
 
 Character::~Character(void) {};
@@ -171,10 +171,12 @@ void Character::moveX(const float amount) {
 
   while (amountToMoveX-- > 0) {
     // Move hitboxes 1 pixel into direction
-    updateHitboxesPosition(m_position + sf::Vector2f(directionX, 0.0f));
+    m_hurtbox.updateHitboxesPosition(m_position +
+                                     sf::Vector2f(directionX, 0.0f));
 
     // Test collisions against map
-    const auto collidingMapHitboxes = getCollidingHitbox(*WORLD.m_ptr_map);
+    const auto collidingMapHitboxes =
+        m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
     if (collidingMapHitboxes != nullptr) {
       const auto collision = Collidable::GetCollision(*collidingMapHitboxes);
       if (collision.axis == Axis::X) {
@@ -186,7 +188,8 @@ void Character::moveX(const float amount) {
     }
 
     // Test collisions against player
-    const auto collidingPlayerHitboxes = getCollidingHitbox(*otherPlayer);
+    const auto collidingPlayerHitboxes =
+        m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
     if (collidingPlayerHitboxes != nullptr) {
       // TODO: check if collision occurs on axis X
       // Collision againt player detected
@@ -197,7 +200,7 @@ void Character::moveX(const float amount) {
     // No obstacle, apply position
     m_position.x += directionX;
   }
-  updateHitboxesPosition(m_position);
+  m_hurtbox.updateHitboxesPosition(m_position);
 }
 
 void Character::moveY(const float amount) {
@@ -214,10 +217,12 @@ void Character::moveY(const float amount) {
 
   while (amountToMoveY-- > 0) {
     // Move hitboxes 1 pixel into direction
-    updateHitboxesPosition(m_position + sf::Vector2f(0.0f, directionY));
+    m_hurtbox.updateHitboxesPosition(m_position +
+                                     sf::Vector2f(0.0f, directionY));
 
     // Test collisions against map
-    const auto collidingMapHitboxes = getCollidingHitbox(*WORLD.m_ptr_map);
+    const auto collidingMapHitboxes =
+        m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
     if (collidingMapHitboxes != nullptr) {
       // TODO: check if collision occurs on axis Y
       // Collision againt map detected
@@ -232,7 +237,8 @@ void Character::moveY(const float amount) {
     }
 
     // Test collisions against player
-    const auto collidingPlayerHitboxes = getCollidingHitbox(*otherPlayer);
+    const auto collidingPlayerHitboxes =
+        m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
 
     // Marsupial jump
     if (collidingPlayerHitboxes != nullptr) {
@@ -247,5 +253,5 @@ void Character::moveY(const float amount) {
     // No obstacle, apply position
     m_position.y += directionY;
   }
-  updateHitboxesPosition(m_position);
+  m_hurtbox.updateHitboxesPosition(m_position);
 }

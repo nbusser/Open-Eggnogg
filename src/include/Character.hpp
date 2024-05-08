@@ -24,7 +24,7 @@ constexpr float characterMarsupialStunDuration = 0.3f;
 constexpr float respawnDuration = 2.0f;
 } // namespace Constants
 
-class Character : public PhysicsEntity, public Displayable, public Collidable {
+class Character : public PhysicsEntity, public Displayable {
 private:
   std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
 
@@ -55,6 +55,7 @@ public:
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
   sf::Vector2f m_remainder;
+  Collidable m_hurtbox;
 
   bool m_isGrounded;
 
