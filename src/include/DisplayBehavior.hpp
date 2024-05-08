@@ -4,6 +4,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "Utils.hpp"
 #include <memory>
 
 class DisplayBehavior : public sf::Drawable {
@@ -12,11 +13,13 @@ protected:
   sf::Texture m_texture;
 
 public:
-  DisplayBehavior(const std::string& textureFilepath);
+  DisplayBehavior(const std::string& textureFilepath,
+                  sf::Vector2f textureUvSize);
 
   ~DisplayBehavior(void) = default;
 
-  virtual void update(const sf::Vector2f& position, const float delta);
+  virtual void update(const sf::Vector2f& position, const Direction direction,
+                      const float delta);
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;

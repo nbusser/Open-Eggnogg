@@ -6,3 +6,5 @@ class Utils {
 public:
   static sf::Vector2f getFloatRectCenter(const sf::FloatRect& rect);
 };
+
+enum Direction { NEUTRAL, LEFT, RIGHT };

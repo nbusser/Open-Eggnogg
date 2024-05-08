@@ -2,7 +2,6 @@
 
 #include "CharacterDisplayBehavior.hpp"
 #include "Collidable.hpp"
-#include "DisplayBehavior.hpp"
 #include "Displayable.hpp"
 #include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
@@ -11,6 +10,7 @@
 #include "SFML/Graphics/Sprite.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "Utils.hpp"
 
 namespace Constants {
 constexpr float characterMaxVelocityX = 2.0f;
@@ -19,8 +19,6 @@ constexpr float characterJumpForce = -5.0f;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
 } // namespace Constants
-
-enum Direction { NEUTRAL, LEFT, RIGHT };
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
 private:

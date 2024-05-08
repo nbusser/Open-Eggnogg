@@ -14,5 +14,6 @@ public:
 
   ~CharacterDisplayBehavior(void) = default;
 
-  virtual void update(const sf::Vector2f& position, const float delta) override;
+  virtual void update(const sf::Vector2f& position, const Direction direction,
+                      const float delta) override;
 };

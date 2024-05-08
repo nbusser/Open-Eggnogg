@@ -102,7 +102,9 @@ void Character::jump(const float delta) {
 }
 
 void Character::display(sf::RenderTarget& target, const float delta) {
-  m_ptr_displayBehavior->update(m_position, delta);
+  const auto spriteDirection =
+      m_velocity.x >= 0 ? Direction::RIGHT : Direction::LEFT;
+  m_ptr_displayBehavior->update(m_position, spriteDirection, delta);
   target.draw(*m_ptr_displayBehavior);
 }
 
