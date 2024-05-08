@@ -57,10 +57,7 @@ void World::process(const float delta) {
 
   for (size_t i = 0; i < ptr_Characters.size(); ++i) {
     const auto player = ptr_Characters[i];
-    const auto otherPlayer = ptr_Characters[(i + 1) % 2];
 
-    // Decelerate
-    // TODO: if no input
     const auto decelerationAmount = 7.0f * delta;
     if (player->m_velocity.x > 0) {
       player->m_velocity.x =
@@ -76,89 +73,8 @@ void World::process(const float delta) {
     player->m_remainder.x += std::abs(player->m_velocity.x);
     player->m_remainder.y += std::abs(player->m_velocity.y);
 
-    // Move X
-    const auto directionX = player->m_velocity.x < 0 ? -1 : 1;
-
-    auto amountToMoveX = std::abs(std::round(player->m_remainder.x));
-
-    if (amountToMoveX > 0) {
-      player->m_remainder.x -= amountToMoveX;
-    }
-
-    while (amountToMoveX-- > 0) {
-      // Move hitboxes 1 pixel into direction
-      player->updateHitboxesPosition(player->m_position +
-                                     sf::Vector2f(directionX, 0.0f));
-
-      // Test collisions against map
-      const auto collidingMapHitboxes = player->getCollidingHitbox(*ptr_Map);
-      if (collidingMapHitboxes != nullptr) {
-        const auto collision = Collidable::GetCollision(*collidingMapHitboxes);
-        if (collision.axis == Axis::X) {
-          // TODO: check if collision occurs on axis X
-          // Collision againt map detected
-          player->m_velocity.x = 0;
-          break;
-        }
-      }
-
-      // Test collisions against player
-      const auto collidingPlayerHitboxes =
-          player->getCollidingHitbox(*otherPlayer);
-      if (collidingPlayerHitboxes != nullptr) {
-        // TODO: check if collision occurs on axis X
-        // Collision againt player detected
-        player->m_velocity.x = 0;
-        break;
-      }
-
-      // No obstacle, apply position
-      player->m_position.x += directionX;
-    }
-    player->updateHitboxesPosition(player->m_position);
-
-    // Move Y
-    const auto directionY = player->m_velocity.y < 0 ? -1 : 1;
-    auto amountToMoveY = std::abs(std::round(player->m_remainder.y));
-
-    if (amountToMoveY > 0) {
-      player->m_remainder.y -= amountToMoveY;
-    }
-
-    while (amountToMoveY-- > 0) {
-      // Move hitboxes 1 pixel into direction
-      player->updateHitboxesPosition(player->m_position +
-                                     sf::Vector2f(0.0f, directionY));
-
-      // Test collisions against map
-      const auto collidingMapHitboxes = player->getCollidingHitbox(*ptr_Map);
-      if (collidingMapHitboxes != nullptr) {
-        // TODO: check if collision occurs on axis Y
-        // Collision againt map detected
-        player->m_velocity.y = 0;
-
-        // If is falling
-        if (directionY > 0) {
-          player->m_isGrounded = true;
-        }
-
-        break;
-      }
-
-      // Test collisions against player
-      const auto collidingPlayerHitboxes =
-          player->getCollidingHitbox(*otherPlayer);
-      if (collidingPlayerHitboxes != nullptr) {
-        // TODO: check if collision occurs on axis Y
-        // Collision againt player detected
-        player->m_velocity.y = 0;
-        break;
-      }
-
-      // No obstacle, apply position
-      player->m_position.y += directionY;
-    }
-    player->updateHitboxesPosition(player->m_position);
+    player->moveX(0.0f);
+    player->moveY(0.0f);
   }
 }
 
