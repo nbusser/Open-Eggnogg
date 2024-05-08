@@ -74,6 +74,11 @@ void Character::updateSpeed(sf::Vector2f force) {
                             Constants::gravity);
 }
 
+void Character::move() {
+  moveX(m_velocity.x);
+  moveY(m_velocity.y);
+}
+
 std::shared_ptr<Character> Character::getOtherCharacter(void) const {
   for (const auto ptr_character : WORLD.m_ptr_characters) {
     if (ptr_character.get() != this) {

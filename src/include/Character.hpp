@@ -49,6 +49,8 @@ public:
 
   void updateSpeed(sf::Vector2f force);
 
+  void move(void);
+
   void physicsTick(const float delta);
 
   virtual void moveX(const float amount) override;

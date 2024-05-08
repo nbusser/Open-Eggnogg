@@ -54,9 +54,7 @@ void World::process(const float delta) {
     const auto player = m_ptr_characters[i];
 
     player->physicsTick(delta);
-
-    player->moveX(player->m_velocity.x);
-    player->moveY(player->m_velocity.y);
+    player->move();
   }
 }
 
