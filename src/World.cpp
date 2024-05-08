@@ -38,43 +38,25 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
 void World::process(const float delta) {
   // Pressed inputs processing
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
-    GET_PLAYER(0)->move(Direction::LEFT, delta);
+    GET_PLAYER(0)->inputDirection(Direction::LEFT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    GET_PLAYER(0)->move(Direction::RIGHT, delta);
+    GET_PLAYER(0)->inputDirection(Direction::RIGHT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
     GET_PLAYER(0)->jump(delta);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-    GET_PLAYER(1)->move(Direction::LEFT, delta);
+    GET_PLAYER(1)->inputDirection(Direction::LEFT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-    GET_PLAYER(1)->move(Direction::RIGHT, delta);
+    GET_PLAYER(1)->inputDirection(Direction::RIGHT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
     GET_PLAYER(1)->jump(delta);
-
-  // for (const auto& ptr_physicsBody : m_ptr_characters) {
-  //   ptr_physicsBody->physicsTick();
-  // }
 
   for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
     const auto player = m_ptr_characters[i];
 
-    const auto decelerationAmount =
-        Constants::characterDecelerationFactor * delta;
-    if (player->m_velocity.x > 0) {
-      player->m_velocity.x =
-          std::max(0.0f, player->m_velocity.x - decelerationAmount);
-    } else if (player->m_velocity.x < 0) {
-      player->m_velocity.x =
-          std::min(0.0f, player->m_velocity.x + decelerationAmount);
-    }
+    player->physicsTick(delta);
 
-    // Apply gravity
-    player->updateSpeed(Constants::gravityVector * delta);
-
-    player->m_remainder.x += std::abs(player->m_velocity.x);
-    player->m_remainder.y += std::abs(player->m_velocity.y);
-
-    player->moveX(0.0f);
-    player->moveY(0.0f);
+    player->moveX(player->m_velocity.x);
+    player->moveY(player->m_velocity.y);
   }
 }
 

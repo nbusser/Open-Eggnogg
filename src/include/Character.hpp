@@ -20,7 +20,7 @@ constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
 } // namespace Constants
 
-enum Direction { LEFT, RIGHT };
+enum Direction { NEUTRAL, LEFT, RIGHT };
 
 class Character : public PhysicsEntity, public Displayable, public Collidable {
 private:
@@ -30,12 +30,14 @@ private:
 
   std::shared_ptr<Character> getOtherCharacter(void) const;
 
+  Direction m_input_direction;
+
 public:
   Character(const sf::Vector2f& position);
 
   ~Character(void);
 
-  void move(const Direction direction, const float delta);
+  void inputDirection(const Direction direction);
 
   void jump(const float delta);
 
@@ -46,6 +48,8 @@ public:
   bool m_isGrounded;
 
   void updateSpeed(sf::Vector2f force);
+
+  void physicsTick(const float delta);
 
   virtual void moveX(const float amount) override;
   virtual void moveY(const float amount) override;

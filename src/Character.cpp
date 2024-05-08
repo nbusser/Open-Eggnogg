@@ -18,7 +18,8 @@
 #include <vector>
 
 Character::Character(const sf::Vector2f& position)
-    : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
+    : m_input_direction(Direction::NEUTRAL),
+      m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)) {
   // Play idle anim
@@ -33,6 +34,36 @@ Character::Character(const sf::Vector2f& position)
 };
 
 Character::~Character(void) {};
+
+void Character::physicsTick(const float delta) {
+  // Apply acceleration regarding input direction
+  const auto acceleration = Constants::characterAccelerationFactor * delta;
+
+  switch (m_input_direction) {
+  case Direction::LEFT:
+    updateSpeed(sf::Vector2f(-acceleration, 0.0f));
+    break;
+  case Direction::RIGHT:
+    updateSpeed(sf::Vector2f(acceleration, 0.0f));
+    break;
+  default:
+    break;
+  }
+  // Consumes direction
+  m_input_direction = Direction::NEUTRAL;
+
+  // Apply friction
+  const auto decelerationAmount =
+      Constants::characterDecelerationFactor * delta;
+  if (m_velocity.x > 0) {
+    m_velocity.x = std::max(0.0f, m_velocity.x - decelerationAmount);
+  } else if (m_velocity.x < 0) {
+    m_velocity.x = std::min(0.0f, m_velocity.x + decelerationAmount);
+  }
+
+  // Apply gravity
+  updateSpeed(Constants::gravityVector * delta);
+}
 
 void Character::updateSpeed(sf::Vector2f force) {
   m_velocity += force;
@@ -53,16 +84,8 @@ std::shared_ptr<Character> Character::getOtherCharacter(void) const {
   return nullptr;
 }
 
-void Character::move(const Direction direction, const float delta) {
-  const auto acceleration = Constants::characterAccelerationFactor * delta;
-  switch (direction) {
-  case Direction::LEFT:
-    updateSpeed(sf::Vector2f(-acceleration, 0.0f));
-    break;
-  case Direction::RIGHT:
-    updateSpeed(sf::Vector2f(acceleration, 0.0f));
-    break;
-  }
+void Character::inputDirection(const Direction direction) {
+  m_input_direction = direction;
 }
 
 void Character::jump(const float delta) {
@@ -81,7 +104,9 @@ void Character::display(sf::RenderTarget& target, const float delta) {
 void Character::moveX(const float amount) {
   const auto otherPlayer = getOtherCharacter();
 
-  const auto directionX = m_velocity.x < 0 ? -1 : 1;
+  m_remainder.x += std::abs(amount);
+
+  const auto directionX = amount < 0 ? -1 : 1;
 
   auto amountToMoveX = std::abs(std::round(m_remainder.x));
 
@@ -123,7 +148,9 @@ void Character::moveX(const float amount) {
 void Character::moveY(const float amount) {
   const auto otherPlayer = getOtherCharacter();
 
-  const auto directionY = m_velocity.y < 0 ? -1 : 1;
+  m_remainder.y += std::abs(amount);
+
+  const auto directionY = amount < 0 ? -1 : 1;
   auto amountToMoveY = std::abs(std::round(m_remainder.y));
 
   if (amountToMoveY > 0) {
