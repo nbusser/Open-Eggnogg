@@ -40,12 +40,19 @@ Character::Character(const sf::Vector2f& position, const Direction direction)
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 
-  // Set player's hitbox
+  // Set player's hurtbox
   const auto hurtbox =
       sf::FloatRect(sf::Vector2f(3.0f, 1.0f), sf::Vector2f(9.0f, 15.0f));
   m_hurtbox.m_relativeHitboxes.push_back(hurtbox);
-  // Shift the hitbox with player's position
+  // Shift the hurtbox with player's position
   m_hurtbox.updateHitboxesPosition(position);
+
+  // Set player's hitbox
+  const auto hitbox =
+      sf::FloatRect(sf::Vector2f(18.0f, 7.0f), sf::Vector2f(9.0f, 1.0f));
+  m_hitbox.m_relativeHitboxes.push_back(hitbox);
+  // Shift the hitbox with player's position
+  m_hitbox.updateHitboxesPosition(position);
 
   for (size_t i = 0; i < static_cast<size_t>(TimedAction::TOTAL); ++i) {
     m_timers.push_back(Timer());
@@ -240,6 +247,8 @@ void Character::moveX(const float amount) {
     // Move hitboxes 1 pixel into direction
     m_hurtbox.updateHitboxesPosition(m_position +
                                      sf::Vector2f(directionX, 0.0f));
+    m_hitbox.updateHitboxesPosition(m_position +
+                                    sf::Vector2f(directionX, 0.0f));
 
     // Test collisions against map
     const auto collidingMapHitboxes =
@@ -255,6 +264,21 @@ void Character::moveX(const float amount) {
     }
 
     // Test collisions against player
+
+    // Hitbox
+    const auto touchingOtherPlayerHurtboxWithMyHitbox =
+        m_hitbox.getCollidingHitbox(otherPlayer->m_hurtbox);
+    if (touchingOtherPlayerHurtboxWithMyHitbox != nullptr) {
+      otherPlayer->kill();
+    }
+    const auto touchingOtherPlayerHitboxWithMyHurtbox =
+        m_hurtbox.getCollidingHitbox(otherPlayer->m_hitbox);
+    if (touchingOtherPlayerHitboxWithMyHurtbox != nullptr) {
+      kill();
+      break;
+    }
+
+    // Hurtbox
     const auto collidingPlayerHitboxes =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
     if (collidingPlayerHitboxes != nullptr) {
@@ -268,6 +292,7 @@ void Character::moveX(const float amount) {
     m_position.x += directionX;
   }
   m_hurtbox.updateHitboxesPosition(m_position);
+  m_hitbox.updateHitboxesPosition(m_position);
 }
 
 void Character::moveY(const float amount) {
@@ -286,6 +311,8 @@ void Character::moveY(const float amount) {
     // Move hitboxes 1 pixel into direction
     m_hurtbox.updateHitboxesPosition(m_position +
                                      sf::Vector2f(0.0f, directionY));
+    m_hitbox.updateHitboxesPosition(m_position +
+                                    sf::Vector2f(0.0f, directionY));
 
     // Test collisions against map
     const auto collidingMapHitboxes =
@@ -329,4 +356,5 @@ void Character::moveY(const float amount) {
     }
   }
   m_hurtbox.updateHitboxesPosition(m_position);
+  m_hitbox.updateHitboxesPosition(m_position);
 }
