@@ -13,6 +13,7 @@ bool AnimationPlayer::isAnimationEnded(void) const {
   return isAnimationLoaded() &&
          m_currentFrame == m_ptr_currentAnimation->textureUVs.size() - 1;
 }
+float nSecondsPerAnimtion;
 
 void AnimationPlayer::setAnimationFrame(const std::uint8_t frameIndex) {
   const auto textureSize = m_ptr_currentAnimation->textureSize;
@@ -31,7 +32,7 @@ void AnimationPlayer::update(const float delta) {
   }
   m_secondsCounter += delta;
 
-  if (m_secondsCounter > m_ptr_currentAnimation->nSecondsPerAnimtion &&
+  if (m_secondsCounter > m_ptr_currentAnimation->nSecondsPerAnimation &&
       (!isAnimationEnded() || m_ptr_currentAnimation->loop)) {
     m_secondsCounter = 0.0f;
     m_currentFrame =

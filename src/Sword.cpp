@@ -1,12 +1,12 @@
 #include "include/Sword.hpp"
 #include "SFML/System/Vector2.hpp"
-#include "include/DisplayBehavior.hpp"
+#include "include/TexturedSprite.hpp"
 
 Sword::Sword(void)
     : m_position(sf::Vector2f()), m_ptr_attachedCharacter(nullptr),
-      m_displayBehavior(DisplayBehavior(Constants::swordTextureFilepath,
-                                        Constants::swordTextureUv,
-                                        Constants::swordTextureUvSize)) {};
+      m_displayBehavior(TexturedSprite(Constants::swordTextureFilepath,
+                                       Constants::swordTextureUv,
+                                       Constants::swordTextureUvSize)) {};
 
 void Sword::attachTo(std::shared_ptr<Character> ptr_character) {
   m_ptr_attachedCharacter = ptr_character;

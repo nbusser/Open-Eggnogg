@@ -1,12 +1,12 @@
-#include "include/DisplayBehavior.hpp"
+#include "include/TexturedSprite.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "include/Character.hpp"
 #include <iostream>
 
-DisplayBehavior::DisplayBehavior(const std::string& textureFilepath,
-                                 sf::Vector2i textureUv,
-                                 sf::Vector2i textureUvSize)
+TexturedSprite::TexturedSprite(const std::string& textureFilepath,
+                               const sf::Vector2i textureUv,
+                               const sf::Vector2i textureUvSize)
     : m_texture(sf::Texture()) {
   if (!m_texture.loadFromFile(textureFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
@@ -20,8 +20,12 @@ DisplayBehavior::DisplayBehavior(const std::string& textureFilepath,
   m_sprite.setTextureRect(textureRect);
 }
 
-void DisplayBehavior::update(const sf::Vector2f& position,
-                             const Direction direction, const float delta) {
+TexturedSprite::TexturedSprite(const std::string& textureFilepath,
+                               const sf::Vector2i textureUv)
+    : TexturedSprite(textureFilepath, textureUv, sf::Vector2i(16, 16)) {};
+
+void TexturedSprite::update(const sf::Vector2f& position,
+                            const Direction direction, const float delta) {
   const auto localePosition = position + m_sprite.getOrigin();
   m_sprite.setPosition(localePosition.x, localePosition.y);
 
@@ -29,7 +33,7 @@ void DisplayBehavior::update(const sf::Vector2f& position,
   m_sprite.setScale(flipScale, 1.0f);
 }
 
-void DisplayBehavior::draw(sf::RenderTarget& target,
-                           sf::RenderStates states) const {
+void TexturedSprite::draw(sf::RenderTarget& target,
+                          sf::RenderStates states) const {
   target.draw(m_sprite);
 };

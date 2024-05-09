@@ -7,16 +7,19 @@
 #include "Utils.hpp"
 #include <memory>
 
-class DisplayBehavior : public sf::Drawable {
-protected:
+class TexturedSprite : public sf::Drawable {
+private:
   sf::Sprite m_sprite;
   sf::Texture m_texture;
 
 public:
-  DisplayBehavior(const std::string& textureFilepath, sf::Vector2i textureUv,
-                  sf::Vector2i textureUvSize);
+  TexturedSprite(const std::string& textureFilepath,
+                 const sf::Vector2i textureUv,
+                 const sf::Vector2i textureUvSize);
+  TexturedSprite(const std::string& textureFilepath,
+                 const sf::Vector2i textureUv);
 
-  ~DisplayBehavior(void) = default;
+  ~TexturedSprite(void) = default;
 
   virtual void update(const sf::Vector2f& position, const Direction direction,
                       const float delta);

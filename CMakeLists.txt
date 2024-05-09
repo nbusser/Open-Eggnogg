@@ -21,10 +21,10 @@ add_executable(
   src/CharacterDisplayBehavior.cpp
   src/CharacterPhysicsBehavior.cpp
   src/Collidable.cpp
-  src/DisplayBehavior.cpp
   src/Map.cpp
   src/PhysicsEntity.cpp
   src/Sword.cpp
+  src/TexturedSprite.cpp
   src/Timer.cpp
   src/Utils.cpp
   src/World.cpp

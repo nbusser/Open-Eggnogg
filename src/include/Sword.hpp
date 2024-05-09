@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Character.hpp"
-#include "DisplayBehavior.hpp"
 #include "Displayable.hpp"
 #include "PhysicsEntity.hpp"
 #include "SFML/System/Vector2.hpp"
+#include "TexturedSprite.hpp"
 #include <memory>
 
 namespace Constants {
@@ -15,7 +15,7 @@ const auto swordTextureUvSize = sf::Vector2i(16.0f, 16.0f);
 
 class Sword : public PhysicsEntity, public Displayable {
 private:
-  DisplayBehavior m_displayBehavior;
+  TexturedSprite m_displayBehavior;
 
   std::shared_ptr<Character> m_ptr_attachedCharacter;
   sf::Vector2f m_position;

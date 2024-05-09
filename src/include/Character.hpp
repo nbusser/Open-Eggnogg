@@ -43,7 +43,7 @@ enum TimedAction {
 
 class Character : public PhysicsEntity, public Displayable {
 private:
-  std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
+  CharacterDisplayBehavior m_displayBehavior;
 
   virtual void display(sf::RenderTarget& target, const float delta) override;
 

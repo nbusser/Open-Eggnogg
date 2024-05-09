@@ -9,7 +9,6 @@
 #include "include/CharacterDisplayBehavior.hpp"
 #include "include/CharacterPhysicsBehavior.hpp"
 #include "include/Collidable.hpp"
-#include "include/DisplayBehavior.hpp"
 #include "include/Utils.hpp"
 #include "include/World.hpp"
 #include <cstdlib>
@@ -31,14 +30,14 @@ bool Character::isPerformingAction(const TimedAction action) const {
 }
 
 Character::Character(const sf::Vector2f& position, const Direction direction)
-    : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
-      m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
-      m_isGrounded(false), m_pixelsJumpingLeft(0),
-      m_remainder(sf::Vector2f(0.0f, 0.0f)), m_direction(direction),
-      m_input_direction(Direction::NEUTRAL), m_timers(std::vector<Timer>()),
-      m_hurtbox(Collidable()), m_hitbox(Collidable()) {
+    : m_displayBehavior(CharacterDisplayBehavior()), m_position(position),
+      m_velocity(sf::Vector2f(0.0f, 0.0f)), m_isGrounded(false),
+      m_pixelsJumpingLeft(0), m_remainder(sf::Vector2f(0.0f, 0.0f)),
+      m_direction(direction), m_input_direction(Direction::NEUTRAL),
+      m_timers(std::vector<Timer>()), m_hurtbox(Collidable()),
+      m_hitbox(Collidable()) {
   // Play idle anim
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerIdle);
 
   // Set player's hurtbox
   const auto hurtbox =
@@ -157,7 +156,7 @@ void Character::inputAttack(void) {
 
   m_velocity.x = 0.0f;
 
-  m_ptr_displayBehavior->playAnimation(Animations::playerAttack);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerAttack);
   m_timers[TimedAction::ATTACK_FORWARD].start(
       Constants::attackForwardPhaseDuration, [this] {
         m_timers[TimedAction::ATTACK_BACKWARD].start(
@@ -185,16 +184,17 @@ bool Character::isControllable(void) const {
 }
 
 void Character::endStun(void) {
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerIdle);
 }
 
 void Character::endAttack(void) {
   m_velocity.x = 0.0f;
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerIdle);
 }
 
 void Character::endureMarsupialJump(void) {
-  m_ptr_displayBehavior->playAnimation(Animations::playerEndureMarsupialJump);
+  m_displayBehavior.playAnimation(
+      Animations::FullBody::playerEndureMarsupialJump);
   m_timers[TimedAction::STUN].start(Constants::characterMarsupialStunDuration,
                                     [this] { endStun(); });
 }
@@ -206,8 +206,8 @@ void Character::tickTimers(const float delta) {
 }
 
 void Character::display(sf::RenderTarget& target, const float delta) {
-  m_ptr_displayBehavior->update(m_position, m_direction, delta);
-  target.draw(*m_ptr_displayBehavior);
+  m_displayBehavior.update(m_position, m_direction, delta);
+  target.draw(m_displayBehavior);
 }
 
 void Character::respawn(void) {
@@ -217,12 +217,12 @@ void Character::respawn(void) {
 
   m_position = respawnPosition;
   m_velocity = sf::Vector2f(0.0f, 0.0f);
-  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerIdle);
 }
 
 void Character::kill(void) {
   // TODO: remove hitboxes
-  m_ptr_displayBehavior->playAnimation(Animations::playerDeath);
+  m_displayBehavior.playAnimation(Animations::FullBody::playerDeath);
 
   // Stop all timers
   for (auto& timer : m_timers) {
