@@ -18,6 +18,7 @@
 #include <system_error>
 #include <vector>
 
+#define IS_JUMPING (m_pixelsJumpingLeft > 0)
 #define IS_STUNNED m_stunTimer.isRunning()
 #define IS_DEAD m_respawnTimer.isRunning()
 #define IS_ATTACKING                                                           \
@@ -28,12 +29,12 @@
 Character::Character(const sf::Vector2f& position, const Direction direction)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
-      m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
-      m_direction(direction), m_input_direction(Direction::NEUTRAL),
-      m_stunTimer(Timer()), m_respawnTimer(Timer()),
-      m_attackForwardPhaseTimer(Timer()), m_attackBackwardPhaseTimer(Timer()),
-      m_attackNeutralPhaseTimer(Timer()), m_hurtbox(Collidable()),
-      m_hitbox(Collidable()) {
+      m_isGrounded(false), m_pixelsJumpingLeft(0),
+      m_remainder(sf::Vector2f(0.0f, 0.0f)), m_direction(direction),
+      m_input_direction(Direction::NEUTRAL), m_stunTimer(Timer()),
+      m_respawnTimer(Timer()), m_attackForwardPhaseTimer(Timer()),
+      m_attackBackwardPhaseTimer(Timer()), m_attackNeutralPhaseTimer(Timer()),
+      m_hurtbox(Collidable()), m_hitbox(Collidable()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 
@@ -71,6 +72,11 @@ void Character::physicsTick(const float delta) {
     m_velocity.x = std::max(0.0f, m_velocity.x - decelerationAmount);
   } else if (m_velocity.x < 0) {
     m_velocity.x = std::min(0.0f, m_velocity.x + decelerationAmount);
+  }
+
+  // Character is jumping
+  if (IS_JUMPING) {
+    updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce) * delta);
   }
 
   // Apply gravity
@@ -152,8 +158,14 @@ void Character::inputAttack(void) {
 }
 
 void Character::jump() {
-  updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
+  m_pixelsJumpingLeft = Constants::characterJumpHeightPixel;
   m_isGrounded = false;
+}
+
+void Character::interruptJump() {
+  // Finish jump
+  m_pixelsJumpingLeft = 0;
+  m_velocity.y = 0;
 }
 
 bool Character::isControllable(void) const {
@@ -281,6 +293,8 @@ void Character::moveY(const float amount) {
         m_isGrounded = true;
       }
 
+      interruptJump();
+
       break;
     }
 
@@ -300,6 +314,12 @@ void Character::moveY(const float amount) {
 
     // No obstacle, apply position
     m_position.y += directionY;
+
+    if (directionY < 0 && IS_JUMPING && --m_pixelsJumpingLeft <= 0) {
+      // Finish jump
+      interruptJump();
+      break;
+    }
   }
   m_hurtbox.updateHitboxesPosition(m_position);
 }

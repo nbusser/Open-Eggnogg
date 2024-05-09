@@ -22,7 +22,7 @@ World& World::GetInstance(void) {
 }
 
 World::World(void) : m_ptr_map(std::make_shared<Map>()) {
-  const auto player1 = std::make_shared<Character>(sf::Vector2f(-64.0f, 32.0f),
+  const auto player1 = std::make_shared<Character>(sf::Vector2f(-16.0f, 32.0f),
                                                    Direction::RIGHT);
   const auto player2 =
       std::make_shared<Character>(sf::Vector2f(64.0f, 32.0f), Direction::LEFT);

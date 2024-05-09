@@ -13,14 +13,16 @@
 #include "SFML/System/Vector2.hpp"
 #include "Timer.hpp"
 #include "Utils.hpp"
+#include <cstdint>
 
 namespace Constants {
 // Physics
 constexpr float characterMaxVelocityX = 2.0f;
-constexpr float characterMinVelocityY = -15.0f;
-constexpr float characterJumpForce = -5.0f;
+constexpr float characterMinVelocityY = -2.2f;
+constexpr float characterJumpForce = -40.0f - Constants::gravity;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
+constexpr std::uint16_t characterJumpHeightPixel = 24;
 
 // Timers
 constexpr float characterMarsupialStunDuration = 0.3f;
@@ -41,6 +43,8 @@ private:
   Direction m_direction;
   Direction m_input_direction;
 
+  std::uint16_t m_pixelsJumpingLeft;
+
   Timer m_stunTimer;
   Timer m_respawnTimer;
 
@@ -48,7 +52,8 @@ private:
   Timer m_attackBackwardPhaseTimer;
   Timer m_attackNeutralPhaseTimer;
 
-  void jump();
+  void jump(void);
+  void interruptJump(void);
 
   bool isControllable(void) const;
   void respawn(void);
