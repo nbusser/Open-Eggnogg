@@ -92,9 +92,8 @@ void Character::physicsTick(const float delta) {
   }
 
   // Character is lunging forward
-  const auto lungingForce = sf::Vector2f(40.0f, 0.0f) *
-                            (m_direction == Direction::LEFT ? -1.0f : 1.0f) *
-                            delta;
+  const auto lungingForce = sf::Vector2f(40.0f, 0.0f) * delta *
+                            (m_direction == Direction::LEFT ? -1.0f : 1.0f);
   if (m_attackForwardPhaseTimer.isRunning()) {
     updateSpeed(lungingForce);
   } else if (m_attackBackwardPhaseTimer.isRunning()) {
@@ -142,6 +141,9 @@ void Character::inputJump(const float delta) {
 void Character::inputAttack(void) {
   if (!isControllable() || !m_isGrounded)
     return;
+
+  // TODO: real attack based on hitbox
+  getOtherCharacter()->kill();
 
   m_velocity.x = 0.0f;
 
