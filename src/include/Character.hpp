@@ -64,6 +64,8 @@ private:
   bool isControllable(void) const;
   void respawn(void);
 
+  void kill(void);
+
 public:
   Character(const sf::Vector2f& position, const Direction direction);
 
@@ -98,7 +100,7 @@ public:
   void endStun(void);
   void endAttack(void);
 
-  void kill(void);
+  void endureAttack(void);
 
   // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };

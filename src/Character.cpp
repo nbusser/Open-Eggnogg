@@ -155,9 +155,6 @@ void Character::inputAttack(void) {
   if (!isControllable() || !m_isGrounded)
     return;
 
-  // TODO: real attack based on hitbox
-  getOtherCharacter()->kill();
-
   m_velocity.x = 0.0f;
 
   m_ptr_displayBehavior->playAnimation(Animations::playerAttack);
@@ -226,8 +223,21 @@ void Character::respawn(void) {
 void Character::kill(void) {
   // TODO: remove hitboxes
   m_ptr_displayBehavior->playAnimation(Animations::playerDeath);
+
+  // Stop all timers
+  for (auto& timer : m_timers) {
+    timer.stop();
+  }
   m_timers[TimedAction::RESPAWN].start(Constants::respawnDuration,
                                        [this] { respawn(); });
+}
+
+void Character::endureAttack(void) {
+  // TODO: check attack parameters (direction, armed/karate)
+  // Determine outcome
+  if (!IS_DEAD) {
+    kill();
+  }
 }
 
 void Character::moveX(const float amount) {
@@ -269,13 +279,14 @@ void Character::moveX(const float amount) {
     const auto touchingOtherPlayerHurtboxWithMyHitbox =
         m_hitbox.getCollidingHitbox(otherPlayer->m_hurtbox);
     if (touchingOtherPlayerHurtboxWithMyHitbox != nullptr) {
-      otherPlayer->kill();
+      otherPlayer->endureAttack();
     }
     const auto touchingOtherPlayerHitboxWithMyHurtbox =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hitbox);
     if (touchingOtherPlayerHitboxWithMyHurtbox != nullptr) {
-      kill();
-      break;
+      endureAttack();
+      if (IS_DEAD)
+        break;
     }
 
     // Hurtbox
@@ -333,6 +344,22 @@ void Character::moveY(const float amount) {
     }
 
     // Test collisions against player
+
+    // Hitbox
+    const auto touchingOtherPlayerHurtboxWithMyHitbox =
+        m_hitbox.getCollidingHitbox(otherPlayer->m_hurtbox);
+    if (touchingOtherPlayerHurtboxWithMyHitbox != nullptr) {
+      otherPlayer->endureAttack();
+    }
+    const auto touchingOtherPlayerHitboxWithMyHurtbox =
+        m_hurtbox.getCollidingHitbox(otherPlayer->m_hitbox);
+    if (touchingOtherPlayerHitboxWithMyHurtbox != nullptr) {
+      endureAttack();
+      if (IS_DEAD)
+        break;
+    }
+
+    // Hurtbox
     const auto collidingPlayerHitboxes =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
 
