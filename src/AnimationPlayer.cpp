@@ -11,7 +11,7 @@ bool AnimationPlayer::isAnimationLoaded(void) const {
 
 bool AnimationPlayer::isAnimationEnded(void) const {
   return isAnimationLoaded() &&
-         m_currentFrame == m_ptr_currentAnimation->textureUVs.size();
+         m_currentFrame == m_ptr_currentAnimation->textureUVs.size() - 1;
 }
 
 void AnimationPlayer::setAnimationFrame(const std::uint8_t frameIndex) {
