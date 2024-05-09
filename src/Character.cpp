@@ -48,7 +48,7 @@ Character::Character(const sf::Vector2f& position, const Direction direction)
 
   // Set player's hitbox
   const auto hitbox =
-      sf::FloatRect(sf::Vector2f(18.0f, 7.0f), sf::Vector2f(9.0f, 1.0f));
+      sf::FloatRect(sf::Vector2f(16.0f, 8.0f), sf::Vector2f(9.0f, 1.0f));
   m_hitbox.m_relativeHitboxes.push_back(hitbox);
   // Shift the hitbox with player's position
   m_hitbox.updateHitboxesPosition(position);
