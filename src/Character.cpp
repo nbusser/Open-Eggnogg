@@ -20,13 +20,19 @@
 
 #define IS_STUNNED m_stunTimer.isRunning()
 #define IS_DEAD m_respawnTimer.isRunning()
+#define IS_ATTACKING                                                           \
+  (m_attackForwardPhaseTimer.isRunning() ||                                    \
+   m_attackBackwardPhaseTimer.isRunning() ||                                   \
+   m_attackNeutralPhaseTimer.isRunning())
 
 Character::Character(const sf::Vector2f& position, const Direction direction)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_remainder(sf::Vector2f(0.0f, 0.0f)),
       m_direction(direction), m_input_direction(Direction::NEUTRAL),
-      m_stunTimer(Timer()), m_respawnTimer(Timer()), m_hurtbox(Collidable()),
+      m_stunTimer(Timer()), m_respawnTimer(Timer()),
+      m_attackForwardPhaseTimer(Timer()), m_attackBackwardPhaseTimer(Timer()),
+      m_attackNeutralPhaseTimer(Timer()), m_hurtbox(Collidable()),
       m_hitbox(Collidable()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
@@ -70,10 +76,23 @@ void Character::physicsTick(const float delta) {
   // Apply gravity
   updateSpeed(Constants::gravityVector * delta);
 
-  if (m_direction == Direction::RIGHT && m_velocity.x < 0.0f) {
-    m_direction = Direction::LEFT;
-  } else if (m_direction == Direction::LEFT && m_velocity.x > 0.0f) {
-    m_direction = Direction::RIGHT;
+  // Switch direction
+  if (isControllable()) {
+    if (m_direction == Direction::RIGHT && m_velocity.x < 0.0f) {
+      m_direction = Direction::LEFT;
+    } else if (m_direction == Direction::LEFT && m_velocity.x > 0.0f) {
+      m_direction = Direction::RIGHT;
+    }
+  }
+
+  // Character is lunging forward
+  const auto lungingForce = sf::Vector2f(40.0f, 0.0f) *
+                            (m_direction == Direction::LEFT ? -1.0f : 1.0f) *
+                            delta;
+  if (m_attackForwardPhaseTimer.isRunning()) {
+    updateSpeed(lungingForce);
+  } else if (m_attackBackwardPhaseTimer.isRunning()) {
+    updateSpeed(-lungingForce);
   }
 }
 
@@ -114,14 +133,39 @@ void Character::inputJump(const float delta) {
   }
 }
 
+void Character::inputAttack(void) {
+  if (!isControllable() || !m_isGrounded)
+    return;
+
+  m_velocity.x = 0.0f;
+
+  m_ptr_displayBehavior->playAnimation(Animations::playerAttack);
+  m_attackForwardPhaseTimer.start(
+      Constants::attackForwardPhaseDuration, [this] {
+        m_attackBackwardPhaseTimer.start(
+            Constants::attackBackwardPhaseDuration, [this] {
+              m_attackNeutralPhaseTimer.start(
+                  Constants::attackNeutralPhaseDuration,
+                  [this] { endAttack(); });
+            });
+      });
+}
+
 void Character::jump() {
   updateSpeed(sf::Vector2f(0.0f, Constants::characterJumpForce));
   m_isGrounded = false;
 }
 
-bool Character::isControllable(void) const { return !IS_STUNNED && !IS_DEAD; }
+bool Character::isControllable(void) const {
+  return !IS_STUNNED && !IS_DEAD && !IS_ATTACKING;
+}
 
 void Character::endStun(void) {
+  m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
+}
+
+void Character::endAttack(void) {
+  m_velocity.x = 0.0f;
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
 }
 
@@ -134,6 +178,9 @@ void Character::endureMarsupialJump(void) {
 void Character::tickTimers(const float delta) {
   m_stunTimer.tick(delta);
   m_respawnTimer.tick(delta);
+  m_attackForwardPhaseTimer.tick(delta);
+  m_attackBackwardPhaseTimer.tick(delta);
+  m_attackNeutralPhaseTimer.tick(delta);
 }
 
 void Character::display(sf::RenderTarget& target, const float delta) {

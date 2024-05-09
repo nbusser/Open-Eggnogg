@@ -30,8 +30,9 @@ void AnimationPlayer::update(const float delta) {
     return;
   }
   m_secondsCounter += delta;
+
   if (m_secondsCounter > m_ptr_currentAnimation->nSecondsPerAnimtion &&
-      (m_ptr_currentAnimation->loop || !isAnimationEnded())) {
+      (!isAnimationEnded() || m_ptr_currentAnimation->loop)) {
     m_secondsCounter = 0.0f;
     m_currentFrame =
         (++m_currentFrame) % m_ptr_currentAnimation->textureUVs.size();

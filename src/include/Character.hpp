@@ -15,13 +15,19 @@
 #include "Utils.hpp"
 
 namespace Constants {
+// Physics
 constexpr float characterMaxVelocityX = 2.0f;
 constexpr float characterMinVelocityY = -15.0f;
 constexpr float characterJumpForce = -5.0f;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
+
+// Timers
 constexpr float characterMarsupialStunDuration = 0.3f;
 constexpr float respawnDuration = 2.0f;
+constexpr float attackForwardPhaseDuration = 0.2f;
+constexpr float attackBackwardPhaseDuration = 0.1f;
+constexpr float attackNeutralPhaseDuration = 0.2f;
 } // namespace Constants
 
 class Character : public PhysicsEntity, public Displayable {
@@ -38,6 +44,10 @@ private:
   Timer m_stunTimer;
   Timer m_respawnTimer;
 
+  Timer m_attackForwardPhaseTimer;
+  Timer m_attackBackwardPhaseTimer;
+  Timer m_attackNeutralPhaseTimer;
+
   void jump();
 
   bool isControllable(void) const;
@@ -51,6 +61,8 @@ public:
   void inputDirection(const Direction direction);
 
   void inputJump(const float delta);
+
+  void inputAttack(void);
 
   sf::Vector2f m_position;
   sf::Vector2f m_velocity;
@@ -73,6 +85,7 @@ public:
 
   void endureMarsupialJump(void);
   void endStun(void);
+  void endAttack(void);
 
   void kill(void);
 

@@ -47,12 +47,16 @@ void World::process(const float delta) {
     GET_PLAYER(0)->inputDirection(Direction::RIGHT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::V))
     GET_PLAYER(0)->inputJump(delta);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::B))
+    GET_PLAYER(0)->inputAttack();
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
     GET_PLAYER(1)->inputDirection(Direction::LEFT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     GET_PLAYER(1)->inputDirection(Direction::RIGHT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
     GET_PLAYER(1)->inputJump(delta);
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+    GET_PLAYER(1)->inputAttack();
 
   for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
     const auto player = m_ptr_characters[i];
