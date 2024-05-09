@@ -32,6 +32,15 @@ constexpr float attackBackwardPhaseDuration = 0.1f;
 constexpr float attackNeutralPhaseDuration = 0.2f;
 } // namespace Constants
 
+enum TimedAction {
+  STUN,
+  RESPAWN,
+  ATTACK_FORWARD,
+  ATTACK_BACKWARD,
+  ATTACK_NEUTRAL,
+  TOTAL,
+};
+
 class Character : public PhysicsEntity, public Displayable {
 private:
   std::unique_ptr<CharacterDisplayBehavior> m_ptr_displayBehavior;
@@ -45,12 +54,9 @@ private:
 
   std::uint16_t m_pixelsJumpingLeft;
 
-  Timer m_stunTimer;
-  Timer m_respawnTimer;
-
-  Timer m_attackForwardPhaseTimer;
-  Timer m_attackBackwardPhaseTimer;
-  Timer m_attackNeutralPhaseTimer;
+  // Has one timer for each (indexed) TimedAction
+  std::vector<Timer> m_timers;
+  bool isPerformingAction(const TimedAction action) const;
 
   void jump(void);
   void interruptJump(void);

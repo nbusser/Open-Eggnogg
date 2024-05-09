@@ -18,22 +18,24 @@
 #include <system_error>
 #include <vector>
 
-#define IS_JUMPING (m_pixelsJumpingLeft > 0)
-#define IS_STUNNED m_stunTimer.isRunning()
-#define IS_DEAD m_respawnTimer.isRunning()
+#define IS_JUMPING m_pixelsJumpingLeft > 0
+#define IS_STUNNED isPerformingAction(TimedAction::STUN)
+#define IS_DEAD isPerformingAction(TimedAction::RESPAWN)
 #define IS_ATTACKING                                                           \
-  (m_attackForwardPhaseTimer.isRunning() ||                                    \
-   m_attackBackwardPhaseTimer.isRunning() ||                                   \
-   m_attackNeutralPhaseTimer.isRunning())
+  (isPerformingAction(TimedAction::ATTACK_FORWARD) ||                          \
+   isPerformingAction(TimedAction::ATTACK_BACKWARD) ||                         \
+   isPerformingAction(TimedAction::ATTACK_NEUTRAL))
+
+bool Character::isPerformingAction(const TimedAction action) const {
+  return m_timers[action].isRunning();
+}
 
 Character::Character(const sf::Vector2f& position, const Direction direction)
     : m_ptr_displayBehavior(std::make_unique<CharacterDisplayBehavior>()),
       m_position(position), m_velocity(sf::Vector2f(0.0f, 0.0f)),
       m_isGrounded(false), m_pixelsJumpingLeft(0),
       m_remainder(sf::Vector2f(0.0f, 0.0f)), m_direction(direction),
-      m_input_direction(Direction::NEUTRAL), m_stunTimer(Timer()),
-      m_respawnTimer(Timer()), m_attackForwardPhaseTimer(Timer()),
-      m_attackBackwardPhaseTimer(Timer()), m_attackNeutralPhaseTimer(Timer()),
+      m_input_direction(Direction::NEUTRAL), m_timers(std::vector<Timer>()),
       m_hurtbox(Collidable()), m_hitbox(Collidable()) {
   // Play idle anim
   m_ptr_displayBehavior->playAnimation(Animations::playerIdle);
@@ -44,6 +46,10 @@ Character::Character(const sf::Vector2f& position, const Direction direction)
   m_hurtbox.m_relativeHitboxes.push_back(hurtbox);
   // Shift the hitbox with player's position
   m_hurtbox.updateHitboxesPosition(position);
+
+  for (size_t i = 0; i < static_cast<size_t>(TimedAction::TOTAL); ++i) {
+    m_timers.push_back(Timer());
+  }
 };
 
 Character::~Character(void) {};
@@ -94,9 +100,9 @@ void Character::physicsTick(const float delta) {
   // Character is lunging forward
   const auto lungingForce = sf::Vector2f(40.0f, 0.0f) * delta *
                             (m_direction == Direction::LEFT ? -1.0f : 1.0f);
-  if (m_attackForwardPhaseTimer.isRunning()) {
+  if (m_timers[TimedAction::ATTACK_FORWARD].isRunning()) {
     updateSpeed(lungingForce);
-  } else if (m_attackBackwardPhaseTimer.isRunning()) {
+  } else if (m_timers[TimedAction::ATTACK_BACKWARD].isRunning()) {
     updateSpeed(-lungingForce);
   }
 }
@@ -148,11 +154,11 @@ void Character::inputAttack(void) {
   m_velocity.x = 0.0f;
 
   m_ptr_displayBehavior->playAnimation(Animations::playerAttack);
-  m_attackForwardPhaseTimer.start(
+  m_timers[TimedAction::ATTACK_FORWARD].start(
       Constants::attackForwardPhaseDuration, [this] {
-        m_attackBackwardPhaseTimer.start(
+        m_timers[TimedAction::ATTACK_BACKWARD].start(
             Constants::attackBackwardPhaseDuration, [this] {
-              m_attackNeutralPhaseTimer.start(
+              m_timers[TimedAction::ATTACK_NEUTRAL].start(
                   Constants::attackNeutralPhaseDuration,
                   [this] { endAttack(); });
             });
@@ -185,16 +191,14 @@ void Character::endAttack(void) {
 
 void Character::endureMarsupialJump(void) {
   m_ptr_displayBehavior->playAnimation(Animations::playerEndureMarsupialJump);
-  m_stunTimer.start(Constants::characterMarsupialStunDuration,
-                    [this] { endStun(); });
+  m_timers[TimedAction::STUN].start(Constants::characterMarsupialStunDuration,
+                                    [this] { endStun(); });
 }
 
 void Character::tickTimers(const float delta) {
-  m_stunTimer.tick(delta);
-  m_respawnTimer.tick(delta);
-  m_attackForwardPhaseTimer.tick(delta);
-  m_attackBackwardPhaseTimer.tick(delta);
-  m_attackNeutralPhaseTimer.tick(delta);
+  for (auto& timer : m_timers) {
+    timer.tick(delta);
+  }
 }
 
 void Character::display(sf::RenderTarget& target, const float delta) {
@@ -215,7 +219,8 @@ void Character::respawn(void) {
 void Character::kill(void) {
   // TODO: remove hitboxes
   m_ptr_displayBehavior->playAnimation(Animations::playerDeath);
-  m_respawnTimer.start(Constants::respawnDuration, [this] { respawn(); });
+  m_timers[TimedAction::RESPAWN].start(Constants::respawnDuration,
+                                       [this] { respawn(); });
 }
 
 void Character::moveX(const float amount) {
