@@ -159,12 +159,22 @@ void Character::inputAttack(void) {
   m_displayBehavior.playAnimation(Animations::FullBody::playerAttack);
   m_timers[TimedAction::ATTACK_FORWARD].start(
       Constants::attackForwardPhaseDuration, [this] {
-        m_timers[TimedAction::ATTACK_BACKWARD].start(
-            Constants::attackBackwardPhaseDuration, [this] {
-              m_timers[TimedAction::ATTACK_NEUTRAL].start(
-                  Constants::attackNeutralPhaseDuration,
-                  [this] { endAttack(); });
-            });
+        // Run neutral timer
+        const auto neutralTimerStartCallback = [this] {
+          m_timers[TimedAction::ATTACK_NEUTRAL].start(
+              Constants::attackNeutralPhaseDuration, [this] { endAttack(); });
+        };
+
+        // If the character is in ground after forward phase, go to backward
+        // phase
+        if (m_isGrounded) {
+          m_timers[TimedAction::ATTACK_BACKWARD].start(
+              Constants::attackBackwardPhaseDuration,
+              neutralTimerStartCallback);
+          // Otherwise, skips backward phase
+        } else {
+          neutralTimerStartCallback();
+        }
       });
 }
 
@@ -376,6 +386,9 @@ void Character::moveY(const float amount) {
 
     // No obstacle, apply position
     m_position.y += directionY;
+
+    // Whatever happens, if you move vertically, it means that you are in air
+    m_isGrounded = false;
 
     if (directionY < 0 && IS_JUMPING && --m_pixelsJumpingLeft <= 0) {
       // Finish jump
