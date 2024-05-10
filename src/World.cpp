@@ -53,7 +53,7 @@ void World::process(const float delta) {
     GET_PLAYER(1)->inputDirection(Direction::LEFT);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
     GET_PLAYER(1)->inputDirection(Direction::RIGHT);
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J))
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift))
     GET_PLAYER(1)->inputJump(delta);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
     GET_PLAYER(1)->inputAttack();
