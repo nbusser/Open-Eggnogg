@@ -56,12 +56,21 @@ void updateSprite(sf::Sprite& sprite, const sf::Vector2f& position,
 void CharacterDisplayBehavior::update(const sf::Vector2f& position,
                                       const Direction direction,
                                       const float delta) {
-  updateSprite(m_bodySprite, position, direction);
-  updateSprite(m_armSprite, position, direction);
-  updateSprite(m_swordSprite, position + Constants::swordOffset, direction);
 
   m_bodyAnimationPlayer.update(delta);
   m_armAnimationPlayer.update(delta);
+
+  const auto& bodyOffset =
+      m_bodyAnimationPlayer.getCurrentAnimationPtr()
+          ->spriteOffsets[m_bodyAnimationPlayer.getCurrentFrame()];
+  const auto& armOffset =
+      m_armAnimationPlayer.getCurrentAnimationPtr()
+          ->spriteOffsets[m_armAnimationPlayer.getCurrentFrame()];
+
+  updateSprite(m_bodySprite, position + bodyOffset, direction);
+  updateSprite(m_armSprite, position + armOffset, direction);
+  updateSprite(m_swordSprite, position + armOffset + Constants::swordOffset,
+               direction);
 }
 
 void CharacterDisplayBehavior::playAnimation(

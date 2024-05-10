@@ -26,4 +26,7 @@ public:
 
   void play(const Animation& animation);
   void stop(void);
+
+  std::uint8_t getCurrentFrame(void) const;
+  const Animation* getCurrentAnimationPtr(void) const;
 };

@@ -18,7 +18,8 @@ const auto playerAttack =
 
 namespace Arm {
 const auto playerIdle = Animation({sf::Vector2i(6, 0)}, 0.0f, false);
-const auto playerAttack = Animation({sf::Vector2i(7, 0)}, 0.0f, false);
+const auto playerAttack =
+    Animation({sf::Vector2i(7, 0)}, {sf::Vector2f(6.0, 0.0)}, 0.0f, false);
 } // namespace Arm
 
 namespace FullBody {

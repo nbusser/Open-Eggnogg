@@ -1,5 +1,6 @@
 #include "include/AnimationPlayer.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "include/Aninmation.hpp"
 
 AnimationPlayer::AnimationPlayer(sf::Sprite& ptr_sprite)
     : m_ptr_sprite(&ptr_sprite), m_secondsCounter(0), m_currentFrame(0),
@@ -55,3 +56,11 @@ void AnimationPlayer::play(const Animation& animation) {
 };
 
 void AnimationPlayer::stop(void) { m_isFrozen = true; };
+
+std::uint8_t AnimationPlayer::getCurrentFrame(void) const {
+  return m_currentFrame;
+}
+
+const Animation* AnimationPlayer::getCurrentAnimationPtr(void) const {
+  return m_ptr_currentAnimation;
+}
