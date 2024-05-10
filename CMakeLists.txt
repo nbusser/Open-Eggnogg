@@ -30,7 +30,7 @@ add_executable(
   src/World.cpp
 )
 target_link_libraries(OpenEggnogg PRIVATE sfml-graphics)
-target_compile_features(OpenEggnogg PRIVATE cxx_std_20)
+target_compile_features(OpenEggnogg PRIVATE cxx_std_23)
 
 if(WIN32)
     add_custom_command(
