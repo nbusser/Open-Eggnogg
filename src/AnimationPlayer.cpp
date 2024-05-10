@@ -1,25 +1,26 @@
 #include "include/AnimationPlayer.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "include/Aninmation.hpp"
+#include <optional>
 
 AnimationPlayer::AnimationPlayer(sf::Sprite& ptr_sprite)
     : m_ptr_sprite(&ptr_sprite), m_secondsCounter(0), m_currentFrame(0),
-      m_isFrozen(false), m_ptr_currentAnimation(nullptr) {};
+      m_isFrozen(false), m_currentAnimation(std::nullopt) {};
 
 bool AnimationPlayer::isAnimationLoaded(void) const {
-  return m_ptr_currentAnimation != nullptr;
+  return m_currentAnimation.has_value();
 }
 
 bool AnimationPlayer::isAnimationEnded(void) const {
   return isAnimationLoaded() &&
-         m_currentFrame == m_ptr_currentAnimation->textureUVs.size() - 1;
+         m_currentFrame == m_currentAnimation.value().textureUVs.size() - 1;
 }
 float nSecondsPerAnimtion;
 
 void AnimationPlayer::setAnimationFrame(const std::uint8_t frameIndex) {
-  const auto textureSize = m_ptr_currentAnimation->textureSize;
+  const auto textureSize = m_currentAnimation.value().textureSize;
 
-  auto uv = m_ptr_currentAnimation->textureUVs[frameIndex];
+  auto uv = m_currentAnimation.value().textureUVs[frameIndex];
   uv.x *= textureSize.x;
   uv.y *= textureSize.y;
 
@@ -33,11 +34,11 @@ void AnimationPlayer::update(const float delta) {
   }
   m_secondsCounter += delta;
 
-  if (m_secondsCounter > m_ptr_currentAnimation->nSecondsPerAnimation &&
-      (!isAnimationEnded() || m_ptr_currentAnimation->loop)) {
+  if (m_secondsCounter > m_currentAnimation.value().nSecondsPerAnimation &&
+      (!isAnimationEnded() || m_currentAnimation.value().loop)) {
     m_secondsCounter = 0.0f;
     m_currentFrame =
-        (++m_currentFrame) % m_ptr_currentAnimation->textureUVs.size();
+        (++m_currentFrame) % m_currentAnimation.value().textureUVs.size();
     setAnimationFrame(m_currentFrame);
   }
 }
@@ -45,13 +46,13 @@ void AnimationPlayer::update(const float delta) {
 void AnimationPlayer::resetCounters(void) {
   m_secondsCounter = 0;
   m_currentFrame = 0;
-  m_ptr_currentAnimation = nullptr;
+  m_currentAnimation.reset();
   m_isFrozen = false;
 }
 
 void AnimationPlayer::play(const Animation& animation) {
   resetCounters();
-  m_ptr_currentAnimation = &animation;
+  m_currentAnimation = std::make_optional(animation);
   setAnimationFrame(0);
 };
 
@@ -61,6 +62,7 @@ std::uint8_t AnimationPlayer::getCurrentFrame(void) const {
   return m_currentFrame;
 }
 
-const Animation* AnimationPlayer::getCurrentAnimationPtr(void) const {
-  return m_ptr_currentAnimation;
+const std::optional<Animation>&
+AnimationPlayer::getCurrentAnimation(void) const {
+  return m_currentAnimation;
 }

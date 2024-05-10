@@ -3,13 +3,14 @@
 #include "Aninmation.hpp"
 #include "SFML/Graphics/Sprite.hpp"
 #include <memory>
+#include <optional>
 
 class AnimationPlayer {
 private:
   sf::Sprite* m_ptr_sprite;
   float m_secondsCounter;
   std::uint8_t m_currentFrame;
-  const Animation* m_ptr_currentAnimation;
+  std::optional<Animation> m_currentAnimation;
   bool m_isFrozen;
 
   bool isAnimationLoaded(void) const;
@@ -28,5 +29,5 @@ public:
   void stop(void);
 
   std::uint8_t getCurrentFrame(void) const;
-  const Animation* getCurrentAnimationPtr(void) const;
+  const std::optional<Animation>& getCurrentAnimation(void) const;
 };

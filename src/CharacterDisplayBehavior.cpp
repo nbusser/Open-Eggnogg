@@ -61,11 +61,17 @@ void CharacterDisplayBehavior::update(const sf::Vector2f& position,
   m_armAnimationPlayer.update(delta);
 
   const auto& bodyOffset =
-      m_bodyAnimationPlayer.getCurrentAnimationPtr()
-          ->spriteOffsets[m_bodyAnimationPlayer.getCurrentFrame()];
+      !m_bodyAnimationPlayer.getCurrentAnimation().has_value()
+          ? sf::Vector2f()
+          : m_bodyAnimationPlayer.getCurrentAnimation()
+                .value()
+                .spriteOffsets[m_bodyAnimationPlayer.getCurrentFrame()];
   const auto& armOffset =
-      m_armAnimationPlayer.getCurrentAnimationPtr()
-          ->spriteOffsets[m_armAnimationPlayer.getCurrentFrame()];
+      !m_armAnimationPlayer.getCurrentAnimation().has_value()
+          ? sf::Vector2f()
+          : m_armAnimationPlayer.getCurrentAnimation()
+                .value()
+                .spriteOffsets[m_armAnimationPlayer.getCurrentFrame()];
 
   updateSprite(m_bodySprite, position + bodyOffset, direction);
   updateSprite(m_armSprite, position + armOffset, direction);
