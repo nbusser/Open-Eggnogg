@@ -263,8 +263,9 @@ void Character::moveX(const float amount) {
     // Test collisions against map
     const auto collidingMapHitboxes =
         m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
-    if (collidingMapHitboxes != nullptr) {
-      const auto collision = Collidable::GetCollision(*collidingMapHitboxes);
+    if (collidingMapHitboxes.has_value()) {
+      const auto collision =
+          Collidable::GetCollision(collidingMapHitboxes.value());
       if (collision.axis == Axis::X) {
         // TODO: check if collision occurs on axis X
         // Collision againt map detected
@@ -278,12 +279,12 @@ void Character::moveX(const float amount) {
     // Hitbox
     const auto touchingOtherPlayerHurtboxWithMyHitbox =
         m_hitbox.getCollidingHitbox(otherPlayer->m_hurtbox);
-    if (touchingOtherPlayerHurtboxWithMyHitbox != nullptr) {
+    if (touchingOtherPlayerHurtboxWithMyHitbox.has_value()) {
       otherPlayer->endureAttack();
     }
     const auto touchingOtherPlayerHitboxWithMyHurtbox =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hitbox);
-    if (touchingOtherPlayerHitboxWithMyHurtbox != nullptr) {
+    if (touchingOtherPlayerHitboxWithMyHurtbox.has_value()) {
       endureAttack();
       if (IS_DEAD)
         break;
@@ -292,7 +293,7 @@ void Character::moveX(const float amount) {
     // Hurtbox
     const auto collidingPlayerHitboxes =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
-    if (collidingPlayerHitboxes != nullptr) {
+    if (collidingPlayerHitboxes.has_value()) {
       // TODO: check if collision occurs on axis X
       // Collision againt player detected
       m_velocity.x = 0;
@@ -328,7 +329,7 @@ void Character::moveY(const float amount) {
     // Test collisions against map
     const auto collidingMapHitboxes =
         m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
-    if (collidingMapHitboxes != nullptr) {
+    if (collidingMapHitboxes.has_value()) {
       // TODO: check if collision occurs on axis Y
       // Collision againt map detected
       m_velocity.y = 0;
@@ -348,12 +349,12 @@ void Character::moveY(const float amount) {
     // Hitbox
     const auto touchingOtherPlayerHurtboxWithMyHitbox =
         m_hitbox.getCollidingHitbox(otherPlayer->m_hurtbox);
-    if (touchingOtherPlayerHurtboxWithMyHitbox != nullptr) {
+    if (touchingOtherPlayerHurtboxWithMyHitbox.has_value()) {
       otherPlayer->endureAttack();
     }
     const auto touchingOtherPlayerHitboxWithMyHurtbox =
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hitbox);
-    if (touchingOtherPlayerHitboxWithMyHurtbox != nullptr) {
+    if (touchingOtherPlayerHitboxWithMyHurtbox.has_value()) {
       endureAttack();
       if (IS_DEAD)
         break;
@@ -364,9 +365,9 @@ void Character::moveY(const float amount) {
         m_hurtbox.getCollidingHitbox(otherPlayer->m_hurtbox);
 
     // Marsupial jump
-    if (collidingPlayerHitboxes != nullptr) {
-      if (collidingPlayerHitboxes->ptr_myHitbox->top <
-          collidingPlayerHitboxes->ptr_otherHitbox->top) {
+    if (collidingPlayerHitboxes.has_value()) {
+      if (collidingPlayerHitboxes.value().myHitbox.top <
+          collidingPlayerHitboxes.value().otherHitbox.top) {
         jump();
         otherPlayer->endureMarsupialJump();
       }

@@ -3,11 +3,12 @@
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <memory>
+#include <optional>
 #include <vector>
 
 struct HitboxesPair {
-  std::unique_ptr<sf::FloatRect> ptr_myHitbox;
-  std::unique_ptr<sf::FloatRect> ptr_otherHitbox;
+  const sf::FloatRect& myHitbox;
+  const sf::FloatRect& otherHitbox;
 };
 
 enum Axis { X, Y };
@@ -26,8 +27,7 @@ public:
   Collidable();
   Collidable(const std::vector<sf::FloatRect>& hitboxes);
 
-  std::unique_ptr<HitboxesPair>
-  getCollidingHitbox(const Collidable& other) const;
+  std::optional<HitboxesPair> getCollidingHitbox(const Collidable& other) const;
 
   void updateHitboxesPosition(const sf::Vector2f& newPosition);
 

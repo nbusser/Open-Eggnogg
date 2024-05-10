@@ -1,5 +1,6 @@
 #include "include/Collidable.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include <optional>
 #include <vector>
 
 Collidable::Collidable() : Collidable(std::vector<sf::FloatRect>()) {};
@@ -7,18 +8,17 @@ Collidable::Collidable() : Collidable(std::vector<sf::FloatRect>()) {};
 Collidable::Collidable(const std::vector<sf::FloatRect>& hitboxes)
     : m_relativeHitboxes(hitboxes), m_absoluteHitboxes(hitboxes) {};
 
-std::unique_ptr<HitboxesPair>
+std::optional<HitboxesPair>
 Collidable::getCollidingHitbox(const Collidable& other) const {
   for (const auto& myHitbox : m_absoluteHitboxes) {
     for (const auto& otherHitbox : other.m_absoluteHitboxes) {
       if (myHitbox.intersects(otherHitbox)) {
-        return std::make_unique<HitboxesPair>(
-            HitboxesPair{std::make_unique<sf::FloatRect>(myHitbox),
-                         std::make_unique<sf::FloatRect>(otherHitbox)});
+        return std::make_optional<HitboxesPair>(
+            HitboxesPair{myHitbox, otherHitbox});
       }
     }
   }
-  return nullptr;
+  return std::nullopt;
 };
 
 void Collidable::updateHitboxesPosition(const sf::Vector2f& newPosition) {
@@ -31,8 +31,8 @@ void Collidable::updateHitboxesPosition(const sf::Vector2f& newPosition) {
 }
 
 Collision Collidable::GetCollision(const HitboxesPair& hitboxesPair) {
-  const auto& hitbox1 = *hitboxesPair.ptr_myHitbox;
-  const auto& hitbox2 = *hitboxesPair.ptr_otherHitbox;
+  const auto& hitbox1 = hitboxesPair.myHitbox;
+  const auto& hitbox2 = hitboxesPair.otherHitbox;
 
   const auto overlapPosition = sf::Vector2f(
       std::max(hitbox1.left, hitbox2.left), std::max(hitbox1.top, hitbox2.top));
