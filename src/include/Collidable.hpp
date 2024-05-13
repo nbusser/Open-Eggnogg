@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Vector2.hpp"
 #include <memory>
@@ -19,7 +20,7 @@ struct Collision {
   Axis axis;
 };
 
-class Collidable {
+class Collidable : public sf::Drawable {
 public:
   std::vector<sf::FloatRect> m_relativeHitboxes;
   std::vector<sf::FloatRect> m_absoluteHitboxes;
@@ -32,4 +33,7 @@ public:
   void updateHitboxesPosition(const sf::Vector2f& newPosition);
 
   static Collision GetCollision(const HitboxesPair& hitboxesPair);
+
+  virtual void draw(sf::RenderTarget& target,
+                    sf::RenderStates states) const override;
 };

@@ -1,9 +1,9 @@
 #include "include/World.hpp"
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
 #include "include/Collidable.hpp"
-#include "include/Displayable.hpp"
 #include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
 #include "include/Sword.hpp"
@@ -33,7 +33,7 @@ World::World(void) : m_ptr_map(std::make_shared<Map>()) {
   ptr_sword->attachTo(player1);
   m_ptr_swords = std::vector<std::shared_ptr<Sword>>{ptr_sword};
 
-  m_ptr_displayables = std::vector<std::shared_ptr<Displayable>>{
+  m_ptr_drawables = std::vector<std::shared_ptr<sf::Drawable>>{
       player1, player2, m_ptr_map, ptr_sword};
 
   m_ptr_map->loadMap("./assets/maps/sample.png");
@@ -60,15 +60,12 @@ void World::process(const float delta) {
 
   for (size_t i = 0; i < m_ptr_characters.size(); ++i) {
     const auto player = m_ptr_characters[i];
-
-    player->tickTimers(delta);
-    player->physicsTick(delta);
-    player->move();
+    player->process(delta);
   }
 }
 
-void World::display(sf::RenderTarget& target, const float delta) {
-  for (const auto& displayable : m_ptr_displayables) {
-    displayable->display(target, delta);
+void World::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  for (const auto drawable : m_ptr_drawables) {
+    target.draw(*drawable);
   }
 }

@@ -5,7 +5,6 @@
 #include "SFML/Window/Keyboard.hpp"
 #include "include/Character.hpp"
 #include "include/Collidable.hpp"
-#include "include/Displayable.hpp"
 #include "include/Map.hpp"
 #include "include/PhysicsEntity.hpp"
 #include "include/World.hpp"
@@ -41,7 +40,7 @@ int main() {
     const auto delta = m_delta.restart().asSeconds();
     world.process(delta);
 
-    world.display(window, delta);
+    window.draw(world);
 
     window.display();
   }

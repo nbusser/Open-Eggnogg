@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Character.hpp"
-#include "Displayable.hpp"
 #include "PhysicsEntity.hpp"
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "TexturedSprite.hpp"
 #include <memory>
@@ -13,7 +13,7 @@ const auto swordTextureUv = sf::Vector2i(0, 0);
 const auto swordTextureUvSize = sf::Vector2i(16.0f, 16.0f);
 } // namespace Constants
 
-class Sword : public PhysicsEntity, public Displayable {
+class Sword : public PhysicsEntity, public sf::Drawable {
 private:
   TexturedSprite m_displayBehavior;
 
@@ -26,7 +26,8 @@ public:
 
   void attachTo(std::shared_ptr<Character> ptr_character);
 
-  virtual void display(sf::RenderTarget& target, const float delta) override;
+  virtual void draw(sf::RenderTarget& target,
+                    sf::RenderStates states) const override;
 
   virtual void moveX(const float amount) override;
   virtual void moveY(const float amount) override;

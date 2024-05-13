@@ -2,9 +2,9 @@
 
 #include "Character.hpp"
 #include "Collidable.hpp"
-#include "Displayable.hpp"
 #include "Map.hpp"
 #include "PhysicsEntity.hpp"
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/System/Clock.hpp"
 #include "Sword.hpp"
@@ -13,16 +13,17 @@
 
 #define WORLD World::GetInstance()
 
-class World : public Displayable {
+class World : public sf::Drawable {
 private:
-  std::vector<std::shared_ptr<Displayable>> m_ptr_displayables;
+  std::vector<std::shared_ptr<sf::Drawable>> m_ptr_drawables;
 
 public:
   static World& GetInstance(void);
 
   void process(const float delta);
 
-  virtual void display(sf::RenderTarget& target, const float delta);
+  virtual void draw(sf::RenderTarget& target,
+                    sf::RenderStates states) const override;
 
   std::shared_ptr<Map> m_ptr_map;
   std::vector<std::shared_ptr<Character>> m_ptr_characters;

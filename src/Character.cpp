@@ -215,9 +215,18 @@ void Character::tickTimers(const float delta) {
   }
 }
 
-void Character::display(sf::RenderTarget& target, const float delta) {
+void Character::process(const float delta) {
+  tickTimers(delta);
+  physicsTick(delta);
+  move();
   m_displayBehavior.update(m_position, m_direction, delta);
+}
+
+void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(m_displayBehavior);
+
+  target.draw(m_hurtbox);
+  target.draw(m_hitbox);
 }
 
 void Character::respawn(void) {
@@ -272,7 +281,7 @@ void Character::moveX(const float amount) {
 
     // Test collisions against map
     const auto collidingMapHitboxes =
-        m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
+        m_hurtbox.getCollidingHitbox(WORLD.m_ptr_map->getCollisionBoxes());
     if (collidingMapHitboxes.has_value()) {
       const auto collision =
           Collidable::GetCollision(collidingMapHitboxes.value());
@@ -338,7 +347,7 @@ void Character::moveY(const float amount) {
 
     // Test collisions against map
     const auto collidingMapHitboxes =
-        m_hurtbox.getCollidingHitbox(*WORLD.m_ptr_map);
+        m_hurtbox.getCollidingHitbox(WORLD.m_ptr_map->getCollisionBoxes());
     if (collidingMapHitboxes.has_value()) {
       // TODO: check if collision occurs on axis Y
       // Collision againt map detected

@@ -2,9 +2,9 @@
 
 #include "CharacterDisplayBehavior.hpp"
 #include "Collidable.hpp"
-#include "Displayable.hpp"
 #include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
+#include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Sprite.hpp"
@@ -41,11 +41,9 @@ enum TimedAction {
   TOTAL,
 };
 
-class Character : public PhysicsEntity, public Displayable {
+class Character : public PhysicsEntity, public sf::Drawable {
 private:
   CharacterDisplayBehavior m_displayBehavior;
-
-  virtual void display(sf::RenderTarget& target, const float delta) override;
 
   std::shared_ptr<Character> getOtherCharacter(void) const;
 
@@ -87,6 +85,8 @@ public:
 
   void updateSpeed(sf::Vector2f force);
 
+  void process(const float delta);
+
   void move(void);
 
   void tickTimers(const float delta);
@@ -101,6 +101,9 @@ public:
   void endAttack(void);
 
   void endureAttack(void);
+
+  virtual void draw(sf::RenderTarget& target,
+                    sf::RenderStates states) const override;
 
   // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };

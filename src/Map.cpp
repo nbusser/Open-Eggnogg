@@ -35,7 +35,7 @@ const std::unordered_map<sf::Uint32, Tile> Map::ColorToTileMap = {
 
 Map::Map()
     : m_grid(std::vector<Tile>()), m_tilesetTexture(sf::Texture()),
-      m_vertices(sf::VertexArray()) {
+      m_vertices(sf::VertexArray()), m_collisionBoxes(Collidable()) {
   if (!m_tilesetTexture.loadFromFile(Constants::tilesetFilepath)) {
     throw std::system_error(std::make_error_code(std::errc::io_error),
                             "An error occured while opening texture file ");
@@ -50,7 +50,7 @@ Tile Map::getTile(const size_t row, const size_t column) const {
 void Map::clearMap() {
   m_grid.clear();
   m_vertices.clear();
-  m_relativeHitboxes.clear();
+  m_collisionBoxes.m_relativeHitboxes.clear();
 }
 
 void Map::loadMapFile(const std::string& mapFilepath) {
@@ -132,7 +132,7 @@ void Map::loadMapVertices(void) {
         const auto tileBoxSize =
             sf::Vector2f(Constants::mapTileSize, Constants::mapTileSize);
         auto tileBox = sf::FloatRect(quad[0].position, tileBoxSize);
-        m_relativeHitboxes.push_back(tileBox);
+        m_collisionBoxes.m_relativeHitboxes.push_back(tileBox);
       }
     }
   }
@@ -142,7 +142,7 @@ void Map::loadMap(const std::string& mapFilePath) {
   clearMap();
   loadMapFile(mapFilePath);
   loadMapVertices();
-  updateHitboxesPosition(sf::Vector2f(0.0f, 0.0f));
+  m_collisionBoxes.updateHitboxesPosition(sf::Vector2f(0.0f, 0.0f));
 }
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -150,6 +150,6 @@ void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(m_vertices, states);
 }
 
-void Map::display(sf::RenderTarget& target, const float delta) {
-  target.draw(*this);
+const Collidable& Map::getCollisionBoxes(void) const {
+  return m_collisionBoxes;
 }

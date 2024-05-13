@@ -12,7 +12,7 @@ void Sword::attachTo(std::shared_ptr<Character> ptr_character) {
   m_ptr_attachedCharacter = ptr_character;
 }
 
-void Sword::display(sf::RenderTarget& target, const float delta) {
+void Sword::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(m_displayBehavior);
 };
 

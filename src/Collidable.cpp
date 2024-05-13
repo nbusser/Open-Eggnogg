@@ -1,5 +1,8 @@
 #include "include/Collidable.hpp"
 #include "SFML/Graphics/Rect.hpp"
+#include "SFML/Graphics/RectangleShape.hpp"
+#include "SFML/Graphics/RenderTarget.hpp"
+#include "include/Utils.hpp"
 #include <optional>
 #include <vector>
 
@@ -50,4 +53,16 @@ Collision Collidable::GetCollision(const HitboxesPair& hitboxesPair) {
       std::pair<const sf::FloatRect&, const sf::FloatRect&>(hitbox1, hitbox2),
       overlapRect, axis};
   return collision;
+}
+
+void Collidable::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  if (!IS_DEBUG_MODE) {
+    return;
+  }
+  for (const auto& hitbox : m_absoluteHitboxes) {
+    auto rect = sf::RectangleShape(hitbox.getSize());
+    rect.setPosition(hitbox.getPosition());
+    rect.setFillColor(sf::Color(255, 0, 0, 100));
+    target.draw(rect);
+  }
 }
