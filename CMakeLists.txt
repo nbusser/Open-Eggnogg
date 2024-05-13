@@ -11,6 +11,12 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x) # TODO: update to SFML 3.0 when it's released
 FetchContent_MakeAvailable(SFML)
 
+option(DEBUG_DISPLAY_COLLIDABLES "Enable collidables display" OFF)
+if(DEBUG_DISPLAY_COLLIDABLES STREQUAL "ON")
+    message(STATUS "Collidables display enabled")
+    add_compile_definitions(DEBUG_DISPLAY_COLLIDABLES)
+endif()
+
 # Adds the executable and links the SFML library
 add_executable(
   OpenEggnogg

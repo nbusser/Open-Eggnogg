@@ -2,9 +2,14 @@
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RectangleShape.hpp"
 #include "SFML/Graphics/RenderTarget.hpp"
-#include "include/Utils.hpp"
 #include <optional>
 #include <vector>
+
+#ifdef DEBUG_DISPLAY_COLLIDABLES
+#define DISPLAY_COLLIDABLES true
+#else
+#define DISPLAY_COLLIDABLES false
+#endif
 
 Collidable::Collidable() : Collidable(std::vector<sf::FloatRect>()) {};
 
@@ -56,7 +61,7 @@ Collision Collidable::GetCollision(const HitboxesPair& hitboxesPair) {
 }
 
 void Collidable::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  if (!IS_DEBUG_MODE) {
+  if (!DISPLAY_COLLIDABLES) {
     return;
   }
   for (const auto& hitbox : m_absoluteHitboxes) {
