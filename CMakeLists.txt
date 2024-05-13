@@ -25,10 +25,8 @@ add_executable(
   src/AnimationPlayer.cpp
   src/Character.cpp
   src/CharacterDisplayBehavior.cpp
-  src/CharacterPhysicsBehavior.cpp
   src/Collidable.cpp
   src/Map.cpp
-  src/PhysicsEntity.cpp
   src/Sword.cpp
   src/TexturedSprite.cpp
   src/Timer.cpp

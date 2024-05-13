@@ -7,7 +7,6 @@
 #include "SFML/System/Vector2.hpp"
 #include "include/Animations.hpp"
 #include "include/CharacterDisplayBehavior.hpp"
-#include "include/CharacterPhysicsBehavior.hpp"
 #include "include/Collidable.hpp"
 #include "include/Utils.hpp"
 #include "include/World.hpp"

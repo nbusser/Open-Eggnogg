@@ -2,7 +2,6 @@
 
 #include "CharacterDisplayBehavior.hpp"
 #include "Collidable.hpp"
-#include "PhysicsBehavior.hpp"
 #include "PhysicsEntity.hpp"
 #include "SFML/Graphics/Drawable.hpp"
 #include "SFML/Graphics/Rect.hpp"
@@ -16,10 +15,14 @@
 #include <cstdint>
 
 namespace Constants {
-// Physics
+// General physics
+constexpr float gravity = 10.0f;
+const auto gravityVector = sf::Vector2f(0.0f, gravity);
+
+// Character physics
 constexpr float characterMaxVelocityX = 2.0f;
 constexpr float characterMinVelocityY = -2.2f;
-constexpr float characterJumpForce = -40.0f - Constants::gravity;
+constexpr float characterJumpForce = -40.0f - gravity;
 constexpr float characterAccelerationFactor = 15.0f;
 constexpr float characterDecelerationFactor = 7.0f;
 constexpr std::uint16_t characterJumpHeightPixel = 24;
@@ -104,6 +107,4 @@ public:
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
-
-  // std::shared_ptr<PhysicsBehavior> m_ptr_physicsBehavior;
 };
