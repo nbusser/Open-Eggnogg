@@ -17,4 +17,4 @@ set -e
 
 cmake -S . -B build -DCMAKE_BUILD_TYPE=${MODE} -DDEBUG_DISPLAY_COLLIDABLES=${DEBUG_DISPLAY_COLLIDABLES} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 cmake --build build
-ln -sf assets build/bin/assets
+ln -sf $(pwd)/assets ./build/bin/assets

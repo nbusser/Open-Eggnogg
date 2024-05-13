@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./build/bin/OpenEggnogg
+cd ./build/bin && ./OpenEggnogg
