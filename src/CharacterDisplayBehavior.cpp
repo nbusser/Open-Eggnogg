@@ -98,7 +98,7 @@ void CharacterDisplayBehavior::playAnimation(
 
 void CharacterDisplayBehavior::draw(sf::RenderTarget& target,
                                     sf::RenderStates states) const {
-  target.draw(m_swordSprite);
-  target.draw(m_armSprite);
-  target.draw(m_bodySprite);
+  target.draw(m_swordSprite, states);
+  target.draw(m_armSprite, states);
+  target.draw(m_bodySprite, states);
 }

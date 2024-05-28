@@ -35,5 +35,5 @@ void TexturedSprite::update(const sf::Vector2f& position,
 
 void TexturedSprite::draw(sf::RenderTarget& target,
                           sf::RenderStates states) const {
-  target.draw(m_sprite);
+  target.draw(m_sprite, states);
 };

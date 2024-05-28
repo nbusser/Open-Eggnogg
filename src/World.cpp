@@ -66,6 +66,6 @@ void World::process(const float delta) {
 
 void World::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   for (const auto drawable : m_ptr_drawables) {
-    target.draw(*drawable);
+    target.draw(*drawable, states);
   }
 }

@@ -222,10 +222,10 @@ void Character::process(const float delta) {
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  target.draw(m_displayBehavior);
+  target.draw(m_displayBehavior, states);
 
-  target.draw(m_hurtbox);
-  target.draw(m_hitbox);
+  target.draw(m_hurtbox, states);
+  target.draw(m_hitbox, states);
 }
 
 void Character::respawn(void) {

@@ -23,6 +23,15 @@ int main() {
   camera.setCenter(0.0f, 0.0f);
   window.setView(camera);
 
+  sf::Shader shader;
+
+  // load both shaders
+  if (!shader.loadFromFile("./shaders/main.vert", "./shaders/main.frag")) {
+    throw std::system_error(std::make_error_code(std::errc::io_error),
+                            "Cannot open shader");
+  }
+  shader.setUniform("texture", sf::Shader::CurrentTexture);
+
   auto m_delta = sf::Clock();
   while (window.isOpen()) {
     for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -40,7 +49,7 @@ int main() {
     const auto delta = m_delta.restart().asSeconds();
     world.process(delta);
 
-    window.draw(world);
+    window.draw(world, &shader);
 
     window.display();
   }

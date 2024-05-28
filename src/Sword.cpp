@@ -13,7 +13,7 @@ void Sword::attachTo(std::shared_ptr<Character> ptr_character) {
 }
 
 void Sword::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  target.draw(m_displayBehavior);
+  target.draw(m_displayBehavior, states);
 };
 
 void Sword::moveX(const float amount) {}
